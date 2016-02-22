@@ -1,37 +1,60 @@
-## Описание
+## Description
 
-framework.js - небольшая часть фреймворка, необходимая для демонстрации IoC
-application.js - часть приложения для демонстрации IoC
+`framework.js` - small piece of the framework, just to demonstrate IoC
+`application.js` - small piece of the application, also for IoC demonstration
 
-## Запуск
+## How to execute
 
-Из командной строки можно набрать `node ./framework.js` или `node framework`
+From the command line, type: `node ./framework.js` or `node framework`
 
-## Задания
+## Tasks
 
-1. Пробросить в контекст приложения setTimeout и setInterval и использовать их,
-выводя console.log() с таймера
+You may select at least one of the following tasks, make a fork of this
+repository and implement your solution there. If those tasks are simple
+for somebody, please see additional tasks below.
 
-2. Пробросить в контекст приложения библиотеку util и сделать вызовы нескольких
-ее функций из приложения
+1. Add `setTimeout` and `setInterval` to the application context and use them
+printing something from the timer function using console.log()
 
-3. Сделать возможность запускать фреймворк с разными приложениями, через
-параметр командной строки: `node framework <applicationName>`
+2. Inject a link to `util` library into the application context and make a few
+calls to its functions from applied code
 
-4. Обернуть вызов console.log() в песочнице приложения, чтобы добавить в вывод
-дополнительные данные: `<applicationName> <time> <message>`
+3. Implement the ability to run different applications inside framework, using
+command line option, e.g.: `node framework <applicationName>`
 
-5. Обернуть вызов console.log() в песочнице приложения, для дублирования записи
-в файл в формате: `<applicationName> <time> <message>`
+4. Wrap or intercept `console.log()` call to add more info into console output
+in the following format: `<applicationName> <time> <message>`
 
-6. Пробросить в приложение `require` и обернуть в песочнице для логирования,
-вызывать и логировать вызовы в файл в формате: `<time> <module name>`
+5. Wrap or intercept `console.log()` in the sandboxed application logging all
+console output into a file in the format: `<applicationName> <time> <message>`
 
-7. Экспортировать из приложения хеш с несколькими функциями и переменными и
-распечатать их список из фреймворка с указанием типов
+6. Give a link to `require` function to the application, add call to it and
+wrap it for logging to a file in the format: `<time> <module name>` 
 
-8. Экспортировать из приложения функцию и распечатать список ее параметров
-из фреймворка (начать с вывода тела функции)
+7. Export a hash from `application.js` with multiple functions and variables,
+print the list with types from framework
 
-9. Распечатать из приложения список всего, что находится в его глобальном
-контексте (т.е. в песочнице приложения) с указанием типов данных
+8. Export a function from `application.js` and print a list of its parameters
+form the framework (you can start printing function source)
+
+9. Print a list of everything from the application global context (application
+sandbox) with the data types specified
+
+10. Compare an application sandboxed context keys before application loaded and
+after, print it from the framework and find a difference (keys added / deleted)
+
+## Additional tasks
+
+11. You can combine several tasks (listed above) in your code, implement a more
+complex example of interaction between framework and application, preparing
+run-time environment (sandbox) and/or improving CLI (command line interface)
+
+12. Implement a similar example in another programming language
+
+13. Improve and/or optimize Impress Application Server code, specifically
+everything related to sandboxing, see:
+[/lib/impress.application.js](https://github.com/tshemsedinov/impress/blob/master/lib/impress.application.js)
+
+14. Use IoC and code isolation principles using sandboxed context and/or other
+similar technique in your projects (any technological stack) to demonstrate its
+use and the effect of such use

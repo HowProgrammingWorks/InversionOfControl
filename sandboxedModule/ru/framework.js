@@ -7,12 +7,12 @@
 var fs = require('fs'),
     vm = require('vm');
 
-// создаем контекст-песочницу, которая станет глобальным контекстом приложения
+// Чоздаем контекст-песочницу, которая станет глобальным контекстом приложения
 var context = { module: {}, console: console };
 context.global = context;
 var sandbox = vm.createContext(context);
 
-// читаем исходный код приложения из файла
+// Читаем исходный код приложения из файла
 var fileName = './application.js';
 fs.readFile(fileName, function(err, src) {
   // Тут нужно обработать ошибки
