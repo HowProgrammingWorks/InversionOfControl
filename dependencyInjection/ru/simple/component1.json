@@ -1,0 +1,10 @@
+{
+  "description": "Example: Module1",
+  "version": "1.0.0",
+  "author": "Timur Shemsedinov",
+  "api": [
+    "console",
+    "util",
+    "colors"
+  ]
+}

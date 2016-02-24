@@ -1,0 +1,14 @@
+{
+  "description": "Example: Application with dependencies",
+  "version": "1.0.0",
+  "author": "Timur Shemsedinov",
+  "api": [
+    "component2",
+    "component3",
+    "mkdirp",
+    "ncp",
+    "console",
+    "setTimeout",
+    "setInterval"
+  ]
+}

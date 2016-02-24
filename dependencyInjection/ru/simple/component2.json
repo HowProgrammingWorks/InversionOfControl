@@ -1,0 +1,10 @@
+{
+  "description": "Example: Module2",
+  "version": "1.0.0",
+  "author": "Timur Shemsedinov",
+  "api": [
+    "util",
+    "path",
+    "component1"
+  ]
+}

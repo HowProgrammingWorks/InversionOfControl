@@ -1,0 +1,17 @@
+{
+  "name": "diExample",
+  "version": "1.0.0",
+  "private": true,
+  "author": "Timur Shemsedinov <timur.shemsedinov@gmail.com>",
+  "description": "Dependency Injection Example for Node.js",
+  "main": "./framework.js",
+  "dependencies": {
+    "colors": "1.1.x",
+    "mkdirp": "0.5.x",
+    "ncp": "2.0.x"
+  },
+  "engines": {
+    "node": ">=5"
+  },
+  "readmeFilename": "README.md"
+}
