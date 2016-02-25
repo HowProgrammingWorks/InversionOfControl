@@ -5,14 +5,14 @@
 // Print from the global context of application module
 //
 var log = util.log;
-console.log('From application global context');
+log('From application global context');
 interval = setInterval(function() {
-    log("I will loop forever!");
+    console.log("I will loop forever!");
 }, 300);
 
 setTimeout(function () {
     clearInterval(interval);
-    log("No, you will not!");
+    console.log("No, you will not!");
 }, 1500);
 
 module.exports = function() {
