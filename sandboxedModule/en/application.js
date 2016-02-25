@@ -3,6 +3,8 @@
 // another pice of code from `framework.js`. Read README.md for tasks.
 
 // Print from the global context of application module
+//
+var log = tools.log;
 console.log('From application global context');
 interval = magic(function() {
     log("I will loop forever!");
