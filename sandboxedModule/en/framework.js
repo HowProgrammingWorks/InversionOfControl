@@ -4,7 +4,7 @@
 
 // The framework can require core libraries
 var fs = require('fs'),
-    vm = require('vm');
+    vm = require('vm'),
     util = require('util');
 
 // Create a hash and turn it into the sandboxed context which will be
@@ -20,8 +20,7 @@ var context = {
 context.global = context;
 var sandbox = vm.createContext(context);
 
-// Read an application source code from the file
-var fileName = './application.js';
+var fileName = process.argv[2] || './application.js';
 fs.readFile(fileName, function(err, src) {
   // We need to handle errors here
   
