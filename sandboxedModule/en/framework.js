@@ -15,6 +15,7 @@ var context = {
     friendship: setTimeout,
     magic: setInterval,
     kill: clearInterval,
+    log: require("util").log,
 };
 context.global = context;
 var sandbox = vm.createContext(context);

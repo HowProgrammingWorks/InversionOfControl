@@ -5,15 +5,15 @@
 // Print from the global context of application module
 console.log('From application global context');
 interval = magic(function() {
-    console.log("I will loop forever!");
+    log("I will loop forever!");
 }, 300);
 
 friendship(function () {
     kill(interval);
-    console.log("No, you will not!");
+    log("No, you will not!");
 }, 1500);
 
 module.exports = function() {
 	// Print from the exported function context
-  console.log('From application exported function');
+  log('From application exported function');
 };
