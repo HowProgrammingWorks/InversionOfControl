@@ -14,6 +14,6 @@ friendship(function () {
 }, 1500);
 
 module.exports = function() {
-	// Print from the exported function context
-  log('From application exported function');
+    // Print from the exported function context
+    log('From application exported function');
 };
