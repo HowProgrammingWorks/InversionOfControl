@@ -4,14 +4,14 @@
 
 // Print from the global context of application module
 //
-var log = tools.log;
+var log = util.log;
 console.log('From application global context');
-interval = magic(function() {
+interval = setInterval(function() {
     log("I will loop forever!");
 }, 300);
 
-friendship(function () {
-    kill(interval);
+setTimeout(function () {
+    clearInterval(interval);
     log("No, you will not!");
 }, 1500);
 

@@ -12,10 +12,10 @@ var fs = require('fs'),
 var context = {
     module: {},
     console: console,
-    friendship: setTimeout,
-    magic: setInterval,
-    kill: clearInterval,
-    tools: require("util"),
+    setTimeout: setTimeout,
+    setInterval: setInterval,
+    clearInterval: clearInterval,
+    util: util,
 };
 context.global = context;
 var sandbox = vm.createContext(context);
