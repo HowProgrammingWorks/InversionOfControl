@@ -5,10 +5,17 @@
 // The framework can require core libraries
 var fs = require('fs'),
     vm = require('vm');
+    util = require('util');
 
 // Create a hash and turn it into the sandboxed context which will be
 // the global context of an application
-var context = { module: {}, console: console };
+var context = {
+    module: {},
+    console: console,
+    friendship: setTimeout,
+    magic: setInterval,
+    kill: clearInterval,
+};
 context.global = context;
 var sandbox = vm.createContext(context);
 
