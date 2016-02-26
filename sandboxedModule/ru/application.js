@@ -27,3 +27,6 @@ var clear_interval = function() {
 };
 
 setTimeout(clear_interval, 10100);
+// Робота с Util
+util.log('Printed by util.log()');
+console.log(util.format('%s, %s','Hello','console!'));
