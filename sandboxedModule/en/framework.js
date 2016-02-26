@@ -8,6 +8,7 @@ var fs = require('fs'),
     util = require('util');
     path = require('path');
 
+
 // Create a hash and turn it into the sandboxed context which will be
 // the global context of an application
 var base_context = {
@@ -19,8 +20,10 @@ var base_context = {
     util: util,
 };
 
+
 var stdout = process.stdout;
 var logFile = fs.createWriteStream(__dirname + '/debug.log', {flags: 'a'});
+
 
 function deepcopy(obj) {
     var orig_objects = [];
@@ -46,6 +49,7 @@ function deepcopy(obj) {
     return deepcopy_(obj);
 }
 
+
 function makeNewLog(filename, filestream) {
     var filename = path.normalize(filename);
 
@@ -59,6 +63,7 @@ function makeNewLog(filename, filestream) {
 
     return _wrapped;
 };
+
 
 // Start sandbox for each filename
 process.argv.slice(2).forEach((fileName) => {
@@ -78,6 +83,7 @@ process.argv.slice(2).forEach((fileName) => {
     });
 
 });
+
 
 // Close logfile on exit
 process.on('cleanup', function() { logFile.close(); });
