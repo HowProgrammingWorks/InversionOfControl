@@ -19,6 +19,9 @@ var base_context = {
     util: util,
 };
 
+var stdout = process.stdout;
+var logFile = fs.createWriteStream(__dirname + '/debug.log', {flags: 'a'});
+
 function deepcopy(obj) {
     var orig_objects = [];
     var copy_objects = [];
@@ -43,13 +46,15 @@ function deepcopy(obj) {
     return deepcopy_(obj);
 }
 
-function makeNewLog(filename, context) {
+function makeNewLog(filename, filestream) {
     var filename = path.normalize(filename);
-    var oldLog = context.console.log;
 
     function _wrapped() {
         var timestamp = (new Date()).toISOString().replace(/T/, ' ').replace(/Z/, '');
-        oldLog(filename, timestamp, util.format.apply(null, arguments));
+        var message = util.format.apply(null, arguments);
+        var log_message = util.format('%s %s: %s\n', filename, timestamp, message);
+        logFile.write(log_message);
+        stdout.write(log_message);
     }
 
     return _wrapped;
@@ -60,7 +65,7 @@ process.argv.slice(2).forEach((fileName) => {
 
     // Finalize context preparations
     var ctx = deepcopy(base_context);
-    ctx.console.log = makeNewLog(fileName, ctx);
+    ctx.console.log = makeNewLog(fileName);
 
     ctx.__filename = fileName; 
     ctx.global = ctx;
@@ -72,4 +77,17 @@ process.argv.slice(2).forEach((fileName) => {
         script.runInNewContext(sandbox);
     });
 
+});
+
+// Close logfile on exit
+process.on('cleanup', function() { logFile.close(); });
+process.on('exit', function() { process.emit('cleanup'); });
+process.on('SIGINT', function() {
+    console.log('Ctrl-C...');
+    process.exit(2);
+});
+process.on('uncaughtException', function() {
+    console.log('Uncaught Exception...');
+    console.log(e.stack);
+    process.exit(42);
 });
