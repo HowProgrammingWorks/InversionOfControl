@@ -18,6 +18,12 @@ var interval_log = function(){
     console.log('Interval: 2 second');
 }
 
+var clear_interval = function(){
+    clearInterval(interval_id);
+    console.log('Timer cleared');
+}
+
 var timeout_id = setTimeout(timeout_log, 1000);
 var interval_id = setInterval(interval_log, 2000);
-
+// Убираем таймер
+setTimeout(clear_interval, 10100);
