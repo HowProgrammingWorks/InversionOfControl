@@ -6,14 +6,19 @@
 //
 var log = util.log;
 log('From application global context');
+console.log(global);
+
+
 interval = setInterval(function() {
     console.log("I will loop forever!");
 }, 300);
+
 
 setTimeout(function () {
     clearInterval(interval);
     console.log("No, you will not!");
 }, 1500);
+
 
 module.exports = function() {
     // Print from the exported function context
