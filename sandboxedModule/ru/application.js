@@ -10,20 +10,20 @@ module.exports = function() {
   console.log('From application exported function');
 };
 // 
-var timeout_log = function(){
+var timeout_log = function() {
     console.log('Timeout: 1 second');
-}
+};
 
-var interval_log = function(){
+var interval_log = function() {
     console.log('Interval: 2 second');
-}
-
-var clear_interval = function(){
-    clearInterval(interval_id);
-    console.log('Timer cleared');
-}
+};
 
 var timeout_id = setTimeout(timeout_log, 1000);
 var interval_id = setInterval(interval_log, 2000);
 // Убираем таймер
+var clear_interval = function() {
+    clearInterval(interval_id);
+    console.log('Timer cleared');
+};
+
 setTimeout(clear_interval, 10100);
