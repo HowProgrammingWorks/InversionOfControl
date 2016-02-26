@@ -65,12 +65,21 @@ function makeNewLog(filename, filestream) {
 };
 
 
+function loggedReuire(module_name) {
+    var timestamp = (new Date()).toISOString().replace(/T/, ' ').replace(/Z/, '');
+    var log_message = util.format('%s: %s\n', timestamp, module_name);
+    logFile.write(log_message);
+    return require(module_name);
+}
+
+
 // Start sandbox for each filename
 process.argv.slice(2).forEach((fileName) => {
 
     // Finalize context preparations
     var ctx = deepcopy(base_context);
     ctx.console.log = makeNewLog(fileName);
+    ctx.require = loggedReuire;
 
     ctx.__filename = fileName; 
     ctx.global = ctx;
