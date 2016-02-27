@@ -18,9 +18,11 @@ var context = { module: {},
               };
 context.global = context;
 var sandbox = vm.createContext(context);
-
+// Запуск фреймворка с разными приложениями через командную строку
+var applicationName = process.argv[2] || 'application';
 // Читаем исходный код приложения из файла
-var fileName = './application.js';
+var fileName = './' + applicationName + '.js';
+
 fs.readFile(fileName, function(err, src) {
   // Тут нужно обработать ошибки
   
