@@ -8,9 +8,25 @@ var fs = require('fs'),
     vm = require('vm'),
     util = require('util');
 
+// Запуск фреймворка с разными приложениями через командную строку
+var applicationName = process.argv[2] || 'application';
+
+// Обертка для вызова console.log()
+var sandboxConsole = {};
+sandboxConsole.log = function() {
+    var now = new Date();
+    var this_log = applicationName + ' ' + now.toDateString() + ' ' + now.toLocaleTimeString() + ' ' + arguments[0];
+    
+    fs.appendFile(('./' + applicationName + '.log'), (this_log + '\n'), function(err){
+       if (err) throw err; 
+    });
+    
+    console.log(this_log);
+}
+
 // Чоздаем контекст-песочницу, которая станет глобальным контекстом приложения
 var context = { module: {},
-               console: console,
+               console: sandboxConsole,
                setTimeout: setTimeout,
                setInterval: setInterval,
                clearInterval: clearInterval,
@@ -18,8 +34,7 @@ var context = { module: {},
               };
 context.global = context;
 var sandbox = vm.createContext(context);
-// Запуск фреймворка с разными приложениями через командную строку
-var applicationName = process.argv[2] || 'application';
+
 // Читаем исходный код приложения из файла
 var fileName = './' + applicationName + '.js';
 
