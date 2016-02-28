@@ -71,21 +71,50 @@ function decorate(f, before, after) {
 }
 
 function resolveApi( api ) {
-   var apiObj = apis.local [ api ];
-   if(!apiObj) {
-     apiObj = apis.local [api] = {};
-   }
-   var resolvedContext = {};
+  var apiObj;
   
-   var resolvedImport = apiObj.imports ? apiObj.imports : {};
-   copy(resolvedContext, resolvedImport);
-   delete apiObj.imports; 
-
-   resolvedContext.module = {};
-   resolvedContext.global = resolvedContext;
+  if(!api.startsWith(".") && !api.startsWith("/")) {
+    apiObj = apis.global [api];
+    
+    if(!apiObj) {
+      try {
+	var resolvedImport = require(api);
+      }catch(e) {
+	
+	return {resolvedContext: {}};
+      }
+      if(resolvedImport) {
+	apiObj = {};
+	apiObj.name = api;
+	apiObj.resolvedContext = resolvedImport;
+	apis.global [api] = apiObj;
+	return apiObj;
+      }
+      return null;
+    }
+    return apiObj;
+  } 
+  
+   var apiObj = apis.local [ api ];
    
-   apiObj.resolvedContext = resolvedContext;
-
+   if(!apiObj) {
+    return {resolvedContext: {}}; // todo: faild TODO
+   } 
+   
+   if(!apiObj.resolvedContext) { 
+     apiObj.resolvedContext = {};
+   }
+  
+   apiObj.imports = apiObj.imports ? apiObj.imports : {};
+   copy(apiObj.resolvedContext, apiObj.imports);
+   delete apiObj.imports; // gc
+   
+   apiObj.apis = apiObj.apis || [];
+   apiObj.apis = typeof(apiObj.apis) == 'string' ? [apiObj.apis] : apiObj.api;
+   for(var i = 0; i < apiObj.apis.length; i++) {
+     var depend = resolveApi(apiObj.apis[i]);
+   }
+   
    return apiObj;
 }
 
