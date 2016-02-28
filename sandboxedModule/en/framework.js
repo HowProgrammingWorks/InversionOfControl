@@ -75,7 +75,6 @@ function resolveApi( api ) {
   
   if(!api.startsWith(".") && !api.startsWith("/")) {
     apiObj = apis.global [api];
-    
     if(!apiObj) {
       try {
 	var resolvedImport = require(api);
@@ -86,7 +85,8 @@ function resolveApi( api ) {
       if(resolvedImport) {
 	apiObj = {};
 	apiObj.name = api;
-	apiObj.resolvedContext = resolvedImport;
+	apiObj.resolvedContext = {};
+	apiObj.resolvedContext[api] = resolvedImport;
 	apis.global [api] = apiObj;
 	return apiObj;
       }
@@ -113,6 +113,7 @@ function resolveApi( api ) {
    apiObj.apis = typeof(apiObj.apis) == 'string' ? [apiObj.apis] : apiObj.api;
    for(var i = 0; i < apiObj.apis.length; i++) {
      var depend = resolveApi(apiObj.apis[i]);
+     copy(apiObj.resolvedContext, depend.resolvedContext);
    }
    
    return apiObj;
