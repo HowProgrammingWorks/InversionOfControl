@@ -1,7 +1,7 @@
 ## Description
 
-`framework.js` - small piece of the framework, just to demonstrate IoC
-`application.js` - small piece of the application, also for IoC demonstration
+* `framework.js` - small piece of the framework, just to demonstrate IoC
+* `application.js` - small piece of the application, also for IoC demonstration
 
 ## How to execute
 
