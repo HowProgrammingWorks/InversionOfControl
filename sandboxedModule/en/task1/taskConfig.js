@@ -7,9 +7,7 @@ Api ({
     console: console,
     setTimeout: setTimeout,
     setInterval: setInterval
-  },
-  
-  apis: 'u'
+  }
 }) 
 
 Main ('./task1/task.js')

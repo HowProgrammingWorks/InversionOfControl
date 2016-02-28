@@ -110,7 +110,7 @@ function resolveApi( api ) {
    delete apiObj.imports; // gc
    
    apiObj.apis = apiObj.apis || [];
-   apiObj.apis = typeof(apiObj.apis) == 'string' ? [apiObj.apis] : apiObj.api;
+   apiObj.apis = typeof(apiObj.apis) === 'string' ? [apiObj.apis] : apiObj.apis;
    for(var i = 0; i < apiObj.apis.length; i++) {
      var depend = resolveApi(apiObj.apis[i]);
      copy(apiObj.resolvedContext, depend.resolvedContext);
