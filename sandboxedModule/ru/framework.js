@@ -29,6 +29,16 @@ sandboxConsole.log = function() {
     console.log(this_log);
 }
 
+// Обертка для вызова require из приложения
+function wrappedRequire(lib){
+    var now = new Date();
+    var this_log = now.toDateString() + ' ' + now.toLocaleTimeString() + ' ' + lib;
+    
+    putThisIntoLogFile(this_log);
+    
+    return require(lib);
+}
+
 // Чоздаем контекст-песочницу, которая станет глобальным контекстом приложения
 var context = { module: {},
                console: sandboxConsole,
@@ -36,6 +46,7 @@ var context = { module: {},
                setInterval: setInterval,
                clearInterval: clearInterval,
                util: util,
+               require: wrappedRequire
               };
 context.global = context;
 var sandbox = vm.createContext(context);
