@@ -37,7 +37,7 @@ function deepcopy(obj) {
             return copy_objects[idx];
         }
 
-        var copy_ = {};
+        var copy_ = obj_.constructor === Array ? [] : {};
         orig_objects.push(obj_);
         copy_objects.push(copy_);
 
