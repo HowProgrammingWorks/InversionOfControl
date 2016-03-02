@@ -1,13 +1,13 @@
 require('../framework').load();
+path = require("path")
 
 Api ({
   name: './task4/task.js',
 
   imports: {
-    console: console,
-//     console: {
-//       console.log: (mess) => { console.log( process.argv[1] + " " + mess) }
-//     }
+    console: {
+      log: (mess) => { console.log( "<" + path.basename(process.argv[1]) + "> "   + mess) }
+    }
   }
 }) 
 
