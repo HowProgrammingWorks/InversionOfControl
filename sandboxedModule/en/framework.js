@@ -89,6 +89,9 @@ process.argv.slice(2).forEach((fileName) => {
     fs.readFile(fileName, function(err, src) {
         var script = vm.createScript(src, fileName);
         script.runInNewContext(sandbox);
+        script_exports = sandbox.module.exports;
+        console.dir("context from application");
+        console.dir(script_exports);
     });
 
 });

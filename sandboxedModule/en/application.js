@@ -20,7 +20,14 @@ setTimeout(function () {
 }, 1500);
 
 
-module.exports = function() {
-    // Print from the exported function context
-    log('From application exported function');
+module.exports = {
+    default: function() {
+        // Print from the exported function context
+        log('From application exported function');
+    },
+    magicNumber: 42,
+    oneMoreFunction: function(a) {
+        // Print from the exported function context
+        log('From application exported function: ' + a);
+    },
 };
