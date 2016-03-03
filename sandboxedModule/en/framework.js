@@ -92,7 +92,12 @@ process.argv.slice(2).forEach((fileName) => {
         script_exports = sandbox.module.exports;
         console.log(fileName + ' module.exports:');
         for (key in script_exports) {
-            console.log((key + ': [' + typeof(script_exports[key]) + ']'));
+            var val = script_exports[key];
+            if (typeof(val) === 'function') {
+                console.log(key + ': [' + typeof(val) + ' ' + val.length + ']');
+            } else {
+                console.log(key + ': [' + typeof(val) + ']');
+            }
         }
     });
 
