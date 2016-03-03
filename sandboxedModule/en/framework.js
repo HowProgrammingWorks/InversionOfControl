@@ -90,8 +90,10 @@ process.argv.slice(2).forEach((fileName) => {
         var script = vm.createScript(src, fileName);
         script.runInNewContext(sandbox);
         script_exports = sandbox.module.exports;
-        console.dir("context from application");
-        console.dir(script_exports);
+        console.log(fileName + ' module.exports:');
+        for (key in script_exports) {
+            console.log((key + ': [' + typeof(script_exports[key]) + ']'));
+        }
     });
 
 });
