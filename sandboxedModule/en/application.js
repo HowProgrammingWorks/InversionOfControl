@@ -6,7 +6,10 @@
 //
 var log = util.log;
 log('From application global context');
-console.log(global);
+console.log('globals:');
+for (key in global) {
+    console.log((key + ': [' + typeof(global[key]) + ']'));
+}
 
 
 interval = setInterval(function() {
