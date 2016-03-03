@@ -34,8 +34,8 @@ wrap it for logging to a file in the format: `<time> <module name>`
 7. Export a hash from `application.js` with multiple functions and variables,
 print the list with types from framework
 
-8. Export a function from `application.js` and print a list of its parameters
-form the framework (you can start printing function source)
+8. Export a function from `application.js` and print its parameter count and
+source code from the framework
 
 9. Print a list of everything from the application global context (application
 sandbox) with the data types specified
