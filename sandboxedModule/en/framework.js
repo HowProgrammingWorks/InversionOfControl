@@ -69,10 +69,12 @@ function decorate(f, before, after) {
 function resolveApi( api ) {
   var apiObj = apis.local[api];
   
+  // resolve already resolved global api
   if(apiObj && apiObj.lookup === 'GLOBAL') {
      return apiObj;
   } 
 
+  // resolve not resolved global api
   if(!apiObj && di.lookupType(api) === 'GLOBAL') {
       try {
         var resolvedRequire = require(api);
@@ -90,10 +92,12 @@ function resolveApi( api ) {
       return new di.Api(api);
   } 
     
+  // return a stab if cannot resolve
   if(!apiObj) {
     return new di.Api(api);
   }  
 
+  // resolve a local api
    copy(apiObj.resolvedContext, apiObj.imports);
    apiObj.imports = {};
    
