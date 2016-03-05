@@ -6,6 +6,7 @@
 var fs = require('fs'),
     vm = require('vm');
     di = require('./DiClasses');
+    diDecl = require('./DiDeclaration');
 
 var injections = {};
 var apis = {};
@@ -28,16 +29,16 @@ if(process.argv[2] != undefined) {
     fileName += 'application.js'
 }
 
-
-
-function Api( api ) {
+// Declaration functions
+var diDecl = {};
+diDecl.Api = function( api ) {
     if(typeof(api) === 'object') {
         var apiObj = new di.Api(api.name, api.imports, api.apis);
         apis[apiObj.name] = apiObj;
     }
 }
 
-function Main ( path ) {
+diDecl.Main = function Main ( path ) {
     if(typeof(path) === 'string') {
             mainScriptFile = path;
     }
@@ -146,6 +147,6 @@ function load() {
 module.exports = {
     load: load,
     configure: configure,
-    Api: Api,
-    Main: Main
+    Api: diDecl.Api,
+    Main: diDecl.Main
 }
