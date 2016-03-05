@@ -67,37 +67,33 @@ function decorate(f, before, after) {
 }
 
 function resolveApi( api ) {
-  var apiObj;
+  var apiObj = apis.local[api];
   
-  if(!api.startsWith(".") && !api.startsWith("/")) {
-    apiObj = apis.global [api];
-    if(!apiObj) {
-      try {
-	var resolvedImport = require(api);
-      }catch(e) {
-	
-	return {resolvedContext: {}};
-      }
-      if(resolvedImport) {
-	apiObj = {};
-	apiObj.name = api;
-	apiObj.resolvedContext = {};
-	apiObj.resolvedContext[api] = resolvedImport;
-	apis.global [api] = apiObj;
-	return apiObj;
-      }
-      return null;
-    }
-    return apiObj;
+  if(apiObj && apiObj.lookup === 'GLOBAL') {
+     return apiObj;
   } 
-  
-   var apiObj = apis.local [ api ];
-   
-   if(!apiObj) {
-    // return {resolvedContext: {}}; // todo: faild TODO
+
+  if(!apiObj && di.lookupType(api) === 'GLOBAL') {
+      try {
+        var resolvedRequire = require(api);
+      }catch(e) {
+        return new di.Api(api);
+      }
+
+      apiObj = new di.Api(api);
+
+      if(resolvedRequire) {
+        apiObj.resolvedContext[api] = resolvedRequire;
+        return apiObj;
+      }
+
+      return new di.Api(api);
+  } 
+    
+  if(!apiObj) {
     return new di.Api(api);
-   } 
-  
+  }  
+
    copy(apiObj.resolvedContext, apiObj.imports);
    apiObj.imports = {};
    
