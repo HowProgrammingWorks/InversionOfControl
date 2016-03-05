@@ -1,5 +1,12 @@
 ## Description
 
+Putpose: learn how to create sandboxed context for modues to separate them and
+minimize cross-modules code coupling, extracting at least two abstraction layers
+(applied and system) and how to execute applied code in virtual environment,
+changing its behavior using IoC from system layer.
+
+## Files
+
 * `framework.js` - small piece of the framework, just to demonstrate IoC
 * `application.js` - small piece of the application, also for IoC demonstration
 
