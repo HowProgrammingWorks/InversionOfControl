@@ -8,10 +8,7 @@ var fs = require('fs'),
     di = require('./DiClasses');
 
 var injections = {};
-var apis = {
-    local: [],
-    global: []
-};
+var apis = {};
 var configurations = {};
 var mainScriptFile;
 var frameworkLoaded = false;
@@ -36,7 +33,7 @@ if(process.argv[2] != undefined) {
 function Api( api ) {
     if(typeof(api) === 'object') {
         var apiObj = new di.Api(api.name, api.imports, api.apis);
-        apis.local[apiObj.name] = apiObj;
+        apis[apiObj.name] = apiObj;
     }
 }
 
@@ -67,7 +64,7 @@ function decorate(f, before, after) {
 }
 
 function resolveApi( api ) {
-  var apiObj = apis.local[api];
+  var apiObj = apis[api];
   
   // resolve already resolved global api
   if(apiObj && apiObj.lookup === 'GLOBAL') {
@@ -98,6 +95,10 @@ function resolveApi( api ) {
   }  
 
   // resolve a local api
+   if(apiObj.resolved) {
+        return apiObj;
+   }
+
    copy(apiObj.resolvedContext, apiObj.imports);
    apiObj.imports = {};
    
@@ -106,6 +107,8 @@ function resolveApi( api ) {
      copy(apiObj.resolvedContext, depend.resolvedContext);
    }
    
+   apiObj.resolved = true;
+
    return apiObj;
 }
 
