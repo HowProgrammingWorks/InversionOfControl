@@ -20,70 +20,67 @@
 аргументов, а если функция имеет еще и callback, то нужно перехватывать и его,
 тоже логируя в файл момент, вызова callback. Это задание можно разбить на
 несколько шагов.
-
 2. Удаляем из `application.js` вызов таймера и оставляем там только код:
-```JavaScript
-var fileName = './README.md';
-console.log('Application going to read ' + fileName);
-fs.readFile(fileName, function(err, src) {
-  console.log('File ' + fileName + ' size ' + src.length);
-});
-```
+
+  ```JavaScript
+  var fileName = './README.md';
+  console.log('Application going to read ' + fileName);
+  fs.readFile(fileName, function(err, src) {
+    console.log('File ' + fileName + ' size ' + src.length);
+  });
+  ```
 Это пример работы с файлом. И мы будем изменять поведение этого кода.
 Убираем из `framework.js` обертку таймера и пробрасываем `fs` в приложение.
 Теперь запускаем `node framework` и убеждаемся, что файл считывается и
 выводится его длина.
-
 3. Теперь пишем функцию `cloneInterface(interfaceName)` для копирования всех
 ключей из библиотеки `fs` в новый интерфейс и передаем в песочницу не исходный
 `fs`, а склонированный. Пример функции клонирования:
-```JavaScript
-function cloneInterface(anInterface) {
-  var clone = {};
-  for (var key in anInterface) {
-    clone[key] = anInterface[key];
-  }
-  return clone;
-}
-```
 
+  ```JavaScript
+  function cloneInterface(anInterface) {
+    var clone = {};
+    for (var key in anInterface) {
+      clone[key] = anInterface[key];
+    }
+    return clone;
+  }
+  ```
 4. Пишем функцию `wrapFunction(fnName, fn)` которая оборачивает функцию `fn` и
 возвращает функцию-замыкание от `wrapper`. Замыкание, это ссылка на копию
 функции `wrapper`, которая замкнута на контекст `wrapFunction`. Таким образом
 мы применяем функциональное наследование и порождаем такой вариант `wrapper`,
 который видит параметры `fnName` и 'fn' от `wrapFunction`. Мы полностью
-передаем все аргументы в функцию fn.
-```JavaScript
-function wrapFunction(fnName, fn) {
-  return function wrapper() {
-    var args = [];
-    Array.prototype.push.apply(args, arguments);
-    console.log('Call: ' + fnName);
-    console.dir(args);
-    fn.apply(undefined, args);
-  }
-}
-```
+передаем все аргументы в функцию fn:
 
+  ```JavaScript
+  function wrapFunction(fnName, fn) {
+    return function wrapper() {
+      var args = [];
+      Array.prototype.push.apply(args, arguments);
+      console.log('Call: ' + fnName);
+      console.dir(args);
+      fn.apply(undefined, args);
+    }
+  }
+  ```
 5. Определяем, есть ли среди аргументов `callback`, он всегда последний в
 массиве аргументов и его тип `function`. Если `callback` есть, то вместо него
 передаем свою функцию, которая логирует все аргументы и вызывает настояций
 `callback`.
-
 6. Теперь можно из `application.js` использовать другие функции `fs` и
 убедиться, что все они обернуты.
-
 7. Добавляем таймеры в `application.js` и на таймерах работаем с файлами, а из
 `framework.js` собираем статистику работы с файлами и выводим ее каждые 30
 секунд. Например, можно соирать несколько из этих параметров
-- количество обращений к функциям,
-- количество колбэков,
-- среднюю скорость завершения функций,
-- среднюю скорость возвращения колбеков,
-- общий объем прочитанных с диска данных,
-- общий объем записанных данных,
-- среднюю скорость чтения и записи,
-и т.д.
+  - количество обращений к функциям,
+  - количество колбэков,
+  - среднюю скорость завершения функций,
+  - среднюю скорость возвращения колбеков,
+  - общий объем прочитанных с диска данных,
+  - общий объем записанных данных,
+  - среднюю скорость чтения и записи,
+  и т.д.
 
 Сохраните наработки этой лабораторной работы, они понадобятся для выполнения
 следующих работ, в частности, работы по передаче вызовов в другой процесс и
