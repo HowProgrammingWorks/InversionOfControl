@@ -5,6 +5,7 @@
 // The framework can require core libraries
 var fs = require('fs'),
     vm = require('vm');
+    di = require('./DiClasses');
 
 var injections = {};
 var apis = {
@@ -34,13 +35,8 @@ if(process.argv[2] != undefined) {
 
 function Api( api ) {
     if(typeof(api) === 'object') {
-        if(api.name.startsWith('./')) {
-            apis.local[api.name] = api;
-            api.resolved = false;
-        } else {
-            apis.global.push(api);
-            api.resolved = false;
-        }
+        var apiObj = new di.Api(api.name, api.imports, api.apis);
+        apis.local[apiObj.name] = apiObj;
     }
 }
 
@@ -98,21 +94,15 @@ function resolveApi( api ) {
    var apiObj = apis.local [ api ];
    
    if(!apiObj) {
-    return {resolvedContext: {}}; // todo: faild TODO
+    // return {resolvedContext: {}}; // todo: faild TODO
+    return new di.Api(api);
    } 
-   
-   if(!apiObj.resolvedContext) { 
-     apiObj.resolvedContext = {};
-   }
   
-   apiObj.imports = apiObj.imports ? apiObj.imports : {};
    copy(apiObj.resolvedContext, apiObj.imports);
-   delete apiObj.imports; // gc
+   apiObj.imports = {};
    
-   apiObj.apis = apiObj.apis || [];
-   apiObj.apis = typeof(apiObj.apis) === 'string' ? [apiObj.apis] : apiObj.apis;
-   for(var i = 0; i < apiObj.apis.length; i++) {
-     var depend = resolveApi(apiObj.apis[i]);
+   for(var i = 0; i < apiObj.injectedApis.length; i++) {
+     var depend = resolveApi(apiObj.injectedApis[i]);
      copy(apiObj.resolvedContext, depend.resolvedContext);
    }
    
