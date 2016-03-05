@@ -7,3 +7,7 @@ function Api(name, imports, injectedApis) {
     this.resolvedContext = {}; // context that will be injected to the file
 }
 
+module.exports {
+    Api: Api,
+}
+
