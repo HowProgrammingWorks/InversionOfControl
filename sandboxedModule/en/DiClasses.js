@@ -14,14 +14,15 @@ function Api(name, imports, injectedApis, injections, lookup) {
 }
 
 function lookupType(name) {
-    if(name.startsWith('./')) {
-        return 'GLOBAL'
-    } else {
+    if(name.startsWith('.')) {
         return 'LOCAL'
+    } else {
+        return 'GLOBAL'
     }
 }
 
 module.exports = {
     Api: Api,
+    lookupType: lookupType
 }
 

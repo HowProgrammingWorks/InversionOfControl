@@ -6,7 +6,6 @@
 var fs = require('fs'),
     vm = require('vm');
     di = require('./DiClasses');
-    diDecl = require('./DiDeclaration');
 
 var injections = {};
 var apis = {};
