@@ -11,6 +11,8 @@ function Api(name, imports, injectedApis, injections, lookup) {
         injectedApis = [injectedApis];
     }
     this.injectedApis = injectedApis || [];
+
+    this.options = {}; 
 }
 
 function lookupType(name) {

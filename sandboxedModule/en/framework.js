@@ -34,6 +34,9 @@ var diDecl = {};
 diDecl.Api = function( api ) {
     if(typeof(api) === 'object') {
         var apiObj = new di.Api(api.name, api.imports, api.apis);
+        if(api.options) {
+            apiObj.options = api.options;
+        }
         apis[apiObj.name] = apiObj;
     }
 }
@@ -129,8 +132,13 @@ function configure () {
       // Run an application in sandboxed context
 
       var script = vm.createScript(src, mainScriptFile);
-      var sandbox = vm.createContext(resolveApi(mainScriptFile).resolvedContext);
+      var apiObj = resolveApi(mainScriptFile);
+      var sandbox = vm.createContext(apiObj.resolvedContext);
       script.runInNewContext(sandbox);
+      if(apiObj.options.debugPrintCache === true) {
+        console.log(apiObj.name + ' cache:');
+        console.log(sandbox);
+      }
 
       // We can access a link to exported interface from sandbox.module.exports
       // to execute, save to the cache, print to console, etc.
