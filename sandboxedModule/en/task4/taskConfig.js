@@ -2,7 +2,7 @@ require('../framework').load();
 path = require("path")
 
 Api ({
-  name: './task4/task.js',
+  name: './task.js',
 
   imports: {
     console: {
@@ -11,7 +11,7 @@ Api ({
   }
 }) 
 
-Main ('./task4/task.js')
+Main ('./task.js')
 
 configure();
 

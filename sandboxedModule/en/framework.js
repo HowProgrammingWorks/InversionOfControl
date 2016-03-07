@@ -6,6 +6,7 @@
 var fs = require('fs'),
     vm = require('vm');
     di = require('./DiClasses');
+    path = require('path');
 
 var injections = {};
 var apis = {};
@@ -112,6 +113,9 @@ function resolveApi( api ) {
    return apiObj;
 }
 
+function resolveScriptPath() {
+    
+}
 function configure () {
       if( !mainScriptFile ) {
         return;
@@ -134,6 +138,7 @@ function configure () {
 }
 
 function load() {
+  process.chdir(path.dirname(process.argv[1]));
   if(!frameworkLoaded) {
     copy(global, module.exports);
     frameworkLoaded  = true;
