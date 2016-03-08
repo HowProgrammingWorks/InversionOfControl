@@ -43,7 +43,7 @@ function decorate_input(func, change_input) {
 }
 
 // записывает аргумент вызова функции в файл fileName
-// декорируэт вывод с помощью функции change_output
+// меняет вывод с помощью функции change_output
 function decorate_logging(func, fileName, change_output) {
   return function(massage) {
     var output = massage;
