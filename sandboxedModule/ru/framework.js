@@ -9,9 +9,11 @@ var fs = require('fs'),
     util = require('util');
 
 
+
 // Читаем исходный код приложения из файла
 var fileName = process.argv[2] || './application.js';
 var outputFile = 'output.txt';
+var outputFile_require = 'require_output.txt';
 
 function createClone(dest, src) {
   if (!dest || !src || typeof dest != 'object' || typeof src != 'object')  {
@@ -27,13 +29,19 @@ createClone(myConsole, console);
 
 // прибавляет к строке <applicationName> <time>
 function add_applicationName_time(str) {
-  var date = new Date();
-  var time = [date.getHours(), date.getMinutes(), date.getSeconds()].join(':');
+  str = add_time(str);
   var applicationName = fileName;
-  str = applicationName + " " + time + " " + str;
+  str = applicationName + " " + str;
   return str;
 }
 
+// прибавляет к строке <time>
+function add_time(str) {
+  var date = new Date();
+  var time = [date.getHours(), date.getMinutes(), date.getSeconds()].join(':');
+  str = time + " " + str;
+  return str;
+}
 // меняет аргумент функции с помощью функции change_input
 function decorate_input(func, change_input) {
   return function(massage) {
@@ -62,7 +70,7 @@ function decorate_logging(func, fileName, change_output) {
 
 myConsole.log = decorate_input(myConsole.log, add_applicationName_time);
 myConsole.log = decorate_logging(myConsole.log, outputFile, add_applicationName_time);
-
+var myRequire = decorate_logging(require, outputFile_require, add_time);
 // Создаем контекст-песочницу, которая станет глобальным контекстом приложения
 var context = {
   module: {},
@@ -71,7 +79,8 @@ var context = {
   setinterval: setInterval,
   clearTimeout: clearTimeout,
   clearInterval: clearInterval,
-  util: util
+  util: util,
+  require : myRequire
 };
 context.global = context;
 var sandbox = vm.createContext(context);
