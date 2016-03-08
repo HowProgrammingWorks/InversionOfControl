@@ -5,13 +5,43 @@
 
 // Фреймворк может явно зависеть от библиотек через dependency lookup
 var fs = require('fs'),
-    vm = require('vm');
+    vm = require('vm'),
     util = require('util');
+
+
+// Читаем исходный код приложения из файла
+var fileName = process.argv[2] || './application.js';
+
+function createClone(dest, src) {
+  if (!dest || !src || typeof dest != 'object' || typeof src != 'object')  {
+    return;
+  }
+  for (key in src) {
+    dest[key] = src[key];
+  }
+}
+
+var myConsole = {};
+createClone(myConsole, console);
+
+// меняет аргумунт функции, прибавляя к нему <applicationName> <time>
+function change_input_decorator(func) {
+  return function(massage) {
+    var date = new Date();
+    var time = [date.getHours(), date.getMinutes(), date.getSeconds()].join(':');
+    var applicationName = fileName;
+    massage = applicationName + " " + time + " " + massage;
+    func.call(this, massage);
+  }
+}
+
+myConsole.log = change_input_decorator(myConsole.log);
+
 
 // Создаем контекст-песочницу, которая станет глобальным контекстом приложения
 var context = {
   module: {},
-  console: console,
+  console: myConsole,
   setTimeout: setTimeout,
   setinterval: setInterval,
   clearTimeout: clearTimeout,
@@ -21,8 +51,7 @@ var context = {
 context.global = context;
 var sandbox = vm.createContext(context);
 
-// Читаем исходный код приложения из файла
-var fileName = process.argv[2] || './application.js';
+
 fs.readFile(fileName, function(err, src) {
   // Тут нужно обработать ошибки
   if(err) throw err;
