@@ -11,6 +11,7 @@ var fs = require('fs'),
 
 // Читаем исходный код приложения из файла
 var fileName = process.argv[2] || './application.js';
+var outputFile = 'output.txt';
 
 function createClone(dest, src) {
   if (!dest || !src || typeof dest != 'object' || typeof src != 'object')  {
@@ -24,19 +25,43 @@ function createClone(dest, src) {
 var myConsole = {};
 createClone(myConsole, console);
 
-// меняет аргумунт функции, прибавляя к нему <applicationName> <time>
-function change_input_decorator(func) {
+// прибавляет к строке <applicationName> <time>
+function add_applicationName_time(str) {
+  var date = new Date();
+  var time = [date.getHours(), date.getMinutes(), date.getSeconds()].join(':');
+  var applicationName = fileName;
+  str = applicationName + " " + time + " " + str;
+  return str;
+}
+
+// меняет аргумент функции с помощью функции change_input
+function decorate_input(func, change_input) {
   return function(massage) {
-    var date = new Date();
-    var time = [date.getHours(), date.getMinutes(), date.getSeconds()].join(':');
-    var applicationName = fileName;
-    massage = applicationName + " " + time + " " + massage;
+    massage = change_input(massage);
     func.call(this, massage);
   }
 }
 
-myConsole.log = change_input_decorator(myConsole.log);
+// записывает аргумент вызова функции в файл fileName
+// декорируэт вывод с помощью функции change_output
+function decorate_logging(func, fileName, change_output) {
+  return function(massage) {
+    var output = massage;
+    if (change_output) {
+      output = change_output(massage);
+    }
+    output += '\n';
+    fs.appendFile(fileName, output, {flag: 'a'}, (err)=> {
+      if(err) {
+        throw err;
+      }
+    })
+    func.call(this, massage);
+  }
+}
 
+myConsole.log = decorate_input(myConsole.log, add_applicationName_time);
+myConsole.log = decorate_logging(myConsole.log, outputFile, add_applicationName_time);
 
 // Создаем контекст-песочницу, которая станет глобальным контекстом приложения
 var context = {
