@@ -7,5 +7,6 @@ console.log('From application global context');
 
 module.exports = function() {
   // Вывод из контекста экспортируемой функции
+  console.log(inspect(global, false, 2, true));
   console.log('From application exported function');
 };
