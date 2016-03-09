@@ -12,6 +12,9 @@ var context = { module: {}, console: console };
 context.global = context;
 var sandbox = vm.createContext(context);
 
+console.log("Before load : ");
+console.log(sandbox);
+
 // Читаем исходный код приложения из файла
 var fileName = './application.js';
 fs.readFile(fileName, function(err, src) {
@@ -20,6 +23,9 @@ fs.readFile(fileName, function(err, src) {
   // Запускаем код приложения в песочнице
   var script = vm.createScript(src, fileName);
   script.runInNewContext(sandbox);
+
+  console.log("After load : ");
+  console.log(sandbox);
   
   // Забираем ссылку из sandbox.module.exports, можем ее исполнить,
   // сохранить в кеш, вывести на экран исходный код приложения и т.д.
