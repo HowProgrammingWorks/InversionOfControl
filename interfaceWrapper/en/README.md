@@ -37,8 +37,7 @@ You can break this task into several steps.
   fs.readFile(fileName, function(err, src) {
     console.log('File ' + fileName + ' size ' + src.length);
   });
-  ```
-  
+  ```  
 This is an example of interaction with the file system. You're going to change
 the behavior of this code. Remove the timer wrapper from `framework.js` and 
 forward a link to the `fs` module to your application. Then run the framework
