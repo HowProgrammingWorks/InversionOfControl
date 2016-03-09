@@ -8,4 +8,9 @@ console.log('From application global context');
 module.exports = function() {
   // Вывод из контекста экспортируемой функции
   console.log('From application exported function');
+
+};
+
+module.exports.foo = function(unused) {
+	return arguments.length;
 };
