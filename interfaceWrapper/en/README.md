@@ -29,6 +29,7 @@ this callback, logging callback calls.
 This task can be divided into a few steps.
 2. Remove `setTimeout` example from `application.js` and replace it with the
 following code:
+
   ```JavaScript
   var fileName = './README.md';
   console.log('Application going to read ' + fileName);
@@ -43,6 +44,7 @@ length.
 3. Next step is preparing function `cloneInterface(interfaceName)` for cloning
 all keys from given library into new interface. So we can pass its result
 (cloned `fs`) to sandbox instead of `fs`. Clonning function example:
+
   ```JavaScript
   function cloneInterface(anInterface) {
     var clone = {};
@@ -58,6 +60,7 @@ closure function. Closure `wrapper` is a newly created function with the help
 of functional inheritance, so it will see `fnName`, `fn` in its context. Thus
 we can pass all arguments from wrapper into original function as you see in
 example:
+
   ```JavaScript
   function wrapFunction(fnName, fn) {
     return function wrapper() {
@@ -69,6 +72,7 @@ example:
     }
   }
   ```
+
 5. Now should detect do we have `callback` argument as a last argument of
 function call, we can do that by `typeof()` comparing to `function`. If we have
 `callback`, we need to wrap it too, so pass ours function instead of `callback`
@@ -79,14 +83,14 @@ try to run wrapped code.
 we will model a real application random file system access. Then we can collect
 some statistics from `framework.js` and print it every 30 seconds. For example,
 you can collect following parameters:
-  - number of function calls,
-  - number of callbacks,
-  - average function completion speed,
-  - average return rate of callbacks,
-  - total amount of data read from the disk,
-  - total amount of recorded data,
-  - average read and write speed,
-  etc.
+  - number of function calls,
+  - number of callbacks,
+  - average function completion speed,
+  - average return rate of callbacks,
+  - total amount of data read from the disk,
+  - total amount of recorded data,
+  - average read and write speed,
+  etc.
 
 Save your results to github, we will need it in next labs, for example we can
 transfer overriden wrapped calls (fs operations) to another process and another
