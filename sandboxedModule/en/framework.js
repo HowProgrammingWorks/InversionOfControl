@@ -53,6 +53,8 @@ function copy(dest, src) {
             dest[key] = src[key];
         }
     }
+
+    return dest;
 }
 
 function resolveApi( api ) {
@@ -118,7 +120,7 @@ function configure () {
 
       var script = vm.createScript(src, mainScriptFile);
       var apiObj = resolveApi(mainScriptFile);
-      var sandbox = vm.createContext(apiObj.resolvedContext);
+      var sandbox = vm.createContext(copy({}, apiObj.resolvedContext));
       script.runInNewContext(sandbox);
       if(apiObj.options.debugPrintCache === true) {
         console.log(apiObj.name + ' cache:');
