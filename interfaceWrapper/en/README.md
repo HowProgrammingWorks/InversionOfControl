@@ -26,7 +26,6 @@ The wrapper should log all calls to the file system into a file. A log record
 should contain the time of the call, the called function's name and arguments.
 If the called function has a callback, you need to intercept the callback as well.
 The call to a callback should also be logged.
-
 You can break this task into several steps.
 
 2. Remove calls to the timer from `application.js`. This is what your 
