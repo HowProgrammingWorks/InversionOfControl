@@ -124,6 +124,13 @@ function configure () {
         console.log(apiObj.name + ' cache:');
         console.log(sandbox);
       }
+      if(apiObj.options.debugPrintModuleCache === true) {
+        if(sandbox.module.exports) {
+            for(key in sandbox.module.exports) {
+                console.log(key + "\t\t" + typeof(sandbox.module.exports[key])); 
+            }
+        }
+      }
 
       // We can access a link to exported interface from sandbox.module.exports
       // to execute, save to the cache, print to console, etc.
