@@ -5,22 +5,35 @@
 
 // Фреймворк может явно зависеть от библиотек через dependency lookup
 var fs = require('fs'),
-    vm = require('vm');
+    vm = require('vm'),
+    util = require('util');
 
+var fileName = './application.js';
+var applicationConsole = {};
+applicationConsole.log = function(str) { 
+	console.log(fileName + " " + (new Date()) + " " + str); 
+	console.log(str);
+};
+// applicationConsole.log = function(str) {
+// 	console.log(console.log.toString());
+// 	console.log(fileName + " " + (new Date()) + " " + str);
+// 	console.log(str);
+// }
 // Создаем контекст-песочницу, которая станет глобальным контекстом приложения
-var context = { module: {}, console: console };
+var context = { module: {}, console: applicationConsole };
 context.global = context;
 var sandbox = vm.createContext(context);
 
 // Читаем исходный код приложения из файла
-var fileName = './application.js';
 fs.readFile(fileName, function(err, src) {
   // Тут нужно обработать ошибки
   
   // Запускаем код приложения в песочнице
   var script = vm.createScript(src, fileName);
   script.runInNewContext(sandbox);
-  
+
+  sandbox.module.exports();
+ 
   // Забираем ссылку из sandbox.module.exports, можем ее исполнить,
   // сохранить в кеш, вывести на экран исходный код приложения и т.д.
 });
