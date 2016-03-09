@@ -1,6 +1,6 @@
 ## Description
 
-Putpose: learn how to create sandboxed context for modues to separate them and
+Purpose: learn how to create sandboxed context for modues to separate them and
 minimize cross-modules code coupling, extracting at least two abstraction layers
 (applied and system) and how to execute applied code in virtual environment,
 changing its behavior using IoC from system layer.
