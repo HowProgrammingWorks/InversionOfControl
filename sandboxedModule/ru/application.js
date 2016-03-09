@@ -7,10 +7,11 @@ console.log('From application global context');
 
 setTimeout(function(){
 	console.log("Some message1");
+	util.log("Some message2");
 }, 1000);
 
 var intervalID01 = setInterval(function(){
-	console.log("Some message2");
+	console.log("Some message3");
 }, 1000);
 
 setTimeout(function(){
