@@ -55,18 +55,6 @@ function copy(dest, src) {
     }
 }
 
-function decorate(f, before, after) {
-  return function() {
-    if(before != undefined) {
-      before.apply(this, arguments);
-    }
-    f.apply(arguments);
-    if(after != undefined) {
-      after.apply(this, arguments);
-    }
-  }
-}
-
 function resolveApi( api ) {
   var apiObj = apis[api];
   
@@ -116,9 +104,6 @@ function resolveApi( api ) {
    return apiObj;
 }
 
-function resolveScriptPath() {
-    
-}
 function configure () {
       if( !mainScriptFile ) {
         return;
