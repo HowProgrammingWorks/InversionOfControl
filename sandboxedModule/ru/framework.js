@@ -5,11 +5,24 @@
 
 // Фреймворк может явно зависеть от библиотек через dependency lookup
 var fs = require('fs'),
-    vm = require('vm')
+    vm = require('vm'),
     util = require('util');
 
+var myConsole = {};
+myConsole.log = function (argument) {
+	var date = new Date();
+    var time = date.getHours()+':'+date.getMinutes()+':'+date.getSeconds();
+
+	console.log(fileName+" "+time+" "+argument);
+}
+/*var exlog = console.log;
+console.log = function(argument) {
+	var date = new Date();
+    var time = date.getHours()+':'+date.getMinutes()+':'+date.getSeconds();
+    exlog(fileName+" "+time+" "+argument);
+}*/
 // Чоздаем контекст-песочницу, которая станет глобальным контекстом приложения
-var context = { module: {}, console: console,
+var context = { module: {}, console: myConsole,
 	 setTimeout: setTimeout, 
 	 setInterval: setInterval, 
 	 clearInterval: clearInterval, 
@@ -19,7 +32,7 @@ context.global = context;
 var sandbox = vm.createContext(context);
 
 // Читаем исходный код приложения из файла
-var fileName = './application.js';
+var fileName = process.argv[2] || './application.js';
 fs.readFile(fileName, function(err, src) {
   // Тут нужно обработать ошибки
   

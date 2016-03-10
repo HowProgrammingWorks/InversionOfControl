@@ -8,6 +8,7 @@ console.log('From application global context');
 setTimeout(function(){
 	console.log("Some message1");
 	util.log("Some message2");
+	util.format('%s:%s', 'foo', 'bar', 'baz');
 }, 1000);
 
 var intervalID01 = setInterval(function(){
@@ -16,7 +17,7 @@ var intervalID01 = setInterval(function(){
 
 setTimeout(function(){
 	clearInterval(intervalID01);
-}, 10000);
+}, 5000);
 
 module.exports = function() {
   // Вывод из контекста экспортируемой функции
