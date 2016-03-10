@@ -9,48 +9,101 @@ var fs = require('fs'),
     util = require('util');
     path = require('path');
 
-// Создаем контекст-песочницу, которая станет глобальным контекстом приложения
-var context = {
+// Writable stream for tasks 5 and 6
+var stream = fs.createWriteStream('log.txt', {flags: 'a'});
+
+// Context factory
+function contextFactory(filename) {
+  var context = {
     module: {},
-    console: console,
+    console: clone(console),
     setInterval: setInterval,
     setTimeout: setTimeout,
     clearInterval: clearInterval,
     util: util
   };
-
-context.global = context;
-
-// Wrapper for console.log
-function wrapped(filename) {
-  if(console.log) {
-    var oldConsoleLog = console.log;
-
-    var date = new Date();
-    var year = date.getFullYear();
-    var month = date.getMonth() + 1;
-    var day = date.getDate();
-
-    console.log = function(){
-      Array.prototype.unshift.call(arguments, '[', day, month, year, filename, ']:');
-      oldConsoleLog.apply(this, arguments);
-    }
-  }
-};
-process.argv.slice(2).forEach((filename) => {
+  context.global = context;
   var sandbox = vm.createContext(context);
 
-  wrapped(filename);
+  // Task 4: wrapping console.log()
+  context.console.log = function(msg) {
+    var date = new Date().toLocaleTimeString();
+    console.log('['+date+'] '+filename+' >> '+msg);
 
-  // Читаем исходный код приложения из файла
-  fs.readFile(filename, function(err, src) {
-    // Тут нужно обработать ошибки
+    // Task 5: logging console output into a file
+    stream.write('['+date+'] '+filename+' >> '+msg+'\n');
+  };
 
-    // Запускаем код приложения в песочнице
+  // Task 6: wrapping require function for logging to a file
+  sandbox.require = function(moduleName) {
+    var date = new Date().toLocaleTimeString();
+    stream.write('['+date+'] '+moduleName+' is required.\n');
+    return require(moduleName);
+  }
+
+  return sandbox;
+};
+
+function clone(obj) {
+  var res = {};
+  for (var key in obj) res[key] = obj[key];
+  return res;
+}
+
+
+// Task 3: runs different applications using command line option
+process.argv.slice(2).forEach((filename) => {
+  var sandbox = contextFactory(filename);
+
+  var oldKeys = {};
+  for (var key in sandbox.global) {
+    oldKeys[key] = sandbox.global[key];
+  }
+
+  fs.readFile(filename, (err, src) => {
     var script = vm.createScript(src, filename);
     script.runInNewContext(sandbox);
+    console.log('-----'+filename+':-----');
 
-    // Забираем ссылку из sandbox.module.exports, можем ее исполнить,
-    // сохранить в кеш, вывести на экран исходный код приложения и т.д.
-  });
+    // Task 10: Compare an application sandboxed context keys before 
+    // application loaded and after, print it from the framework 
+    // and find a difference (keys added / deleted)
+    console.log('-----Task 10: comparing keys-----')
+    var newKeys = {};
+    for (var key in sandbox.global) {
+      newKeys[key] = sandbox.global[key];
+    }
+    console.log('Added keys:');
+    for (var key in newKeys) {
+      if (!(key in oldKeys)) {
+        console.log(key);
+      }
+    }
+    console.log('Deleted keys:');
+    for (var key in oldKeys) {
+      if (!(key in newKeys)) {
+        console.log(key);
+      }
+    }
+
+    // Task 7: print the list of exports with types
+    console.log('-----Task 7: list of exports-----')
+    for (var key in sandbox.module.exports)
+      console.log(key + ': ' + typeof sandbox.module.exports[key]);
+
+    // Task 8: Export a function from application.js
+    // and print its parameter count and source code
+    if (filename == 'application.js') {
+      console.log('-----Task 8-----')
+      console.log('Source code for function "printString":');
+      console.log(sandbox.module.exports.printString.toString());
+      console.log('Parameter count for function "printString": '+
+        sandbox.module.exports.printString.toString().
+        replace(/.+\(/, '').replace(/\)[^]+/, '').split(/, +/).length);
+    }
+  });  
+});
+
+process.on('exit', () => {
+  stream.close();
 });
