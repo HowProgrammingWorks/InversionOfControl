@@ -10,6 +10,7 @@ setTimeout(function(){
 setInterval(function(){
 	console.log("Print something!!!!!=)")
 }, 1000);
+console.log(util.format('We use %s.%s', 'util', 'format'));
 module.exports = function() {
   // Вывод из контекста экспортируемой функции
   console.log('From application exported function');
