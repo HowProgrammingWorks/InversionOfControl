@@ -63,6 +63,11 @@ var context = { module: {}, console: console, inspect: util.inspect };
 context.global = context;
 var sandbox = vm.createContext(context);
 
+// *** Задание 10 ***
+
+console.log("Before load : ");
+console.log(sandbox);
+
 // Читаем исходный код приложения из файла
 
 // *** Задание 3 ***
@@ -87,6 +92,10 @@ fs.readFile(fileName, function(err, src) {
 // *** Задание 8 ***
   console.log(sandbox.module.exports.foo.toString());
   console.log("Arguments : " + sandbox.module.exports.foo(23));
+
+// *** Задание 10 ***
+  console.log("After load : ");
+  console.log(sandbox);
   
   sandbox.module.exports();
   // Забираем ссылку из sandbox.module.exports, можем ее исполнить,
