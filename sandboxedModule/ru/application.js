@@ -9,9 +9,13 @@ var application2 = require('./application2.js');
 console.log('From application global context');
 
 module.exports = function() {
-  // Вывод из контекста экспортируемой функции
-  console.log('From application exported function');
+    // Вывод из контекста экспортируемой функции
+    console.log('From application exported function');
 };
+module.exports.print = function(text) {
+    console.log(text);
+}
+module.exports.variable = 42;
 // Немного таймеров
 var timeout_log = function() {
     console.log('Timeout: 1 second');
@@ -32,6 +36,6 @@ var clear_interval = function() {
 setTimeout(clear_interval, 10100);
 // Робота с Util
 util.log('Printed by util.log()');
-console.log(util.format('%s, %s','Hello','console!'));
+console.log(util.format('%s, %s', 'Hello', 'console!'));
 // Вызов супер функции из стороннего файла
 application2.superFunction();
