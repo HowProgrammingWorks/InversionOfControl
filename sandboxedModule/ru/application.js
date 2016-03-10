@@ -39,3 +39,7 @@ util.log('Printed by util.log()');
 console.log(util.format('%s, %s', 'Hello', 'console!'));
 // Вызов супер функции из стороннего файла
 application2.superFunction();
+
+for(var key in global){
+    console.log(key + ' ' + typeof (global[key]));
+}
