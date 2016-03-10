@@ -81,6 +81,10 @@ fs.readFile(fileName, function(err, src) {
   	console.log(p + " : " + typeof sandbox.module.exports[p]);
   }
 
+// *** Задание 8 ***
+  console.log(sandbox.module.exports.foo.toString());
+  console.log("Arguments : " + sandbox.module.exports.foo(23));
+  
   // Забираем ссылку из sandbox.module.exports, можем ее исполнить,
   // сохранить в кеш, вывести на экран исходный код приложения и т.д.
 });

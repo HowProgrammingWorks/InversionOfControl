@@ -23,6 +23,7 @@ module.exports = {};
 
 module.exports.f = function() {
   // Вывод из контекста экспортируемой функции
+
   // *** Задание 1 ***
   setTimeout(() => {
   	console.log("From setTimeout in applicationn.js");
@@ -37,4 +38,10 @@ module.exports.f = function() {
   	util.inspect(me))
   );
 
+  console.log('From application exported function');
+
+};
+
+module.exports.foo = function(unused) {
+	return arguments.length;
 };
