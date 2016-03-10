@@ -14,6 +14,10 @@ myConsole.log = function (argument) {
     var time = date.getHours()+':'+date.getMinutes()+':'+date.getSeconds();
 
 	console.log(fileName+" "+time+" "+argument);
+	fs.appendFile("console.txt",fileName+" "+time+" "+argument+"\n",
+		function (err){ 
+			if(err) throw err;
+		});
 }
 /*var exlog = console.log;
 console.log = function(argument) {

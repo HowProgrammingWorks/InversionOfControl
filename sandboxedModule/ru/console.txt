@@ -1,0 +1,6 @@
+./application.js 13:1:16 From application global context
+./application.js 13:1:17 Some message1
+./application.js 13:1:17 Some message3
+./application.js 13:1:18 Some message3
+./application.js 13:1:19 Some message3
+./application.js 13:1:20 Some message3
