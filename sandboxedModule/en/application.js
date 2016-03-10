@@ -5,6 +5,7 @@
 // Print from the global context of application module
 console.log('From application global context');
 
+// Print some messages from timers
 setInterval(() => {
   console.log('[setInterval] Hello again!');
 }, 1000);
@@ -13,7 +14,14 @@ setTimeout(() => {
   console.log('[setTimeout]  Hello once!');
 }, 500);
 
+// Example of `util` module usage
+var consoleProperties = util.inspect(console, { colors: true })
+                            .replace(/\s+/g, ' ')
+                            .replace(console.constructor.name + ' ', ''),
+    consoleIntrospection = util.format('console = %s;', consoleProperties);
+console.log(consoleIntrospection);
+
 module.exports = function() {
-	// Print from the exported function context
+  // Print from the exported function context
   console.log('From application exported function');
 };
