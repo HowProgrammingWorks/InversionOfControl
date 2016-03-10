@@ -8,23 +8,10 @@ var context = {
   module: {},
   console: console,
   // Forward link to fs API into sandbox
-  fs: fs,
+  fs: cloneInterface(fs)
   // Wrapper for setTimeout in sandbox
-  setTimeout: function(callback, timeout) {
-    // Logging all setTimeout calls
-    console.log(
-      'Call: setTimeout, ' +
-      'callback function: ' + callback.name + ', ' +
-      'timeout: ' + timeout
-    );
-    setTimeout(function() {
-      // Logging timer events before application event
-      console.log('Event: setTimeout, before callback');
-      // Calling user-defined timer event
-      callback();
-      console.log('Event: setTimeout, after callback');
-    }, timeout);
-  }
+
+
 };
 
 // Turn hash into context
@@ -38,3 +25,28 @@ fs.readFile(fileName, function(err, src) {
   var script = vm.createScript(src, fileName);
   script.runInNewContext(sandbox);
 });
+
+function cloneInterface(anInterface) {
+  var clone = {};
+  for (var key in anInterface) {
+    if (typeof (anInterface[key]) === 'function') {
+      clone[key] = wrapFunction(key, anInterface[key]);
+    } else {
+      clone[key] = anInterface[key];
+    }
+  }
+  return clone;
+}
+
+function wrapFunction(fnName, fn) {
+  return function wrapper() {
+    var args = [];
+    Array.prototype.push.apply(args, arguments);
+    console.log('Call: ' + fnName);
+    console.dir(args);
+    if (typeof (args[args.length - 1]) === 'function') {
+      args[args.length - 1] = wrapFunction(args[args.length - 1].name, args[args.length - 1]);
+    }
+    return fn.apply(undefined, args);
+  }
+}
