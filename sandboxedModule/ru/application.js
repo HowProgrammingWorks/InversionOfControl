@@ -17,6 +17,11 @@ var Person = function(name, age) {
 };
 
 module.exports = function() {
+
+// *** Задание 7 ***
+module.exports = {};
+
+module.exports.f = function() {
   // Вывод из контекста экспортируемой функции
   // *** Задание 1 ***
   setTimeout(() => {

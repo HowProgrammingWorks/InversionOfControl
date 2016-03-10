@@ -76,6 +76,11 @@ fs.readFile(fileName, function(err, src) {
 
   sandbox.module.exports();
 
+// *** Задание 7 ***
+  for (var p in sandbox.module.exports) {
+  	console.log(p + " : " + typeof sandbox.module.exports[p]);
+  }
+
   // Забираем ссылку из sandbox.module.exports, можем ее исполнить,
   // сохранить в кеш, вывести на экран исходный код приложения и т.д.
 });
