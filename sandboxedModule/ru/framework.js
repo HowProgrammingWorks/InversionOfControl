@@ -8,6 +8,7 @@ var fs = require('fs'),
     vm = require('vm');
 
 // Создаем контекст-песочницу, которая станет глобальным контекстом приложения
+// *** Задание 1 ***
 var context = { module: {},
 				console: console,
 				setTimeout: setTimeout,
