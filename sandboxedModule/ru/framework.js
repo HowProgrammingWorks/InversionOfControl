@@ -57,6 +57,9 @@ var context = { module: {},
 				console: console,
 				require : fakeRequire };
 
+// *** Задание 9 ***
+var context = { module: {}, console: console, inspect: util.inspect };
+
 context.global = context;
 var sandbox = vm.createContext(context);
 
@@ -85,6 +88,7 @@ fs.readFile(fileName, function(err, src) {
   console.log(sandbox.module.exports.foo.toString());
   console.log("Arguments : " + sandbox.module.exports.foo(23));
   
+  sandbox.module.exports();
   // Забираем ссылку из sandbox.module.exports, можем ее исполнить,
   // сохранить в кеш, вывести на экран исходный код приложения и т.д.
 });

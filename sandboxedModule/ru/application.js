@@ -38,6 +38,9 @@ module.exports.f = function() {
   	util.inspect(me))
   );
 
+// *** Задание 9 ***
+  console.log(inspect(global, false, 2, true));
+
   console.log('From application exported function');
 
 };
