@@ -59,7 +59,7 @@ function decorate_logging(func, fileName, change_output) {
       output = change_output(massage);
     }
     output += '\n';
-    fs.appendFile(fileName, output, {flag: 'a'}, (err)=> {
+    fs.appendFile(fileName, output, {flag: 'a'}, (err) => {
       if(err) {
         throw err;
       }
@@ -93,6 +93,15 @@ fs.readFile(fileName, function(err, src) {
   var script = vm.createScript(src, fileName);
   script.runInNewContext(sandbox);
 
-  // Забираем ссылку из sandbox.module.exports, можем ее исполнить,
+
+  var module_exports = sandbox.module.exports;
+
+
+  // Task 7 распечатать експорт
+  for (var k in module_exports) {
+    console.log(k + " - " + typeof module_exports[k]);
+  }
+
+
   // сохранить в кеш, вывести на экран исходный код приложения и т.д.
 });

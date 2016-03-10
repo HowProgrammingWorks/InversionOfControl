@@ -13,7 +13,19 @@ setTimeout(()=>console.log('Timeout using(after 1s)'), 1000);
 //Task 2
 console.log(util.format('We use %s.%s', 'util', 'format'));
 
-module.exports = function() {
-  // Вывод из контекста экспортируемой функции
-  console.log('From application exported function');
+//Task 7
+function func1(){};
+function func2(a, b){return a + b;};
+var num = 1;
+var str = 'abc';
+var bool = true;
+var obj = {};
+
+module.exports = {
+  func1: func1,
+  func2: func2,
+  num: num,
+  str: str,
+  bool: bool,
+  obj: obj
 };
