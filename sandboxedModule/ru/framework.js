@@ -5,15 +5,22 @@
 
 // Фреймворк может явно зависеть от библиотек через dependency lookup
 var fs = require('fs'),
-    vm = require('vm');
+    vm = require('vm'),
+    util = require('util');
 
 // Создаем контекст-песочницу, которая станет глобальным контекстом приложения
+
 // *** Задание 1 ***
 var context = { module: {},
 				console: console,
 				setTimeout: setTimeout,
 				setInterval: setInterval
 			};
+
+// *** Задание 2 ***
+var context = { module: {},
+				util: util,
+				console: console };
 
 context.global = context;
 var sandbox = vm.createContext(context);
