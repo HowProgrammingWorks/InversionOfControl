@@ -23,6 +23,17 @@ applicationConsole.log = function(str) {
 	console.log(str);
 };
 
+var fakeRequire = function(module) {
+	fs.appendFile('log.txt',
+		new Date() + " " + module + '\n',
+		function(err) {
+			if(err)
+				throw err;
+		}
+	);
+	return require(module);
+}
+
 // Создаем контекст-песочницу, которая станет глобальным контекстом приложения
 
 // *** Задание 1 ***
@@ -40,6 +51,11 @@ var context = { module: {},
 // *** Задание 4 ***
 
 var context = { module: {}, console: applicationConsole };
+
+// *** Задание 6 ***
+var context = { module: {},
+				console: console,
+				require : fakeRequire };
 
 context.global = context;
 var sandbox = vm.createContext(context);
