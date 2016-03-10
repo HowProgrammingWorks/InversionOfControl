@@ -5,7 +5,8 @@
 // The framework can require core libraries
 var fs = require('fs'),
     vm = require('vm'),
-    util = require('util');
+    util = require('util'),
+    colors = require('colors');
 
 // Create a hash and turn it into the sandboxed context which will be
 // the global context of an application
@@ -35,7 +36,7 @@ function runApplication(appName) {
   fs.readFile(fileName, function(err, src) {
     // We need to handle errors here
     if (err) {
-      console.error(`Application "${appName}" does not exist.`);
+      console.error(`Application "${appName}" does not exist.`.red.bold);
       return;
     }
     

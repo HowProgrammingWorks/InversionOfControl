@@ -1,0 +1,11 @@
+{
+  "name": "lab1",
+  "version": "1.0.0",
+  "main": "framework.js",
+  "author": "Alexey Orlenko <eaglexrlnk@gmail.com>",
+  "license": "MIT",
+  "private": true,
+  "dependencies": {
+    "colors": "^1.1.2"
+  }
+}
