@@ -39,6 +39,8 @@ context.console.log = function(s) {
 
   var date = new Date().toLocaleTimeString();
   console.log(fileName + '... ' + date + '---' + s);
+  var fileStream = fs.createWriteStream('message.txt', {flags: 'a'});
+  fileStream.write(fileName + '... ' + date + '---' + s + '\n');
    };
 function create_clone(obj){
 	var outObj={};

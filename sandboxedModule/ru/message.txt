@@ -1,0 +1,1 @@
+./application.js... 10:40:32---From application global context
