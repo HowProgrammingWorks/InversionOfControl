@@ -14,24 +14,25 @@ var fs = require('fs'),
 function createSandbox(appName) {
   var context = {
     module: {},
-    console: createConsole(appName),
+    console: createConsoleModule(appName),
     setInterval: setInterval,
     setTimeout: setTimeout,
-    util: util
+    util: util,
+    process: {
+      stdin: process.stdin,
+      stdout: process.stdout,
+      stderr: process.stderr
+    }
   };
   context.global = context;
   return vm.createContext(context);
 }
 
-// Console factory
+// Mixin that wraps methods of a specified console object
 //
-function createConsole(appName) {
-  // Create a new Console instance so that console.time() and
-  // console.timeEnd() may be used from different applications simultaneously
-  var consoleWrapper = new console.Console(process.stdout, process.stderr);
-  
+function applicationConsoleMixin(consoleWrapper, appName) {
   // Define which methods should be wrapped
-  var methodsToWrap = ['log', 'error', 'info', 'warn', 'dir', 'trace'];
+  var methodsToWrap = ['log', 'error', 'info', 'warn'];
   
   // Create a method wrapper
   function wrapMethod(originalFn) {
@@ -45,14 +46,40 @@ function createConsole(appName) {
   // Wrap all own properties of consoleWrapper
   for (var key in consoleWrapper) {
     var value = consoleWrapper[key];
-    if (!console.hasOwnProperty(key) || typeof(value) !== 'function') {
+    if (/*!consoleWrapper.hasOwnProperty(key) ||*/ typeof(value) !== 'function') {
       continue;
     }
     if (methodsToWrap.indexOf(key) != -1) {
       consoleWrapper[key] = wrapMethod(value);
     }
   }
+}
+
+// Console factory
+//
+function createConsole(appName) {
+  // Create a new Console instance
+  var consoleWrapper = new console.Console(process.stdout, process.stderr);
+  applicationConsoleMixin(consoleWrapper, appName);
   return consoleWrapper;
+}
+
+// Console module factory
+//
+function createConsoleModule(appName) {
+  var consoleModule = createConsole(appName),
+      stdStreams = [process.stdout, process.stderr];
+  // Wrap Console constructor
+  consoleModule.Console = function(outStream, errStream) {
+    Object.setPrototypeOf(this, console.Console.prototype);
+    console.Console.apply(this, arguments);
+    if (stdStreams.indexOf(outStream) != -1 &&
+        (stdStreams.indexOf(errStream) != -1 || !errStream)) {
+      applicationConsoleMixin(this, appName);
+    }
+  };
+  
+  return consoleModule;
 }
 
 // Run an application in a new restricted sandbox
