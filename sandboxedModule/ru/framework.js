@@ -99,7 +99,7 @@ process.argv.slice(2).forEach((filename) => {
       console.log(sandbox.module.exports.printString.toString());
       console.log('Parameter count for function "printString": '+
         sandbox.module.exports.printString.toString().
-        replace(/.+\(/, '').replace(/\)[^]+/, '').split(/, +/).length);
+        replace(/.+\(/, '').replace(/\)[^]+/, '').split(/, */).length);
     }
   });  
 });
