@@ -26,15 +26,30 @@ function createSandbox(appName) {
 // Console factory
 //
 function createConsole(appName) {
-  var consoleWrapper = {};
-  consoleWrapper.log = function() {
-    var time = new Date().toLocaleTimeString(),
-        userOutput = util.format.apply(util, arguments);
-    console.log(appName.yellow, time.magenta, userOutput);
-  };
-  for (var key in console) {
-    if (console.hasOwnProperty(key) && !consoleWrapper[key]) {
-      consoleWrapper[key] = console[key];
+  // Create a new Console instance so that console.time() and
+  // console.timeEnd() may be used from different applications simultaneously
+  var consoleWrapper = new console.Console(process.stdout, process.stderr);
+  
+  // Define which methods should be wrapped
+  var methodsToWrap = ['log', 'error', 'info', 'warn', 'dir', 'trace'];
+  
+  // Create a method wrapper
+  function wrapMethod(originalFn) {
+    return function() {
+      var time = new Date().toLocaleTimeString(),
+          userOutput = util.format.apply(util, arguments);
+      originalFn(appName.yellow, time.magenta, userOutput);
+    };
+  }
+  
+  // Wrap all own properties of consoleWrapper
+  for (var key in consoleWrapper) {
+    var value = consoleWrapper[key];
+    if (!console.hasOwnProperty(key) || typeof(value) !== 'function') {
+      continue;
+    }
+    if (methodsToWrap.indexOf(key) != -1) {
+      consoleWrapper[key] = wrapMethod(value);
     }
   }
   return consoleWrapper;
