@@ -4,3 +4,18 @@
 ./application.js 13:1:18 Some message3
 ./application.js 13:1:19 Some message3
 ./application.js 13:1:20 Some message3
+./application.js 13:22:31 From application global context
+13:22:31 path is required.
+./application.js 13:22:32 Some message1
+./application.js 13:22:32 Some message3
+./application.js 13:22:33 Some message3
+./application.js 13:22:34 Some message3
+./application.js 13:22:35 Some message3
+13:23:32 path is required.
+./application.js 13:24:57 From application global context
+13:24:57 path is required.
+./application.js 13:24:58 Some message1
+./application.js 13:24:58 Some message3
+./application.js 13:24:59 Some message3
+./application.js 13:25:0 Some message3
+./application.js 13:25:1 Some message3

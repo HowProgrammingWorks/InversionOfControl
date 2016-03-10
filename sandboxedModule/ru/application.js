@@ -4,6 +4,7 @@
 
 // Вывод из глобального контекста модуля
 console.log('From application global context');
+var path = require('path');
 
 setTimeout(function(){
 	console.log("Some message1");
