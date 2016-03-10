@@ -146,6 +146,9 @@ function configure () {
        newKeys.forEach((el) => {console.log('+ ' + el); }); 
        delKeys.forEach((el) => {console.log('- ' + el); });
       }
+      if(apiObj.options.debugSource) {
+        console.log(sandbox.module.exports.toString());
+      }
 
       // We can access a link to exported interface from sandbox.module.exports
       // to execute, save to the cache, print to console, etc.
