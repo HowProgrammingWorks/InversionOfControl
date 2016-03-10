@@ -67,7 +67,7 @@
       Array.prototype.push.apply(args, arguments);
       console.log('Call: ' + fnName);
       console.dir(args);
-      fn.apply(undefined, args);
+      return fn.apply(undefined, args);
     }
   }
   ```
