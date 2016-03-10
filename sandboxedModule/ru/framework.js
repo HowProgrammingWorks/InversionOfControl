@@ -14,11 +14,6 @@ applicationConsole.log = function(str) {
 	console.log(fileName + " " + (new Date()) + " " + str); 
 	console.log(str);
 };
-// applicationConsole.log = function(str) {
-// 	console.log(console.log.toString());
-// 	console.log(fileName + " " + (new Date()) + " " + str);
-// 	console.log(str);
-// }
 // Создаем контекст-песочницу, которая станет глобальным контекстом приложения
 var context = { module: {}, console: applicationConsole };
 context.global = context;
