@@ -7,6 +7,8 @@ var fs = require('fs'),
 var context = {
   module: {},
   console: console,
+  // Помещаем ссылку на fs API в песочницу
+  fs: fs,
   // Оборачиваем функцию setTimeout в песочнице
   setTimeout: function(callback, timeout) {
     // Добавляем поведение при вызове setTimeout

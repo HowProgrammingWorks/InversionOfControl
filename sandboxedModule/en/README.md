@@ -1,5 +1,12 @@
 ## Description
 
+Purpose: learn how to create sandboxed context for modues to separate them and
+minimize cross-modules code coupling, extracting at least two abstraction layers
+(applied and system) and how to execute applied code in virtual environment,
+changing its behavior using IoC from system layer.
+
+## Files
+
 * `framework.js` - small piece of the framework, just to demonstrate IoC
 * `application.js` - small piece of the application, also for IoC demonstration
 
@@ -34,8 +41,8 @@ wrap it for logging to a file in the format: `<time> <module name>`
 7. Export a hash from `application.js` with multiple functions and variables,
 print the list with types from framework
 
-8. Export a function from `application.js` and print a list of its parameters
-form the framework (you can start printing function source)
+8. Export a function from `application.js` and print its parameter count and
+source code from the framework
 
 9. Print a list of everything from the application global context (application
 sandbox) with the data types specified
