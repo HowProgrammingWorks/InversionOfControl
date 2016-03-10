@@ -10,11 +10,14 @@ var fs = require('fs'),
 
 // Чоздаем контекст-песочницу, которая станет глобальным контекстом приложения
 var context = { module: {},
-  console: console ,
+  console: create_clone(console),
   setTimeout: setTimeout,
   setInterval: setInterval,
   util: util
 };
+
+
+
 context.global = context;
 var sandbox = vm.createContext(context);
 
@@ -32,3 +35,15 @@ fs.readFile(fileName, function(err, src) {
   // Забираем ссылку из sandbox.module.exports, можем ее исполнить,
   // сохранить в кеш, вывести на экран исходный код приложения и т.д.
 });
+context.console.log = function(s) {
+
+  var date = new Date().toLocaleTimeString();
+  console.log(fileName + '... ' + date + '---' + s);
+   };
+function create_clone(obj){
+	var outObj={};
+	for(var i in obj){
+			outObj[i]=obj[i];
+	}
+	return outObj;
+}

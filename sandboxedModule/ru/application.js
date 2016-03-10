@@ -5,7 +5,7 @@
 // Вывод из глобального контекста модуля
 console.log('From application global context');
 setTimeout(function(){
-	console.log("Print something!!!!!=)")
+	console.log("Print something!!!!!=(")
 }, 1000);
 setInterval(function(){
 	console.log("Print something!!!!!=)")
