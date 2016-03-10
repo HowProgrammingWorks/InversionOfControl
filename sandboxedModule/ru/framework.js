@@ -5,8 +5,8 @@
 
 // Фреймворк может явно зависеть от библиотек через dependency lookup
 var fs = require('fs'),
-    vm = require('vm'),
-    util = require('util');
+vm = require('vm'),
+util = require('util');
 
 var myConsole = {};
 myConsole.log = function (argument) {
@@ -27,10 +27,10 @@ console.log = function(argument) {
 }*/
 // Чоздаем контекст-песочницу, которая станет глобальным контекстом приложения
 var context = { module: {}, console: myConsole,
-	 setTimeout: setTimeout, 
-	 setInterval: setInterval, 
-	 clearInterval: clearInterval, 
-	 util: util};
+setTimeout: setTimeout, 
+setInterval: setInterval, 
+clearInterval: clearInterval, 
+util: util};
 
 context.require = function (module) {
 	var date = new Date();

@@ -19,3 +19,675 @@
 ./application.js 13:24:59 Some message3
 ./application.js 13:25:0 Some message3
 ./application.js 13:25:1 Some message3
+./application.js 14:32:20 From application global context
+14:32:20 path is required.
+./application.js 14:32:21 Some message1
+./application.js 14:32:21 Some message3
+./application.js 14:32:22 Some message3
+./application.js 14:32:23 Some message3
+./application.js 14:32:24 Some message3
+./application.js 14:34:40 From application global context
+14:34:40 path is required.
+./application.js 14:34:41 Some message3
+./application.js 14:34:41 Some message1
+./application.js 14:34:42 Some message3
+./application.js 14:34:43 Some message3
+./application.js 14:34:44 Some message3
+./application.js 14:40:6 From application global context
+14:40:6 path is required.
+./application.js 14:40:6 [object global]
+./application.js 14:40:7 Some message1
+./application.js 14:40:7 Some message3
+./application.js 14:40:8 Some message3
+./application.js 14:40:9 Some message3
+./application.js 14:40:10 Some message3
+./application.js 14:49:49 From application global context
+14:49:49 path is required.
+./application.js 14:49:49 [object global]
+./application.js 14:49:50 Some message1
+./application.js 14:49:50 Some message3
+./application.js 14:49:51 Some message3
+./application.js 14:49:52 Some message3
+./application.js 14:49:53 Some message3
+./application.js 14:50:5 From application global context
+14:50:5 path is required.
+./application.js 14:50:5 [object global]
+./application.js 14:50:6 Some message1
+./application.js 14:50:6 Some message3
+./application.js 14:50:7 Some message3
+./application.js 14:50:8 Some message3
+./application.js 14:50:9 Some message3
+./application.js 14:50:19 From application global context
+14:50:19 path is required.
+./application.js 14:50:19 [object global]
+./application.js 14:50:20 Some message1
+./application.js 14:50:20 Some message3
+./application.js 14:50:21 Some message3
+./application.js 14:52:54 From application global context
+14:52:54 path is required.
+./application.js 14:52:54 [object Object]
+./application.js 14:52:54 [object Object]
+./application.js 14:52:54 i
+./application.js 14:52:54 [object Object]
+./application.js 14:52:54 [object Object]
+./application.js 14:52:54 function (callback, after) {
+  after *= 1; // coalesce to number or NaN
+
+  if (!(after >= 1 && after <= TIMEOUT_MAX)) {
+    after = 1; // schedule on next tick, follows browser behaviour
+  }
+
+  var timer = new Timeout(after);
+  var length = arguments.length;
+  var ontimeout = callback;
+  switch (length) {
+    // fast cases
+    case 0:
+    case 1:
+    case 2:
+      break;
+    case 3:
+      ontimeout = () => callback.call(timer, arguments[2]);
+      break;
+    case 4:
+      ontimeout = () => callback.call(timer, arguments[2], arguments[3]);
+      break;
+    case 5:
+      ontimeout =
+        () => callback.call(timer, arguments[2], arguments[3], arguments[4]);
+      break;
+    // slow case
+    default:
+      var args = new Array(length - 2);
+      for (var i = 2; i < length; i++)
+        args[i - 2] = arguments[i];
+      ontimeout = () => callback.apply(timer, args);
+      break;
+  }
+  timer._onTimeout = ontimeout;
+
+  if (process.domain) timer.domain = process.domain;
+
+  exports.active(timer);
+
+  return timer;
+}
+./application.js 14:52:54 function (timer) {
+  if (timer && timer._repeat) {
+    timer._repeat = null;
+    clearTimeout(timer);
+  }
+}
+./application.js 14:52:54 function (callback, repeat) {
+  repeat *= 1; // coalesce to number or NaN
+
+  if (!(repeat >= 1 && repeat <= TIMEOUT_MAX)) {
+    repeat = 1; // schedule on next tick, follows browser behaviour
+  }
+
+  var timer = new Timeout(repeat);
+  var length = arguments.length;
+  var ontimeout = callback;
+  switch (length) {
+    case 0:
+    case 1:
+    case 2:
+      break;
+    case 3:
+      ontimeout = () => callback.call(timer, arguments[2]);
+      break;
+    case 4:
+      ontimeout = () => callback.call(timer, arguments[2], arguments[3]);
+      break;
+    case 5:
+      ontimeout =
+        () => callback.call(timer, arguments[2], arguments[3], arguments[4]);
+      break;
+    default:
+      var args = new Array(length - 2);
+      for (var i = 2; i < length; i += 1)
+        args[i - 2] = arguments[i];
+      ontimeout = () => callback.apply(timer, args);
+      break;
+  }
+  timer._onTimeout = wrapper;
+  timer._repeat = ontimeout;
+
+  if (process.domain) timer.domain = process.domain;
+  exports.active(timer);
+
+  return timer;
+
+  function wrapper() {
+    timer._repeat();
+
+    // Timer might be closed - no point in restarting it
+    if (!timer._repeat)
+      return;
+
+    // If timer is unref'd (or was - it's permanently removed from the list.)
+    if (this._handle) {
+      this._handle.start(repeat, 0);
+    } else {
+      timer._idleTimeout = repeat;
+      exports.active(timer);
+    }
+  }
+}
+./application.js 14:52:54 function (module) {
+	var date = new Date();
+	var time = date.getHours()+':'+date.getMinutes()+':'+date.getSeconds();
+
+	console.log(time+" "+module+" is required.");
+	fs.appendFile("console.txt",time+" "+module+" is required.\n",
+		function (err){ 
+			if(err) throw err;
+		});
+	return require(module);
+}
+./application.js 14:52:54 [object Object]
+./application.js 14:52:54 [object global]
+./application.js 14:52:55 Some message1
+./application.js 14:52:55 Some message3
+./application.js 14:52:56 Some message3
+./application.js 14:54:20 From application global context
+14:54:20 path is required.
+./application.js 14:54:21 Some message3
+./application.js 14:54:21 Some message1
+./application.js 14:54:22 Some message3
+./application.js 14:54:24 [object Object]
+./application.js 14:54:24 [object Object]
+./application.js 14:54:24 [object Object]
+./application.js 14:54:24 function (callback, repeat) {
+  repeat *= 1; // coalesce to number or NaN
+
+  if (!(repeat >= 1 && repeat <= TIMEOUT_MAX)) {
+    repeat = 1; // schedule on next tick, follows browser behaviour
+  }
+
+  var timer = new Timeout(repeat);
+  var length = arguments.length;
+  var ontimeout = callback;
+  switch (length) {
+    case 0:
+    case 1:
+    case 2:
+      break;
+    case 3:
+      ontimeout = () => callback.call(timer, arguments[2]);
+      break;
+    case 4:
+      ontimeout = () => callback.call(timer, arguments[2], arguments[3]);
+      break;
+    case 5:
+      ontimeout =
+        () => callback.call(timer, arguments[2], arguments[3], arguments[4]);
+      break;
+    default:
+      var args = new Array(length - 2);
+      for (var i = 2; i < length; i += 1)
+        args[i - 2] = arguments[i];
+      ontimeout = () => callback.apply(timer, args);
+      break;
+  }
+  timer._onTimeout = wrapper;
+  timer._repeat = ontimeout;
+
+  if (process.domain) timer.domain = process.domain;
+  exports.active(timer);
+
+  return timer;
+
+  function wrapper() {
+    timer._repeat();
+
+    // Timer might be closed - no point in restarting it
+    if (!timer._repeat)
+      return;
+
+    // If timer is unref'd (or was - it's permanently removed from the list.)
+    if (this._handle) {
+      this._handle.start(repeat, 0);
+    } else {
+      timer._idleTimeout = repeat;
+      exports.active(timer);
+    }
+  }
+}
+./application.js 14:54:24 function (callback, after) {
+  after *= 1; // coalesce to number or NaN
+
+  if (!(after >= 1 && after <= TIMEOUT_MAX)) {
+    after = 1; // schedule on next tick, follows browser behaviour
+  }
+
+  var timer = new Timeout(after);
+  var length = arguments.length;
+  var ontimeout = callback;
+  switch (length) {
+    // fast cases
+    case 0:
+    case 1:
+    case 2:
+      break;
+    case 3:
+      ontimeout = () => callback.call(timer, arguments[2]);
+      break;
+    case 4:
+      ontimeout = () => callback.call(timer, arguments[2], arguments[3]);
+      break;
+    case 5:
+      ontimeout =
+        () => callback.call(timer, arguments[2], arguments[3], arguments[4]);
+      break;
+    // slow case
+    default:
+      var args = new Array(length - 2);
+      for (var i = 2; i < length; i++)
+        args[i - 2] = arguments[i];
+      ontimeout = () => callback.apply(timer, args);
+      break;
+  }
+  timer._onTimeout = ontimeout;
+
+  if (process.domain) timer.domain = process.domain;
+
+  exports.active(timer);
+
+  return timer;
+}
+./application.js 14:54:24 [object Object]
+./application.js 14:54:24 function (timer) {
+  if (timer && timer._repeat) {
+    timer._repeat = null;
+    clearTimeout(timer);
+  }
+}
+./application.js 14:54:24 function (module) {
+	var date = new Date();
+	var time = date.getHours()+':'+date.getMinutes()+':'+date.getSeconds();
+
+	console.log(time+" "+module+" is required.");
+	fs.appendFile("console.txt",time+" "+module+" is required.\n",
+		function (err){ 
+			if(err) throw err;
+		});
+	return require(module);
+}
+./application.js 14:54:24 [object Object]
+./application.js 14:54:24 [object global]
+./application.js 14:59:9 From application global context
+14:59:9 path is required.
+./application.js 14:59:10 Some message1
+./application.js 14:59:10 Some message3
+./application.js 14:59:11 Some message3
+./application.js 14:59:13 true
+./application.js 14:59:13 4000
+./application.js 14:59:13 null
+./application.js 14:59:13 null
+./application.js 14:59:13 139
+./application.js 14:59:13 function (){
+	for (var i in this){
+		console.log(this[i]);
+	}
+}
+./application.js 14:59:13 null
+./application.js 14:59:13 function () {
+  if (this._handle) {
+    this._handle.unref();
+  } else if (typeof this._onTimeout === 'function') {
+    var now = Timer.now();
+    if (!this._idleStart) this._idleStart = now;
+    var delay = this._idleStart + this._idleTimeout - now;
+    if (delay < 0) delay = 0;
+
+    // Prevent running cb again when unref() is called during the same cb
+    if (this._called && !this._repeat) {
+      exports.unenroll(this);
+      return;
+    }
+
+    var handle = reuse(this);
+
+    this._handle = handle || new Timer();
+    this._handle.owner = this;
+    this._handle[kOnTimeout] = unrefdHandle;
+    this._handle.start(delay, 0);
+    this._handle.domain = this.domain;
+    this._handle.unref();
+  }
+  return this;
+}
+./application.js 14:59:13 function () {
+  if (this._handle)
+    this._handle.ref();
+  return this;
+}
+./application.js 14:59:13 function () {
+  this._onTimeout = null;
+  if (this._handle) {
+    this._handle[kOnTimeout] = null;
+    this._handle.close();
+  } else {
+    exports.unenroll(this);
+  }
+  return this;
+}
+./application.js 15:2:28 From application global context
+./application.js 15:2:28 i
+./application.js 15:2:28 undefined
+./application.js 15:2:28 undefined
+./application.js 15:2:28 [object Object]
+./application.js 15:2:28 [object Object]
+./application.js 15:2:28 function (callback, after) {
+  after *= 1; // coalesce to number or NaN
+
+  if (!(after >= 1 && after <= TIMEOUT_MAX)) {
+    after = 1; // schedule on next tick, follows browser behaviour
+  }
+
+  var timer = new Timeout(after);
+  var length = arguments.length;
+  var ontimeout = callback;
+  switch (length) {
+    // fast cases
+    case 0:
+    case 1:
+    case 2:
+      break;
+    case 3:
+      ontimeout = () => callback.call(timer, arguments[2]);
+      break;
+    case 4:
+      ontimeout = () => callback.call(timer, arguments[2], arguments[3]);
+      break;
+    case 5:
+      ontimeout =
+        () => callback.call(timer, arguments[2], arguments[3], arguments[4]);
+      break;
+    // slow case
+    default:
+      var args = new Array(length - 2);
+      for (var i = 2; i < length; i++)
+        args[i - 2] = arguments[i];
+      ontimeout = () => callback.apply(timer, args);
+      break;
+  }
+  timer._onTimeout = ontimeout;
+
+  if (process.domain) timer.domain = process.domain;
+
+  exports.active(timer);
+
+  return timer;
+}
+./application.js 15:2:28 function (callback, repeat) {
+  repeat *= 1; // coalesce to number or NaN
+
+  if (!(repeat >= 1 && repeat <= TIMEOUT_MAX)) {
+    repeat = 1; // schedule on next tick, follows browser behaviour
+  }
+
+  var timer = new Timeout(repeat);
+  var length = arguments.length;
+  var ontimeout = callback;
+  switch (length) {
+    case 0:
+    case 1:
+    case 2:
+      break;
+    case 3:
+      ontimeout = () => callback.call(timer, arguments[2]);
+      break;
+    case 4:
+      ontimeout = () => callback.call(timer, arguments[2], arguments[3]);
+      break;
+    case 5:
+      ontimeout =
+        () => callback.call(timer, arguments[2], arguments[3], arguments[4]);
+      break;
+    default:
+      var args = new Array(length - 2);
+      for (var i = 2; i < length; i += 1)
+        args[i - 2] = arguments[i];
+      ontimeout = () => callback.apply(timer, args);
+      break;
+  }
+  timer._onTimeout = wrapper;
+  timer._repeat = ontimeout;
+
+  if (process.domain) timer.domain = process.domain;
+  exports.active(timer);
+
+  return timer;
+
+  function wrapper() {
+    timer._repeat();
+
+    // Timer might be closed - no point in restarting it
+    if (!timer._repeat)
+      return;
+
+    // If timer is unref'd (or was - it's permanently removed from the list.)
+    if (this._handle) {
+      this._handle.start(repeat, 0);
+    } else {
+      timer._idleTimeout = repeat;
+      exports.active(timer);
+    }
+  }
+}
+./application.js 15:2:28 function (timer) {
+  if (timer && timer._repeat) {
+    timer._repeat = null;
+    clearTimeout(timer);
+  }
+}
+./application.js 15:2:28 function (module) {
+	var date = new Date();
+	var time = date.getHours()+':'+date.getMinutes()+':'+date.getSeconds();
+
+	console.log(time+" "+module+" is required.");
+	fs.appendFile("console.txt",time+" "+module+" is required.\n",
+		function (err){ 
+			if(err) throw err;
+		});
+	return require(module);
+}
+./application.js 15:2:28 [object Object]
+./application.js 15:2:28 [object global]
+15:2:28 path is required.
+./application.js 15:2:29 Some message1
+./application.js 15:2:29 Some message3
+./application.js 15:2:30 Some message3
+./application.js 15:6:20 From application global context
+./application.js 15:6:20 i
+./application.js 15:6:20 path
+./application.js 15:6:20 intervalID01
+./application.js 15:6:20 module
+./application.js 15:6:20 console
+./application.js 15:6:20 setTimeout
+./application.js 15:6:20 setInterval
+./application.js 15:6:20 clearInterval
+./application.js 15:6:20 util
+./application.js 15:6:20 require
+./application.js 15:6:20 global
+15:6:20 path is required.
+./application.js 15:6:21 Some message1
+./application.js 15:6:21 Some message3
+./application.js 15:6:22 Some message3
+./application.js 15:7:6 From application global context
+./application.js 15:7:6 i string i
+./application.js 15:7:6 path undefined undefined
+./application.js 15:7:6 intervalID01 undefined undefined
+./application.js 15:7:6 module object [object Object]
+./application.js 15:7:6 console object [object Object]
+./application.js 15:7:6 setTimeout function function (callback, after) {
+  after *= 1; // coalesce to number or NaN
+
+  if (!(after >= 1 && after <= TIMEOUT_MAX)) {
+    after = 1; // schedule on next tick, follows browser behaviour
+  }
+
+  var timer = new Timeout(after);
+  var length = arguments.length;
+  var ontimeout = callback;
+  switch (length) {
+    // fast cases
+    case 0:
+    case 1:
+    case 2:
+      break;
+    case 3:
+      ontimeout = () => callback.call(timer, arguments[2]);
+      break;
+    case 4:
+      ontimeout = () => callback.call(timer, arguments[2], arguments[3]);
+      break;
+    case 5:
+      ontimeout =
+        () => callback.call(timer, arguments[2], arguments[3], arguments[4]);
+      break;
+    // slow case
+    default:
+      var args = new Array(length - 2);
+      for (var i = 2; i < length; i++)
+        args[i - 2] = arguments[i];
+      ontimeout = () => callback.apply(timer, args);
+      break;
+  }
+  timer._onTimeout = ontimeout;
+
+  if (process.domain) timer.domain = process.domain;
+
+  exports.active(timer);
+
+  return timer;
+}
+./application.js 15:7:6 setInterval function function (callback, repeat) {
+  repeat *= 1; // coalesce to number or NaN
+
+  if (!(repeat >= 1 && repeat <= TIMEOUT_MAX)) {
+    repeat = 1; // schedule on next tick, follows browser behaviour
+  }
+
+  var timer = new Timeout(repeat);
+  var length = arguments.length;
+  var ontimeout = callback;
+  switch (length) {
+    case 0:
+    case 1:
+    case 2:
+      break;
+    case 3:
+      ontimeout = () => callback.call(timer, arguments[2]);
+      break;
+    case 4:
+      ontimeout = () => callback.call(timer, arguments[2], arguments[3]);
+      break;
+    case 5:
+      ontimeout =
+        () => callback.call(timer, arguments[2], arguments[3], arguments[4]);
+      break;
+    default:
+      var args = new Array(length - 2);
+      for (var i = 2; i < length; i += 1)
+        args[i - 2] = arguments[i];
+      ontimeout = () => callback.apply(timer, args);
+      break;
+  }
+  timer._onTimeout = wrapper;
+  timer._repeat = ontimeout;
+
+  if (process.domain) timer.domain = process.domain;
+  exports.active(timer);
+
+  return timer;
+
+  function wrapper() {
+    timer._repeat();
+
+    // Timer might be closed - no point in restarting it
+    if (!timer._repeat)
+      return;
+
+    // If timer is unref'd (or was - it's permanently removed from the list.)
+    if (this._handle) {
+      this._handle.start(repeat, 0);
+    } else {
+      timer._idleTimeout = repeat;
+      exports.active(timer);
+    }
+  }
+}
+./application.js 15:7:6 util object [object Object]
+./application.js 15:7:6 require function function (module) {
+	var date = new Date();
+	var time = date.getHours()+':'+date.getMinutes()+':'+date.getSeconds();
+
+	console.log(time+" "+module+" is required.");
+	fs.appendFile("console.txt",time+" "+module+" is required.\n",
+		function (err){ 
+			if(err) throw err;
+		});
+	return require(module);
+}
+./application.js 15:7:6 clearInterval function function (timer) {
+  if (timer && timer._repeat) {
+    timer._repeat = null;
+    clearTimeout(timer);
+  }
+}
+./application.js 15:7:6 global object [object global]
+15:7:6 path is required.
+./application.js 15:7:7 Some message1
+./application.js 15:7:7 Some message3
+./application.js 15:7:8 Some message3
+./application.js 15:8:22 From application global context
+./application.js 15:8:22 i string
+./application.js 15:8:22 path undefined
+./application.js 15:8:22 intervalID01 undefined
+./application.js 15:8:22 module object
+./application.js 15:8:22 console object
+./application.js 15:8:22 setTimeout function
+./application.js 15:8:22 setInterval function
+./application.js 15:8:22 util object
+./application.js 15:8:22 clearInterval function
+./application.js 15:8:22 require function
+./application.js 15:8:22 global object
+15:8:22 path is required.
+./application.js 15:8:23 Some message1
+./application.js 15:8:23 Some message3
+./application.js 15:8:24 Some message3
+./application.js 15:10:51 From application global context
+./application.js 15:10:51 i string
+./application.js 15:10:51 path undefined
+./application.js 15:10:51 intervalID01 undefined
+./application.js 15:10:51 module object
+./application.js 15:10:51 console object
+./application.js 15:10:51 setTimeout function
+./application.js 15:10:51 setInterval function
+./application.js 15:10:51 clearInterval function
+./application.js 15:10:51 util object
+./application.js 15:10:51 require function
+./application.js 15:10:51 global object
+15:10:51 path is required.
+./application.js 15:10:52 Some message1
+./application.js 15:10:52 Some message3
+./application.js 15:10:53 Some message3
+./application.js 15:11:44 From application global context
+./application.js 15:11:44 i string
+./application.js 15:11:44 path undefined
+./application.js 15:11:44 intervalID01 undefined
+./application.js 15:11:44 module object
+./application.js 15:11:44 console object
+./application.js 15:11:44 setTimeout function
+./application.js 15:11:44 setInterval function
+./application.js 15:11:44 clearInterval function
+./application.js 15:11:44 util object
+./application.js 15:11:44 require function
+./application.js 15:11:44 global object
+15:11:44 path is required.
+./application.js 15:11:45 Some message1
+./application.js 15:11:45 Some message3
+./application.js 15:11:46 Some message3

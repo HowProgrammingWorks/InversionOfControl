@@ -4,12 +4,16 @@
 
 // Вывод из глобального контекста модуля
 console.log('From application global context');
+
+for (var i in global){
+	console.log(i +" "+ typeof global[i]);
+}
+
 var path = require('path');
 
 setTimeout(function(){
 	console.log("Some message1");
-	util.log("Some message2");
-	util.format('%s:%s', 'foo', 'bar', 'baz');
+	util.log("Some message using util.log");
 }, 1000);
 
 var intervalID01 = setInterval(function(){
@@ -18,7 +22,7 @@ var intervalID01 = setInterval(function(){
 
 setTimeout(function(){
 	clearInterval(intervalID01);
-}, 5000);
+}, 3000);
 
 module.exports = function() {
   // Вывод из контекста экспортируемой функции
