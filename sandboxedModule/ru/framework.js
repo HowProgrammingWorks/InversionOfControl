@@ -14,7 +14,12 @@ var fileName = './application.js';
 
 var applicationConsole = {};
 applicationConsole.log = function(str) { 
-	console.log(fileName + " " + (new Date()) + " " + str); 
+	fs.appendFile('log.txt',
+	 fileName + " " + (new Date()) + " " + str + '/n',
+	 function(err) {
+	 	if(err)
+	 		throw err;
+	 });
 	console.log(str);
 };
 
