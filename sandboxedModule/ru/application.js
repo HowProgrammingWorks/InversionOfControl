@@ -8,7 +8,7 @@ require('path');
 console.log('From application global context');
 
 //Task 1
-setTimeout(()=>console.log('Timeout using(after 1s)'), 1000);
+setTimeout(()=>console.log('Timeout using(after 1s) (task 1)'), 1000);
 
 //Task 2
 console.log(util.format('We use %s.%s', 'util', 'format'));
@@ -21,6 +21,8 @@ var str = 'abc';
 var bool = true;
 var obj = {};
 
+var one_more_var = 123;
+
 module.exports = {
   func1: func1,
   func2: func2,
@@ -29,3 +31,8 @@ module.exports = {
   bool: bool,
   obj: obj
 };
+
+console.log('global context of application(task 9):');
+for (var k in global) {
+  console.log(k + " - " + typeof global[k]);
+}

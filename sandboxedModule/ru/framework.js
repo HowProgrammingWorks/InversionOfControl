@@ -98,11 +98,13 @@ fs.readFile(fileName, function(err, src) {
 
 
   // Task 7 распечатать експорт
+  console.log('Exported content(task 7):');
   for (var k in module_exports) {
     console.log(k + " - " + typeof module_exports[k]);
   }
 
   // Task 8 распечатать список аргументов функции
+  console.log('function description(task 8):');
   var func2_str = module_exports.func2.toString();
   console.log(func2_str);
   var func2_args_str = func2_str.slice(func2_str.indexOf('(') + 1, func2_str.indexOf(')'));
