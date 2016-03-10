@@ -89,27 +89,52 @@ var sandbox = vm.createContext(context);
 fs.readFile(fileName, function(err, src) {
   // Тут нужно обработать ошибки
   if(err) throw err;
+
+  var context_before_loading = {};
+  for (var k in sandbox.global) {
+    context_before_loading[k] = sandbox.global[k];
+  }
+
+
   // Запускаем код приложения в песочнице
   var script = vm.createScript(src, fileName);
   script.runInNewContext(sandbox);
 
+  var context_after_loading = {};
+  for (var k in sandbox.global) {
+    context_after_loading[k] = sandbox.global[k];
+  }
 
   var module_exports = sandbox.module.exports;
 
 
   // Task 7 распечатать експорт
-  console.log('Exported content(task 7):');
-  for (var k in module_exports) {
+  console.log('\nExported content(task 7):');
+  for (k in module_exports) {
     console.log(k + " - " + typeof module_exports[k]);
   }
 
   // Task 8 распечатать список аргументов функции
-  console.log('function description(task 8):');
+  console.log('\nfunction description(task 8):');
   var func2_str = module_exports.func2.toString();
   console.log(func2_str);
   var func2_args_str = func2_str.slice(func2_str.indexOf('(') + 1, func2_str.indexOf(')'));
   console.log('arguments : ' + func2_args_str);
   console.log('num of args: ' + func2_args_str.split(',').length);
 
-  // сохранить в кеш, вывести на экран исходный код приложения и т.д.
+  console.log('\nTask 10');
+  console.log('deleted');
+    for (var k in context_before_loading) {
+      if (!(k in context_after_loading)) {
+        console.log(k + ":" + typeof context_before_loading[k]);
+      }
+    }
+    console.log('added');
+    for (var k in context_after_loading) {
+      if (!(k in context_before_loading)) {
+        console.log(k + ":" + typeof context_after_loading[k]);
+      }
+    }
+
+
 });

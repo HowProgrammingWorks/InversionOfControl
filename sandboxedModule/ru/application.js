@@ -5,13 +5,13 @@
 require('path');
 
 // Вывод из глобального контекста модуля
-console.log('From application global context');
+console.log('From application global context\n');
 
 //Task 1
-setTimeout(()=>console.log('Timeout using(after 1s) (task 1)'), 1000);
+setTimeout(()=>console.log('Timeout using(after 1s) (task 1)\n'), 1000);
 
 //Task 2
-console.log(util.format('We use %s.%s', 'util', 'format'));
+console.log(util.format('We use %s.%s', 'util', 'format\n'));
 
 //Task 7
 function func1(){};
@@ -32,7 +32,7 @@ module.exports = {
   obj: obj
 };
 
-console.log('global context of application(task 9):');
+console.log('global context of application(task 9):\n');
 for (var k in global) {
   console.log(k + " - " + typeof global[k]);
 }
