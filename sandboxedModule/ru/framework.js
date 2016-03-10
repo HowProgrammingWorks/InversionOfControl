@@ -102,6 +102,12 @@ fs.readFile(fileName, function(err, src) {
     console.log(k + " - " + typeof module_exports[k]);
   }
 
+  // Task 8 распечатать список аргументов функции
+  var func2_str = module_exports.func2.toString();
+  console.log(func2_str);
+  var func2_args_str = func2_str.slice(func2_str.indexOf('(') + 1, func2_str.indexOf(')'));
+  console.log('arguments : ' + func2_args_str);
+  console.log('num of args: ' + func2_args_str.split(',').length);
 
   // сохранить в кеш, вывести на экран исходный код приложения и т.д.
 });
