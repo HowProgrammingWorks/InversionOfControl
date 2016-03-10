@@ -2,3 +2,6 @@
 *.swo
 log.txt
 .directory
+node_modules
+crlf.js
+*.log
