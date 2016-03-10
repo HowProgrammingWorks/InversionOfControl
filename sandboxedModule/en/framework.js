@@ -133,6 +133,19 @@ function configure () {
             }
         }
       }
+      if(apiObj.options.debugContextChanges === true) {
+       var newKeys = 
+           Object.keys(sandbox).filter(function(el) {
+               return !(el in apiObj.resolvedContext); 
+           });
+       var delKeys = 
+           Object.keys(apiObj.resolvedContext).filter(function(key) {
+               return sandbox[key] === undefined ;
+           });
+
+       newKeys.forEach((el) => {console.log('+ ' + el); }); 
+       delKeys.forEach((el) => {console.log('- ' + el); });
+      }
 
       // We can access a link to exported interface from sandbox.module.exports
       // to execute, save to the cache, print to console, etc.
