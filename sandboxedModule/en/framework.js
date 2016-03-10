@@ -11,16 +11,33 @@ var fs = require('fs'),
 // Create a hash and turn it into the sandboxed context which will be
 // the global context of an application
 //
-function createSandbox() {
+function createSandbox(appName) {
   var context = {
     module: {},
-    console: console,
+    console: createConsole(appName),
     setInterval: setInterval,
     setTimeout: setTimeout,
     util: util
   };
   context.global = context;
   return vm.createContext(context);
+}
+
+// Console factory
+//
+function createConsole(appName) {
+  var consoleWrapper = {};
+  consoleWrapper.log = function() {
+    var time = new Date().toLocaleTimeString(),
+        userOutput = util.format.apply(util, arguments);
+    console.log(appName.yellow, time.magenta, userOutput);
+  };
+  for (var key in console) {
+    if (console.hasOwnProperty(key) && !consoleWrapper[key]) {
+      consoleWrapper[key] = console[key];
+    }
+  }
+  return consoleWrapper;
 }
 
 // Run an application in a new restricted sandbox
@@ -41,7 +58,7 @@ function runApplication(appName) {
     }
     
     // Create a sandbox for the application
-    var sandbox = createSandbox();
+    var sandbox = createSandbox(appName);
 
     // Run an application in sandboxed context
     var script = vm.createScript(src, fileName);
