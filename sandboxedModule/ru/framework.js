@@ -8,6 +8,16 @@ var fs = require('fs'),
     vm = require('vm'),
     util = require('util');
 
+var fileName = './application.js';
+
+// *** Задание 4 ***
+
+var applicationConsole = {};
+applicationConsole.log = function(str) { 
+	console.log(fileName + " " + (new Date()) + " " + str); 
+	console.log(str);
+};
+
 // Создаем контекст-песочницу, которая станет глобальным контекстом приложения
 
 // *** Задание 1 ***
@@ -22,10 +32,15 @@ var context = { module: {},
 				util: util,
 				console: console };
 
+// *** Задание 4 ***
+
+var context = { module: {}, console: applicationConsole };
+
 context.global = context;
 var sandbox = vm.createContext(context);
 
 // Читаем исходный код приложения из файла
+
 // *** Задание 3 ***
 var fileName = process.argv[2];
 
@@ -39,7 +54,7 @@ fs.readFile(fileName, function(err, src) {
   script.runInNewContext(sandbox);
 
   sandbox.module.exports();
-  
+
   // Забираем ссылку из sandbox.module.exports, можем ее исполнить,
   // сохранить в кеш, вывести на экран исходный код приложения и т.д.
 });
