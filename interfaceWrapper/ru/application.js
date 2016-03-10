@@ -8,10 +8,3 @@ function timerEvent() {
 
 // Устанавливаем функцию на таймер
 setTimeout(timerEvent, 1000);
-
-// Пример использования fs API
-var fileName = './README.md';
-console.log('Application going to read ' + fileName);
-fs.readFile(fileName, function(err, src) {
-  console.log('File ' + fileName + ' size ' + src.length);
-});
