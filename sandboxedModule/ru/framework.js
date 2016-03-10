@@ -76,7 +76,7 @@ var context = {
   module: {},
   console: myConsole,
   setTimeout: setTimeout,
-  setinterval: setInterval,
+  setInterval: setInterval,
   clearTimeout: clearTimeout,
   clearInterval: clearInterval,
   util: util,
