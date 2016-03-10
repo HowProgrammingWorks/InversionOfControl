@@ -5,7 +5,9 @@
 // Вывод из глобального контекста модуля
 console.log('From application global context');
 
-module.exports = function() {
+module.exports = {};
+
+module.exports.f = function() {
   // Вывод из контекста экспортируемой функции
   console.log('From application exported function');
 };
