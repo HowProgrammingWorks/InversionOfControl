@@ -51,6 +51,8 @@ var context = { module: {},
 context.global = context;
 var sandbox = vm.createContext(context);
 
+var before = Object.keys(sandbox);
+
 // Читаем исходный код приложения из файла
 var fileName = './' + applicationName + '.js';
 
@@ -70,4 +72,27 @@ fs.readFile(fileName, function(err, src) {
     
     console.log('Exported function:\n'+
                 'text' + fromSandbox.print.toString());
+    
+    var after = Object.keys(sandbox);
+
+    console.log('Keys from framework befor start application:' +
+                before + '\nKeys from framework befor start application:' + after);
+    
+    var added = 0, finded = 0;
+    for (var i in after){
+        checked = false;
+        for(var j in before){
+            if(i == j) {
+                checked = true;
+                break;
+            }
+        }
+        if(checked){ 
+            finded++;
+        }
+        else{
+            added++;
+        }
+    }
+    console.log('Added: ' + added + ', deleted: ' +                           (before.length - finded));
 });
