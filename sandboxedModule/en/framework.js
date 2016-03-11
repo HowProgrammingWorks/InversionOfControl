@@ -46,7 +46,7 @@ function applicationConsoleMixin(consoleWrapper, appName) {
   // Wrap all own properties of consoleWrapper
   for (var key in consoleWrapper) {
     var value = consoleWrapper[key];
-    if (/*!consoleWrapper.hasOwnProperty(key) ||*/ typeof(value) !== 'function') {
+    if (!consoleWrapper.hasOwnProperty(key) || typeof(value) !== 'function') {
       continue;
     }
     if (methodsToWrap.indexOf(key) != -1) {
