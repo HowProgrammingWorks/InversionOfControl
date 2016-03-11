@@ -4,16 +4,17 @@
 // приложением интерфейс. Читайте README.md в нем задания.
 
 // Фреймворк может явно зависеть от библиотек через dependency lookup
-var fs = require('fs'),
-    vm = require('vm');
+var fs   = require('fs'),
+    vm   = require('vm'),
+	util = require('util');
 
 // Чоздаем контекст-песочницу, которая станет глобальным контекстом приложения
 var context = {
   module      : {},
   console     : console,
-
   setTimeout  : setTimeout,
   setInterval : setInterval,
+  util        : util
   };
 
 context.global = context;

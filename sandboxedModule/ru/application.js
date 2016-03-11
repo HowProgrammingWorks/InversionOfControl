@@ -16,3 +16,5 @@ module.exports = function() {
   // Вывод из контекста экспортируемой функции
   console.log('From application exported function');
 };
+
+util.log("Util module");
