@@ -4,9 +4,21 @@
 
 // The framework can require core libraries
 var fs = require('fs'),
+    os = require('os'),
     vm = require('vm'),
     util = require('util'),
+    path = require('path'),
+    async = require('async'),
     colors = require('colors');
+
+// Array of console methods that should be logged
+//
+var loggedMethods = ['log', 'error', 'info', 'warn'];
+
+// A hash of open logs.
+// Keys are log names and values are file descriptors
+//
+var logs = {};
 
 // Create a hash and turn it into the sandboxed context which will be
 // the global context of an application
@@ -28,18 +40,47 @@ function createSandbox(appName) {
   return vm.createContext(context);
 }
 
+// Prepare and open logs
+//
+function openLogs(callback) {
+  var logsDir = path.join(__dirname, 'logs'),
+      today = new Date().toISOString().slice(0, 10),
+      todayLogsDir = path.join(logsDir, today);
+  fs.mkdir(logsDir, function(err) {
+    fs.mkdir(todayLogsDir, function(err) {
+      for (var name of loggedMethods) {
+        var fileName = path.join(todayLogsDir, name + '.txt');
+        logs[name] = fs.createWriteStream(fileName, { flags: 'a' });
+      }
+      callback();
+    });
+  });  
+}
+
+// Write an entry to log
+//
+function log(logName, entry) {
+  logs[logName].write(entry + os.EOL);
+}
+
+// Close logs
+//
+function closeLogs(callback) {
+  for (var name of loggedMethods) {
+    logs[name].end();
+  }
+}
+
 // Mixin that wraps methods of a specified console object
 //
 function applicationConsoleMixin(consoleWrapper, appName) {
-  // Define which methods should be wrapped
-  var methodsToWrap = ['log', 'error', 'info', 'warn'];
-  
   // Create a method wrapper
-  function wrapMethod(originalFn) {
+  function wrapMethod(name, originalFn) {
     return function() {
       var time = new Date().toLocaleTimeString(),
           userOutput = util.format.apply(util, arguments);
       originalFn(appName.yellow, time.magenta, userOutput);
+      log(name, [appName, time, userOutput].join(' - '));
     };
   }
   
@@ -49,8 +90,8 @@ function applicationConsoleMixin(consoleWrapper, appName) {
     if (!consoleWrapper.hasOwnProperty(key) || typeof(value) !== 'function') {
       continue;
     }
-    if (methodsToWrap.indexOf(key) != -1) {
-      consoleWrapper[key] = wrapMethod(value);
+    if (loggedMethods.indexOf(key) != -1) {
+      consoleWrapper[key] = wrapMethod(key, value);
     }
   }
 }
@@ -113,4 +154,6 @@ function runApplication(appName) {
 
 // Retrieve the name of an application to run and then start it
 var appName = process.argv[2] || 'application';
-runApplication(appName);
+openLogs(function() {
+  runApplication(appName);
+});
