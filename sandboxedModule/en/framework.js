@@ -13,7 +13,7 @@ var fs = require('fs'),
 
 // Array of console methods that should be logged
 //
-var loggedMethods = ['log', 'error', 'info', 'warn'];
+var loggedMethods = ['log', 'error', 'info', 'warn', 'require'];
 
 // A hash of open logs.
 // Keys are log names and values are file descriptors
@@ -34,7 +34,10 @@ function createSandbox(appName) {
       stdin: process.stdin,
       stdout: process.stdout,
       stderr: process.stderr
-    }
+    },
+    require: wrappedRequire,
+    __filename: appName.endsWith('.js') ? appName : appName + '.js',
+    __dirname: path.resolve(path.dirname(appName))
   };
   context.global = context;
   return vm.createContext(context);
@@ -69,6 +72,14 @@ function closeLogs(callback) {
   for (var name of loggedMethods) {
     logs[name].end();
   }
+}
+
+// `require` for application code
+//
+function wrappedRequire(moduleName) {
+  var time = new Date().toLocaleTimeString();
+  log('require', [time, moduleName].join(' - '));
+  return require(moduleName);
 }
 
 // Mixin that wraps methods of a specified console object
