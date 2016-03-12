@@ -66,14 +66,6 @@ function log(logName, entry) {
   logs[logName].write(entry + os.EOL);
 }
 
-// Close logs
-//
-function closeLogs(callback) {
-  for (var name of loggedMethods) {
-    logs[name].end();
-  }
-}
-
 // `require` for application code
 //
 function wrappedRequire(moduleName) {
@@ -136,7 +128,7 @@ function createConsoleModule(appName) {
 
 // Run an application in a new restricted sandbox
 //
-function runApplication(appName) {
+function runApplication(appName, callback) {
   // Construct the application file name
   var fileName = appName;
   if (!fileName.endsWith('.js')) {
