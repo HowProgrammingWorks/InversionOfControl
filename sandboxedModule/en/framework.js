@@ -25,7 +25,9 @@ var logs = {};
 //
 function createSandbox(appName) {
   var context = {
-    module: {},
+    module: {
+      exports: {}
+    },
     console: createConsoleModule(appName),
     setInterval: setInterval,
     setTimeout: setTimeout,
@@ -40,6 +42,7 @@ function createSandbox(appName) {
     __dirname: path.resolve(path.dirname(appName))
   };
   context.global = context;
+  context.exports = context.module.exports;
   return vm.createContext(context);
 }
 
@@ -152,7 +155,56 @@ function runApplication(appName, callback) {
 
     // We can access a link to exported interface from sandbox.module.exports
     // to execute, save to the cache, print to console, etc.
+    inspectExportedInterface(appName, sandbox.module.exports);
   });
+}
+
+// Inspects application's exports
+//
+function inspectExportedInterface(appName, interface) {
+  var message = `Introspection of ${appName}'s exported interface:`,
+      fatLine = '='.repeat(message.length);
+  console.log(fatLine.blue.bold);
+  console.log(message.blue.bold);
+  inspectObject(interface);
+  console.log(fatLine.blue.bold);
+}
+
+// Inspect an object
+//
+function inspectObject(obj) {
+  var getConstructor = obj => obj.constructor ? obj.constructor.name : '-',
+      row = (key, type, constructor) =>
+              tableRow`20${key} 15${type} 15${constructor}`,
+      header = row('Property', 'Type', 'Constructor'),
+      thinLine = '-'.repeat(header.length);
+  
+  console.log(thinLine);
+  console.log(header);
+  console.log(thinLine);
+  
+  for (var key in obj) {
+    var value = obj[key];
+    if (!obj.hasOwnProperty(key)) {
+      continue;
+    }
+    console.log(row(key, typeof(value), getConstructor(value)));
+  }
+}
+
+// Simple table row formatter for ES6 template literals
+//
+function tableRow(fields) {
+  var elements = [];
+  for (var index = 0; index < fields.length - 1; index++) {
+    var width = +fields[index],
+        value = arguments[index + 1].toString(),
+        padding = width - value.length;
+    if (padding < 0) padding = 0;
+    elements.push(value);
+    elements.push(' '.repeat(padding));
+  }
+  return elements.join('');
 }
 
 // Retrieve the name of an application to run and then start it

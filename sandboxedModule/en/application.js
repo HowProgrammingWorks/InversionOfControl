@@ -6,11 +6,11 @@
 console.log('From application global context');
 
 // Print some messages from timers
-setInterval(() => {
+var intervalTimer = setInterval(() => {
   console.log('[setInterval] Hello again!');
 }, 1000);
 
-setTimeout(() => {
+var timeoutTimer = setTimeout(() => {
   console.log('[setTimeout]  Hello once!');
 }, 500);
 
@@ -21,7 +21,16 @@ var consoleProperties = util.inspect(console, { colors: true })
     consoleIntrospection = util.format('console = %s;', consoleProperties);
 console.log(consoleIntrospection);
 
-module.exports = function() {
-  // Print from the exported function context
-  console.log('From application exported function');
+module.exports = {
+  message: 'Hello!',
+  statusCode: 0,
+  operations: ['printMessage', 'stopTimers'],
+  printMessage: function() {
+    // Print from the exported function context
+    console.log('From application exported function');
+  },
+  stopTimers: function() {
+    clearInterval(intervalTimer);
+    clearTimeout(timeoutTimer);
+  }
 };
