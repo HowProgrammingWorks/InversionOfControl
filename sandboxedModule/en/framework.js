@@ -220,11 +220,22 @@ function tableRow(fields) {
 // Inspect a function
 //
 function inspectFunction(fn) {
-  var source = fn.toString();
+  var source = fn.toString(),
+      parameters = parseParameters(source);
   console.log('Function name:'.blue, fn.name || '(anonymous)');
-  console.log('Parameters:'.blue);
+  console.log('Parameters:'.blue, parameters.length);
+  for (var index = 0; index < parameters.length; index++) {
+    console.log(`${index + 1}) ${parameters[index]}`);
+  }
   console.log('Source:'.blue);
   console.log(highlightSyntax(source));
+}
+
+// Parse function parameters an return them as an array
+//
+function parseParameters(source) {
+  var paramList = source.match(/\((.+)\)/)[1];
+  return paramList.split(',').map(string => string.trim());
 }
 
 // Highlight JavaScript source code
