@@ -231,7 +231,7 @@ function inspectFunction(fn) {
 //
 function highlightSyntax(source) {
   var wordsToRegex = words =>
-        new RegExp(words.map(word => '(\\b' + word + '\\b)').join('|'), 'g'),
+        new RegExp(words.map(word => '(\\b' + word + '\\b)').join('|')),
       keywordsList = ['await', 'break', 'case', 'catch', 'class', 'const',
                       'continue', 'debugger', 'default', 'delete', 'do',
                       'else', 'export', 'extends', 'finally', 'for',
@@ -239,27 +239,65 @@ function highlightSyntax(source) {
                       'let', 'new', 'return', 'super', 'switch', 'this',
                       'throw', 'try', 'typeof', 'var', 'void', 'while', 'with'],
       literalValuesList = ['false', 'true', 'null', 'NaN', 'undefined'],
-      keywords = wordsToRegex(keywordsList),
-      literalValues = wordsToRegex(literalValuesList),
-      strings = /('(\\.|[^'])*')|("(\\.|[^"])*")|(`(\\.|[^`])*`)/g,
-      numbers = /(0x[\dabcdefABCDEF])|(\d+(\.\d*)?([eE][+-]?\d+)?)|((\.\d+)([eE][+-]?\d+)?)/g,
-      regularExpressions = /([^\/]|$)\/(\\.|[^\/])+\/[gmi]*/g,
-      comments = /(\/\/.*)|(\/\*((\*(?!\/))|[^*]|\n)*\*\/)/g;
-  
-  function highlight(regex, colorName) {
-    source = source.replace(regex, '\$&'[colorName]);
+      tokenTypes = {
+        keyword: {
+          regex: wordsToRegex(keywordsList),
+          color: 'blue',
+          modifier: 'bold'
+        },
+        literalValue: {
+          regex: wordsToRegex(literalValuesList),
+          color: 'cyan'
+        },
+        string: {
+          regex: /('(\\.|[^'])*')|("(\\.|[^"])*")|(`(\\.|[^`])*`)/,
+          color: 'yellow'
+        },
+        number: {
+          regex: /(0x[\dabcdefABCDEF])|(\d+(\.\d*)?([eE][+-]?\d+)?)|((\.\d+)([eE][+-]?\d+)?)/,
+          color: 'green'
+        },
+        regularExpression: {
+          regex: /([^\/]|$)\/(\\.|[^\/])+\/[gmi]*/,
+          color: 'yellow'
+        },
+        comment: {
+          regex: /(\/\/.*)|(\/\*((\*(?!\/))|[^*]|\n)*\*\/)/,
+          color: 'gray'
+        }
+      },
+      highlighted = [];
+
+  while (true) {
+    var bestMatch = null,
+        color,
+        modifier;
+    
+    for (var key in tokenTypes) {
+      if (!tokenTypes.hasOwnProperty(key)) continue;
+      var tokenType = tokenTypes[key];
+      var match = source.match(tokenType.regex);
+      if (!match) continue;
+      if (!bestMatch || match.index < bestMatch.index) {
+        bestMatch = match;
+        color = tokenType.color;
+        modifier = tokenType.modifier;
+      }
+    }
+    if (!bestMatch) break;
+    
+    var beforeMatch = source.slice(0, bestMatch.index);
+    if (beforeMatch) highlighted.push(beforeMatch);
+    
+    var coloredToken = bestMatch[0][color];
+    if (modifier) coloredToken = coloredToken[modifier];
+    highlighted.push(coloredToken);
+    
+    source = source.slice(bestMatch.index + bestMatch[0].length);
   }
+  if (source) highlighted.push(source);
   
-  // Numbers must be highlighted first, otherwise it'll break
-  // terminal escape sequences
-  highlight(numbers, 'magenta');
-  highlight(strings, 'green');
-  highlight(regularExpressions, 'green');
-  highlight(comments, 'gray');
-  highlight(keywords, 'cyan');
-  highlight(literalValues, 'yellow');
-  
-  return source;
+  return highlighted.join('');
 }
 
 // Retrieve the name of an application to run and then start it
