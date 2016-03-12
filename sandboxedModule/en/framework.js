@@ -163,10 +163,20 @@ function runApplication(appName, callback) {
 //
 function inspectExportedInterface(appName, interface) {
   var message = `Introspection of ${appName}'s exported interface:`,
-      fatLine = '='.repeat(message.length);
+      fatLine = '='.repeat(message.length),
+      printers = {
+        object: inspectObject,
+        function: inspectFunction
+      };
+  
   console.log(fatLine.blue.bold);
   console.log(message.blue.bold);
-  inspectObject(interface);
+  
+  var print = printers[typeof(interface)];
+  if (print) {
+    print(interface);
+  }
+  
   console.log(fatLine.blue.bold);
 }
 
@@ -205,6 +215,51 @@ function tableRow(fields) {
     elements.push(' '.repeat(padding));
   }
   return elements.join('');
+}
+
+// Inspect a function
+//
+function inspectFunction(fn) {
+  var source = fn.toString();
+  console.log('Function name:'.blue, fn.name || '(anonymous)');
+  console.log('Parameters:'.blue);
+  console.log('Source:'.blue);
+  console.log(highlightSyntax(source));
+}
+
+// Highlight JavaScript source code
+//
+function highlightSyntax(source) {
+  var wordsToRegex = words =>
+        new RegExp(words.map(word => '(\\b' + word + '\\b)').join('|'), 'g'),
+      keywordsList = ['await', 'break', 'case', 'catch', 'class', 'const',
+                      'continue', 'debugger', 'default', 'delete', 'do',
+                      'else', 'export', 'extends', 'finally', 'for',
+                      'function', 'if', 'import', 'in', 'instanceof',
+                      'let', 'new', 'return', 'super', 'switch', 'this',
+                      'throw', 'try', 'typeof', 'var', 'void', 'while', 'with'],
+      literalValuesList = ['false', 'true', 'null', 'NaN', 'undefined'],
+      keywords = wordsToRegex(keywordsList),
+      literalValues = wordsToRegex(literalValuesList),
+      strings = /('(\\.|[^'])*')|("(\\.|[^"])*")|(`(\\.|[^`])*`)/g,
+      numbers = /(0x[\dabcdefABCDEF])|(\d+(\.\d*)?([eE][+-]?\d+)?)|((\.\d+)([eE][+-]?\d+)?)/g,
+      regularExpressions = /([^\/]|$)\/(\\.|[^\/])+\/[gmi]*/g,
+      comments = /(\/\/.*)|(\/\*((\*(?!\/))|[^*]|\n)*\*\/)/g;
+  
+  function highlight(regex, colorName) {
+    source = source.replace(regex, '\$&'[colorName]);
+  }
+  
+  // Numbers must be highlighted first, otherwise it'll break
+  // terminal escape sequences
+  highlight(numbers, 'magenta');
+  highlight(strings, 'green');
+  highlight(regularExpressions, 'green');
+  highlight(comments, 'gray');
+  highlight(keywords, 'cyan');
+  highlight(literalValues, 'yellow');
+  
+  return source;
 }
 
 // Retrieve the name of an application to run and then start it
