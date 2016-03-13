@@ -346,8 +346,13 @@ function inspectChanges(before, after) {
   }
 }
 
-// Retrieve the name of an application to run and then start it
-var appName = process.argv[2] || 'application';
+// Open logs an spawn applications
 openLogs(function() {
-  runApplication(appName);
+  var applications = process.argv.slice(2);
+  if (!applications.length) {
+    applications.push('application');
+  }
+  for (var appName of applications) {
+    runApplication(appName);
+  }
 });
