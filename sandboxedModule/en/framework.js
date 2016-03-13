@@ -155,29 +155,37 @@ function runApplication(appName, callback) {
 
     // We can access a link to exported interface from sandbox.module.exports
     // to execute, save to the cache, print to console, etc.
-    inspectExportedInterface(appName, sandbox.module.exports);
+    inspectAppArtifacts(appName, sandbox);
   });
+}
+
+// Inspect application's exported interface and globals
+function inspectAppArtifacts(appName, sandbox) {
+  var interfaceMessage = `Introspection of ${appName}'s exported interface:`,
+      globalsMessage = `Introspection of ${appName}'s globals:`,
+      fatLine = '='.repeat(interfaceMessage.length),
+      logColored = msg => console.log(msg.blue.bold);
+  
+  logColored(fatLine);
+  logColored(interfaceMessage);
+  inspectExportedInterface(sandbox.module.exports);
+  logColored(fatLine);
+  logColored(globalsMessage);
+  inspectObject(sandbox.global);
+  logColored(fatLine);
 }
 
 // Inspects application's exports
 //
-function inspectExportedInterface(appName, interface) {
-  var message = `Introspection of ${appName}'s exported interface:`,
-      fatLine = '='.repeat(message.length),
-      printers = {
+function inspectExportedInterface(interface) {
+  var printers = {
         object: inspectObject,
         function: inspectFunction
-      };
-  
-  console.log(fatLine.blue.bold);
-  console.log(message.blue.bold);
-  
-  var print = printers[typeof(interface)];
+      },
+      print = printers[typeof(interface)];
   if (print) {
     print(interface);
   }
-  
-  console.log(fatLine.blue.bold);
 }
 
 // Inspect an object
@@ -185,7 +193,7 @@ function inspectExportedInterface(appName, interface) {
 function inspectObject(obj) {
   var getConstructor = obj => obj.constructor ? obj.constructor.name : '-',
       row = (key, type, constructor) =>
-              tableRow`20${key} 15${type} 15${constructor}`,
+              tableRow`25${key} 10${type} 15${constructor}`,
       header = row('Property', 'Type', 'Constructor'),
       thinLine = '-'.repeat(header.length);
   
