@@ -148,6 +148,10 @@ function runApplication(appName, callback) {
     
     // Create a sandbox for the application
     var sandbox = createSandbox(appName);
+    
+    // Save a copy of application context
+    //
+    var initialContext = Object.assign({}, sandbox.global);
 
     // Run an application in sandboxed context
     var script = vm.createScript(src, fileName);
@@ -155,14 +159,15 @@ function runApplication(appName, callback) {
 
     // We can access a link to exported interface from sandbox.module.exports
     // to execute, save to the cache, print to console, etc.
-    inspectAppArtifacts(appName, sandbox);
+    inspectAppArtifacts(appName, sandbox, initialContext);
   });
 }
 
 // Inspect application's exported interface and globals
-function inspectAppArtifacts(appName, sandbox) {
+function inspectAppArtifacts(appName, sandbox, initialContext) {
   var interfaceMessage = `Introspection of ${appName}'s exported interface:`,
       globalsMessage = `Introspection of ${appName}'s globals:`,
+      changeMessage = `Changes in ${appName}'s context:`,
       fatLine = '='.repeat(interfaceMessage.length),
       logColored = msg => console.log(msg.blue.bold);
   
@@ -170,8 +175,13 @@ function inspectAppArtifacts(appName, sandbox) {
   logColored(interfaceMessage);
   inspectExportedInterface(sandbox.module.exports);
   logColored(fatLine);
+  
   logColored(globalsMessage);
   inspectObject(sandbox.global);
+  logColored(fatLine);
+  
+  logColored(changeMessage);
+  inspectChanges(initialContext, sandbox.global);
   logColored(fatLine);
 }
 
@@ -317,6 +327,23 @@ function highlightSyntax(source) {
   if (source) highlighted.push(source);
   
   return highlighted.join('');
+}
+
+// Inspect changes in object after modification
+//
+function inspectChanges(before, after) {
+  var beforeKeys = Object.keys(before),
+      afterKeys = Object.keys(after),
+      allKeys = new Set(beforeKeys.concat(afterKeys));
+  for (var key of allKeys) {
+    var presentInBefore = before[key] !== undefined,
+        presentInAfter = after[key] !== undefined,
+        status;
+    if (presentInBefore && presentInAfter) continue;
+    if (presentInBefore) status = 'deleted'.red;
+    if (presentInAfter)  status = 'added'.green;
+    console.log(tableRow`25${key} 10${status}`);
+  }
 }
 
 // Retrieve the name of an application to run and then start it

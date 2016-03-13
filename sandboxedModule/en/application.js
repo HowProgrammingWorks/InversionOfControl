@@ -21,6 +21,9 @@ var consoleProperties = util.inspect(console, { colors: true })
     consoleIntrospection = util.format('console = %s;', consoleProperties);
 console.log(consoleIntrospection);
 
+// Delete a key from the global context
+delete require;
+
 module.exports = function gcd(a, b) {
   while (b > 0) {
     var remainder = a % b;
