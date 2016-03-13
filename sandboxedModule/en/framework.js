@@ -149,7 +149,6 @@ function runApplication(appName, callback) {
     var sandbox = createSandbox(appName);
     
     // Save a copy of application context
-    //
     var initialContext = Object.assign({}, sandbox.global);
 
     // Run an application in sandboxed context
@@ -163,6 +162,7 @@ function runApplication(appName, callback) {
 }
 
 // Inspect application's exported interface and globals
+//
 function inspectAppArtifacts(appName, sandbox, initialContext) {
   var interfaceMessage = `Introspection of ${appName}'s exported interface:`,
       globalsMessage = `Introspection of ${appName}'s globals:`,
