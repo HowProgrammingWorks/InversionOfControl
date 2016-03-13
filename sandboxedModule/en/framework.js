@@ -8,7 +8,6 @@ var fs = require('fs'),
     vm = require('vm'),
     util = require('util'),
     path = require('path'),
-    async = require('async'),
     colors = require('colors');
 
 // Array of console methods that should be logged
