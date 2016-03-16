@@ -8,7 +8,7 @@ var context = {
   module: {},
   console: console,
   // Помещаем ссылку на fs API в песочницу
-  fs: fs
+  fs: cloneInterface(fs)
 };
 
 // Преобразовываем хеш в контекст
@@ -26,7 +26,17 @@ fs.readFile(fileName, function(err, src) {
 function cloneInterface(interfaceName) {
     var clone = {};
     for (var key in interfaceName) {
-        clone[key] = interfaceName[key];
+        clone[key] = wrapFunction(key, interfaceName[key]);
     }
     return clone;
+}
+
+function wrapFunction(fnName, fn) {
+    return function wrapper() {
+        var args = [];
+        Array.prototype.push.apply(args, arguments);
+        console.log('Call: ' + fnName);
+        console.dir(args);
+        return fn.apply(undefined, args);
+    }
 }
