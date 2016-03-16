@@ -8,7 +8,7 @@ var fs = require('fs'),
 
 // Create a hash and turn it into the sandboxed context which will be
 // the global context of an application
-var context = { module: {}, console: console };
+var context = { module: {}, console: console, setInterval: setInterval, setTimeout: setTimeout };
 context.global = context;
 var sandbox = vm.createContext(context);
 

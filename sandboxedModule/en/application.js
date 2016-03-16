@@ -9,3 +9,11 @@ module.exports = function() {
 	// Print from the exported function context
   console.log('From application exported function');
 };
+
+setTimeout(() => {
+  console.log('Message from setTimeout');
+}, 0);
+
+setInterval(() => {
+    console.log('Message from setInterval');
+}, 1000);
