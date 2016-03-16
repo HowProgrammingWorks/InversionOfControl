@@ -20,8 +20,15 @@ if (process.argv.length > 2) {
     console.log = function() {
         var msg = util.format.apply(util, arguments);
         msg = appName + ' ' + (new Date()).toTimeString() + ' ' + msg;
-        oldLogger.call(this, msg);
-        fs.appendFile((new Date()).toDateString() + '.log', msg + '\n');
+        oldLogger.call(console, msg);
+        fs.appendFile(getLogFile(), msg + '\n');
+    };
+
+    // Wrap require
+    var requireWithLogging = (moduleName) => {
+        var msg = (new Date()).toTimeString() + ' ' + moduleName;
+        fs.appendFile(getLogFile(),  msg + '\n');
+        return require(moduleName);
     };
 
     // Create a hash and turn it into the sandboxed context which will be
@@ -31,7 +38,8 @@ if (process.argv.length > 2) {
         console: console,
         setInterval: setInterval,
         setTimeout: setTimeout,
-        util: util
+        util: util,
+        require: requireWithLogging
     };
     context.global = context;
     var sandbox = vm.createContext(context);
@@ -52,4 +60,8 @@ function runScript(fileName, contex) {
             console.error(err.toString());
         }
     });
+}
+
+function getLogFile() {
+    return (new Date()).toDateString() + '.log';
 }
