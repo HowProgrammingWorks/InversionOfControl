@@ -18,10 +18,10 @@ if (process.argv.length > 2) {
     // Wrap console.log
     var oldLogger = console.log;
     console.log = function() {
-        if (arguments.length > 0) {
-            arguments[0] = appName + ' ' + (new Date()).toTimeString() + ' ' + arguments[0];
-        }
-        oldLogger.apply(this, arguments);
+        var msg = util.format.apply(util, arguments);
+        msg = appName + ' ' + (new Date()).toTimeString() + ' ' + msg;
+        oldLogger.call(this, msg);
+        fs.appendFile((new Date()).toDateString() + '.log', msg + '\n');
     };
 
     // Create a hash and turn it into the sandboxed context which will be
