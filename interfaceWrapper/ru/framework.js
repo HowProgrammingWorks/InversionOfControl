@@ -22,3 +22,11 @@ fs.readFile(fileName, function(err, src) {
   var script = vm.createScript(src, fileName);
   script.runInNewContext(sandbox);
 });
+
+function cloneInterface(interfaceName) {
+    var clone = {};
+    for (var key in interfaceName) {
+        clone[key] = interfaceName[key];
+    }
+    return clone;
+}
