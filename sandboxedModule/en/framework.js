@@ -5,40 +5,49 @@
 // The framework can require core libraries
 var fs = require('fs'),
     vm = require('vm'),
-    util = require('util');
-
-// Create a hash and turn it into the sandboxed context which will be
-// the global context of an application
-var context = {
-    module: {},
-    console: console,
-    setInterval: setInterval,
-    setTimeout: setTimeout,
-    util: util
-};
-context.global = context;
-var sandbox = vm.createContext(context);
+    util = require('util'),
+    path = require('path');
 
 if (process.argv.length > 2) {
     var fileName = process.argv[2];
-    if (!fileName.endsWith('js')) {
+    if (!fileName.endsWith('.js')) {
         fileName += '.js';
     }
-    runScript(fileName);
+    var appName = path.basename(fileName, '.js');
+
+    // Wrap console.log
+    var oldLogger = console.log;
+    console.log = function() {
+        if (arguments.length > 0) {
+            arguments[0] = appName + ' ' + (new Date()).toTimeString() + ' ' + arguments[0];
+        }
+        oldLogger.apply(this, arguments);
+    };
+
+    // Create a hash and turn it into the sandboxed context which will be
+    // the global context of an application
+    var context = {
+        module: {},
+        console: console,
+        setInterval: setInterval,
+        setTimeout: setTimeout,
+        util: util
+    };
+    context.global = context;
+    var sandbox = vm.createContext(context);
+
+    runScript(fileName, sandbox);
 } else {
     console.error("You must pass application file path as command line argument. E.g: node framework.js application[.js]");
 }
 
-function runScript(fileName) {
+function runScript(fileName, contex) {
     // Read an application source code from the file
     fs.readFile(fileName, (err, src) => {
         if (!err) {
             // Run an application in sandboxed context
             var script = vm.createScript(src, fileName);
-            script.runInNewContext(sandbox);
-
-            // We can access a link to exported interface from sandbox.module.exports
-            // to execute, save to the cache, print to console, etc.
+            script.runInNewContext(contex);
         } else {
             console.error(err.toString());
         }
