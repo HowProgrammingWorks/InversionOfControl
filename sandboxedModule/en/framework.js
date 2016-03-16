@@ -3,31 +3,44 @@
 // as a global context and receives exported application interface
 
 // The framework can require core libraries
-var fs   = require('fs'),
-    vm   = require('vm'),
+var fs = require('fs'),
+    vm = require('vm'),
     util = require('util');
 
 // Create a hash and turn it into the sandboxed context which will be
 // the global context of an application
 var context = {
-  module: {},
-  console: console,
-  setInterval: setInterval,
-  setTimeout: setTimeout,
-  util: util
+    module: {},
+    console: console,
+    setInterval: setInterval,
+    setTimeout: setTimeout,
+    util: util
 };
 context.global = context;
 var sandbox = vm.createContext(context);
 
-// Read an application source code from the file
-var fileName = './application.js';
-fs.readFile(fileName, function(err, src) {
-  // We need to handle errors here
+if (process.argv.length > 2) {
+    var fileName = process.argv[2];
+    if (!fileName.endsWith('js')) {
+        fileName += '.js';
+    }
+    runScript(fileName);
+} else {
+    console.error("You must pass application file path as command line argument. E.g: node framework.js application[.js]");
+}
 
-  // Run an application in sandboxed context
-  var script = vm.createScript(src, fileName);
-  script.runInNewContext(sandbox);
+function runScript(fileName) {
+    // Read an application source code from the file
+    fs.readFile(fileName, (err, src) => {
+        if (!err) {
+            // Run an application in sandboxed context
+            var script = vm.createScript(src, fileName);
+            script.runInNewContext(sandbox);
 
-  // We can access a link to exported interface from sandbox.module.exports
-  // to execute, save to the cache, print to console, etc.
-});
+            // We can access a link to exported interface from sandbox.module.exports
+            // to execute, save to the cache, print to console, etc.
+        } else {
+            console.error(err.toString());
+        }
+    });
+}

@@ -8,8 +8,8 @@ util.log('Application started');
 console.log('From application global context');
 
 module.exports = function() {
-	// Print from the exported function context
-  console.log('From application exported function');
+    // Print from the exported function context
+    console.log('From application exported function');
 };
 
 var author = 'Acarus';
@@ -17,7 +17,7 @@ var year = 2016;
 console.log(util.format('Created by %s in %d', author, year));
 
 setTimeout(() => {
-  console.log('Message from setTimeout');
+    console.log('Message from setTimeout');
 }, 0);
 
 setInterval(() => {
