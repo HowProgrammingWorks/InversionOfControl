@@ -21,7 +21,7 @@ exports.someFunc = function (a, b) {
 
 var author = 'Acarus';
 var year = 2016;
-console.log(util.format('Created by %s in %d', author, year));
+console.log('Created by %s in %d', author, year);
 
 setTimeout(() => {
     console.log('Message from setTimeout');
