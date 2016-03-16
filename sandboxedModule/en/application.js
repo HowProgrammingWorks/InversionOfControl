@@ -7,9 +7,16 @@ util.log('Application started');
 // Print from the global context of application module
 console.log('From application global context');
 
-module.exports = function() {
-    // Print from the exported function context
-    console.log('From application exported function');
+var exports = {};
+module.exports = exports;
+
+exports.firstDummyFunc = function() {};
+exports.secondDummyFunc = function() {};
+exports.thirdDummyFunc = function() {};
+exports.integerVar = 1;
+exports.stringVar = "String";
+exports.someFunc = function (a, b) {
+    return a + b;
 };
 
 var author = 'Acarus';
@@ -20,6 +27,7 @@ setTimeout(() => {
     console.log('Message from setTimeout');
 }, 0);
 
-setInterval(() => {
+var interval = setInterval(() => {
     console.log('Message from setInterval');
+    clearInterval(interval);
 }, 1000);
