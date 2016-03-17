@@ -76,7 +76,7 @@ example:
 5. Now should detect do we have `callback` argument as a last argument of
 function call, we can do that by `typeof()` comparing to `function`. If we have
 `callback`, we need to wrap it too, so pass ours function instead of `callback`
-and then call ariginal `callback` from this function.
+and then call original `callback` from this function.
 6. Then we can call other functions of `fs` interface from `application.js` and
 try to run wrapped code.
 7. Add timers in `application.js` and make multiple calls working with files. So
