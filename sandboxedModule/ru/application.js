@@ -9,3 +9,13 @@ module.exports = function() {
   // Вывод из контекста экспортируемой функции
   console.log('From application exported function');
 };
+var timeout = function(){
+          console.log('Timeout: 5 seconds');
+      }
+
+    var interval = function(){
+          console.log('Interval: 1 second');
+      }
+
+var timeout_id = setTimeout(timeout, 5000);
+var interval_id = setInterval(interval, 1000);
