@@ -5,22 +5,99 @@
 
 // Фреймворк может явно зависеть от библиотек через dependency lookup
 var fs = require('fs'),
-    vm = require('vm');
+    vm = require('vm'),
+    util = require('util');
+
+var fileName = './application.js';
+
+// *** Задание 4 ***
+
+var applicationConsole = {};
+applicationConsole.log = function(str) { 
+	fs.appendFile('log.txt',
+	 fileName + " " + (new Date()) + " " + str + '/n',
+	 function(err) {
+	 	if(err)
+	 		throw err;
+	 });
+	console.log(str);
+};
+
+var fakeRequire = function(module) {
+	fs.appendFile('log.txt',
+		new Date() + " " + module + '\n',
+		function(err) {
+			if(err)
+				throw err;
+		}
+	);
+	return require(module);
+}
 
 // Создаем контекст-песочницу, которая станет глобальным контекстом приложения
-var context = { module: {}, console: console };
+
+// *** Задание 1 ***
+var context = { module: {},
+				console: console,
+				setTimeout: setTimeout,
+				setInterval: setInterval
+			};
+
+// *** Задание 2 ***
+var context = { module: {},
+				util: util,
+				console: console };
+
+// *** Задание 4 ***
+
+var context = { module: {}, console: applicationConsole };
+
+// *** Задание 6 ***
+var context = { module: {},
+				console: console,
+				require : fakeRequire };
+
+// *** Задание 9 ***
+var context = { module: {}, console: console, inspect: util.inspect };
+
 context.global = context;
 var sandbox = vm.createContext(context);
 
+// *** Задание 10 ***
+
+console.log("Before load : ");
+console.log(sandbox);
+
 // Читаем исходный код приложения из файла
-var fileName = './application.js';
+
+// *** Задание 3 ***
+var fileName = process.argv[2];
+
 fs.readFile(fileName, function(err, src) {
   // Тут нужно обработать ошибки
-  
+  if(err) {
+  	throw err;
+  }
   // Запускаем код приложения в песочнице
   var script = vm.createScript(src, fileName);
   script.runInNewContext(sandbox);
+
+  sandbox.module.exports();
+
+// *** Задание 7 ***
+  for (var p in sandbox.module.exports) {
+  	console.log(p + " : " + typeof sandbox.module.exports[p]);
+  }
+
+// *** Задание 8 ***
+  console.log(sandbox.module.exports.foo.toString());
+  console.log("Arguments : " + sandbox.module.exports.foo(23));
+
+// *** Задание 10 ***
+  console.log("After load : ");
+  console.log(sandbox);
   
+  sandbox.module.exports();
   // Забираем ссылку из sandbox.module.exports, можем ее исполнить,
   // сохранить в кеш, вывести на экран исходный код приложения и т.д.
 });
