@@ -1,78 +1,142 @@
 // Example showing us how the framework creates an environment (sandbox) for
-// appication runtime, load an application code and passes a sandbox into app
+// application runtime, load an application code and passes a sandbox into app
 // as a global context and receives exported application interface
 
 // The framework can require core libraries
 var fs = require('fs'),
     vm = require('vm'),
     util = require('util'),
-    path = require('path');
+    path = require('path'),
+    os = require('os');
 
-if (process.argv.length > 2) {
-    var fileName = process.argv[2];
-    if (!fileName.endsWith('.js')) {
-        fileName += '.js';
+// parse command line arguments
+var args = process.argv.slice(2);
+var isFlag = (e) => e.startsWith('-');
+var flags = args.filter(isFlag);
+var apps = args.filter(e => !isFlag(e));
+apps.forEach((filePath, num) => {
+    if (!filePath.endsWith('.js')) {
+        apps[num] += '.js';
     }
-    var appName = path.basename(fileName, '.js');
+});
 
-    // Wrap console.log
-    var oldLogger = console.log;
-    console.log = function() {
-        var msg = util.format.apply(util, arguments);
-        msg = appName + ' ' + (new Date()).toTimeString() + ' ' + msg;
-        oldLogger.call(console, msg);
-        fs.appendFile(getLogFile(), msg + '\n');
-    };
+//run apps
+if (flags.indexOf('-s') !== -1 || flags.indexOf('--sync') !== -1) {
+    // process tasks synchronously
+    runAppsSync();
+} else {
+    // process tasks asynchronously
+    runApps();
+}
 
-    // Wrap require
-    var requireWithLogging = (moduleName) => {
-        var msg = (new Date()).toTimeString() + ' ' + moduleName;
-        fs.appendFile(getLogFile(), msg + '\n');
-        return require(moduleName);
-    };
+function runApps() {
+    apps.forEach((filePath) => {
+        runApp(filePath, showAppWorkInfo);
+    });
+}
+
+function runAppsSync() {
+    runNextApp(0);
+}
+
+function runNextApp(appNum) {
+    if (appNum >= apps.length) {
+        return;
+    }
+
+    runApp(apps[appNum], (data) => {
+        showAppWorkInfo(data);
+        runNextApp(appNum + 1);
+    });
+}
+
+function runApp(filePath, callback) {
+    var appName = path.basename(filePath, '.js');
 
     // Create a hash and turn it into the sandboxed context which will be
     // the global context of an application
     var context = {
         module: {},
-        console: console,
+        console: getConsoleWithLogging(appName),
         setInterval: setInterval,
         clearInterval: clearInterval,
         setTimeout: setTimeout,
         util: util,
-        require: requireWithLogging
+        require: getRequireWithLogging(appName),
+        done: () => {} // app executes when work finished
     };
     context.global = context;
+    var initialContext = Object.assign({}, context);
+    context.done = () => callback({initialContext: initialContext, context: context});
     var sandbox = vm.createContext(context);
 
-    runScript(fileName, sandbox, () => {
-        // print list of exported functions and variables
-        console.log('Exported functions and variables: \n%s\n', util.inspect(sandbox.module.exports));
-
-        // print args and listing of some exported function
-        var someExportedFunction = sandbox.module.exports.someFunc;
-        console.log('someFunc description:\nParameters count: %d.\nBody: %s\n', someExportedFunction.length, someExportedFunction.toString());
-
-        console.log('Application sanbox:\n%s', util.inspect(sandbox));
-    });
-} else {
-    console.error("You must pass application file path as command line argument. E.g: node framework.js application[.js]");
-}
-
-function runScript(fileName, contex, callback) {
-    // Read an application source code from the file
-    fs.readFile(fileName, (err, src) => {
+    fs.readFile(filePath, (err, src) => {
         if (!err) {
             // Run an application in sandboxed context
-            var script = vm.createScript(src, fileName);
-            script.runInNewContext(contex);
+            var script = vm.createScript(src, filePath);
+            script.runInNewContext(sandbox);
         } else {
             console.error(err.toString());
         }
-        callback();
     });
 }
 
-function getLogFile() {
-    return (new Date()).toDateString() + '.log';
+function getRequireWithLogging(appName) {
+    return (moduleName) => {
+        var msg = util.format('%s %s', new Date().toTimeString(), moduleName);
+        fs.appendFile(getLogFile(appName), msg + os.EOL);
+        return require(moduleName);
+    };
+}
+
+function getConsoleWithLogging(appName) {
+    // clone console interface
+    var consoleWithLogging = {};
+    for (key in console) {
+        consoleWithLogging[key] = console[key];
+    }
+
+    // wrap log function
+    consoleWithLogging.log = function () {
+        var msg = util.format.apply(util, arguments);
+        msg = util.format('%s %s %s', appName, new Date().toTimeString(), msg);
+        console.log(msg);
+        fs.appendFile(getLogFile(appName), msg + os.EOL);
+    };
+    return consoleWithLogging;
+}
+
+function getLogFile(appName) {
+    return util.format('%s_%s.log', appName, new Date().toDateString());
+}
+
+function showAppWorkInfo(data) {
+    // print list of exported functions and variables
+    var log = data.initialContext.console.log;
+
+    log('Exported functions and variables:');
+    log(util.inspect(data.context.module.exports));
+
+    // print args and listing of some exported function
+    var someExportedFunction = data.context.module.exports.someFunc;
+    log('someFunc description:');
+    log('Parameters count: %d', someExportedFunction.length);
+    log('Body: %s', someExportedFunction.toString());
+
+    log('Application sanbox:');
+    log(util.inspect(data.context));
+
+    log('Context changes:');
+    displayDifference(data.initialContext, data.context, log);
+}
+
+function displayDifference(before, after, log) {
+    var keysBefore = Object.keys(before),
+        keysAfter = Object.keys(after);
+
+    var keysAdded = keysAfter.filter(e => keysBefore.indexOf(e) < 0);
+    keysAdded.forEach(e => log('[+] %s', e));
+
+    var keysRemoved = keysBefore.filter(e => keysAfter.indexOf(e) < 0);
+    keysRemoved.forEach(e => log('[-] %s', e));
 }

@@ -30,4 +30,7 @@ setTimeout(() => {
 var interval = setInterval(() => {
     console.log('Message from setInterval');
     clearInterval(interval);
+    done();
 }, 1000);
+
+delete require;
