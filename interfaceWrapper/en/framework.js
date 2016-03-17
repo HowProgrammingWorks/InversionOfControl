@@ -2,16 +2,17 @@
 
 var fs = require('fs'),
     vm = require('vm');
+    functionCallsCount = 0;
 
 // Create a hash for application sandbox
 var context = {
   module: {},
   console: console,
   // Forward link to fs API into sandbox
-  fs: cloneInterface(fs)
-  // Wrapper for setTimeout in sandbox
-
-
+  fs: cloneInterface(fs),
+  getFunctionCallsCount: getFunctionCallsCount,
+  setInterval: setInterval,
+  setTimeout: setTimeout
 };
 
 // Turn hash into context
@@ -42,6 +43,8 @@ function wrapFunction(fnName, fn) {
   return function wrapper() {
     var args = [];
     Array.prototype.push.apply(args, arguments);
+    functionCallsCount++;
+    console.log('Call Count: ' + functionCallsCount);
     console.log('Call: ' + fnName);
     console.dir(args);
     if (typeof (args[args.length - 1]) === 'function') {
@@ -49,4 +52,8 @@ function wrapFunction(fnName, fn) {
     }
     return fn.apply(undefined, args);
   }
+}
+
+function getFunctionCallsCount() {
+	return functionCallsCount;
 }
