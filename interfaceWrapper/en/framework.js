@@ -44,7 +44,6 @@ function wrapFunction(fnName, fn) {
     var args = [];
     Array.prototype.push.apply(args, arguments);
     functionCallsCount++;
-    console.log('Call Count: ' + functionCallsCount);
     console.log('Call: ' + fnName);
     console.dir(args);
     if (typeof (args[args.length - 1]) === 'function') {
