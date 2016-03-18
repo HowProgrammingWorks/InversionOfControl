@@ -9,29 +9,14 @@ var fs = require('fs'),
     path = require('path'),
     os = require('os');
 
-// parse command line arguments
-var args = process.argv.slice(2);
-var isFlag = (e) => e.startsWith('-');
-var flags = args.filter(isFlag);
-var apps = args.filter(e => !isFlag(e));
-apps.forEach((filePath, num) => {
-    if (!filePath.endsWith('.js')) {
-        apps[num] += '.js';
-    }
-});
-
-//run apps
-if (flags.indexOf('-s') !== -1 || flags.indexOf('--sync') !== -1) {
-    // process tasks synchronously
-    runAppsSync();
-} else {
-    // process tasks asynchronously
-    runApps();
-}
+var logDir = "logs/";
+var flags = [];
+var apps = [];
+var runAppSyncModeOn = false;
 
 function runApps() {
     apps.forEach((filePath) => {
-        runApp(filePath, showAppWorkInfo);
+        runApp(filePath, displayAppWorkInfo);
     });
 }
 
@@ -40,21 +25,28 @@ function runAppsSync() {
 }
 
 function runNextApp(appNum) {
-    if (appNum >= apps.length) {
-        return;
+    if (appNum < apps.length) {
+        runApp(apps[appNum], (data) => {
+            displayAppWorkInfo(data);
+            runNextApp(appNum + 1);
+        });
     }
-
-    runApp(apps[appNum], (data) => {
-        showAppWorkInfo(data);
-        runNextApp(appNum + 1);
-    });
 }
 
 function runApp(filePath, callback) {
     var appName = path.basename(filePath, '.js');
+    fs.readFile(filePath, (err, src) => {
+        if (!err) {
+            // Run an application in sandboxed context
+            var script = vm.createScript(src, filePath);
+            script.runInNewContext(createAppContext(appName, callback));
+        } else {
+            console.error(err.toString());
+        }
+    });
+}
 
-    // Create a hash and turn it into the sandboxed context which will be
-    // the global context of an application
+function createAppContext(appName, appFinishCallback) {
     var context = {
         module: {},
         console: getConsoleWithLogging(appName),
@@ -67,76 +59,136 @@ function runApp(filePath, callback) {
     };
     context.global = context;
     var initialContext = Object.assign({}, context);
-    context.done = () => callback({initialContext: initialContext, context: context});
-    var sandbox = vm.createContext(context);
-
-    fs.readFile(filePath, (err, src) => {
-        if (!err) {
-            // Run an application in sandboxed context
-            var script = vm.createScript(src, filePath);
-            script.runInNewContext(sandbox);
-        } else {
-            console.error(err.toString());
-        }
-    });
-}
-
-function getRequireWithLogging(appName) {
-    return (moduleName) => {
-        var msg = util.format('%s %s', new Date().toTimeString(), moduleName);
-        fs.appendFile(getLogFile(appName), msg + os.EOL);
-        return require(moduleName);
-    };
+    context.done = () => appFinishCallback({initialContext: initialContext, context: context});
+    return vm.createContext(context);
 }
 
 function getConsoleWithLogging(appName) {
     // clone console interface
     var consoleWithLogging = {};
-    for (key in console) {
-        consoleWithLogging[key] = console[key];
-    }
+    Object.keys(console).forEach(key => consoleWithLogging[key] = console[key]);
 
     // wrap log function
     consoleWithLogging.log = function () {
-        var msg = util.format.apply(util, arguments);
-        msg = util.format('%s %s %s', appName, new Date().toTimeString(), msg);
+        var msg = util.format.apply(util.format, arguments);
+        msg = util.format('%s %s %s', appName, getCurrentTime(), msg);
         console.log(msg);
         fs.appendFile(getLogFile(appName), msg + os.EOL);
     };
     return consoleWithLogging;
 }
 
-function getLogFile(appName) {
-    return util.format('%s_%s.log', appName, new Date().toDateString());
+function getRequireWithLogging(appName) {
+    return (moduleName) => {
+        var msg = util.format('%s %s', getCurrentTime(), moduleName);
+        fs.appendFile(getLogFile(appName), msg + os.EOL);
+        return require(moduleName);
+    };
 }
 
-function showAppWorkInfo(data) {
-    // print list of exported functions and variables
+function getCurrentTime() {
+    return new Date().toTimeString().substr(0, 8);
+}
+
+function getLogFile(appName) {
+    return util.format('%s%s_%s.log', logDir, appName, new Date().toLocaleDateString());
+}
+
+function displayAppWorkInfo(data) {
+    var context = data.context;
     var log = data.initialContext.console.log;
 
+    // print list of exported functions and variables
     log('Exported functions and variables:');
-    log(util.inspect(data.context.module.exports));
+    log(getObjectInfo(context.module.exports));
 
     // print args and listing of some exported function
-    var someExportedFunction = data.context.module.exports.someFunc;
-    log('someFunc description:');
-    log('Parameters count: %d', someExportedFunction.length);
-    log('Body: %s', someExportedFunction.toString());
+    var someExportedFunction = findAnyFunction(context.module.exports);
+    if (someExportedFunction) {
+        log('Function "%s" description:', someExportedFunction.name);
+        log('Parameters count: %d', someExportedFunction.length);
+        log('Body: %s', someExportedFunction.toString());
+    }
 
-    log('Application sanbox:');
-    log(util.inspect(data.context));
+    log('Application context:');
+    log(getObjectInfo(context.module.exports));
 
     log('Context changes:');
-    displayDifference(data.initialContext, data.context, log);
+    log(getDifference(data.initialContext, data.context));
 }
 
-function displayDifference(before, after, log) {
-    var keysBefore = Object.keys(before),
+function getObjectInfo(obj) {
+    if (!obj) return;
+    return Object.keys(obj)
+        .map(key => util.format('%s: [%s]', key, typeof obj[key]))
+        .join(os.EOL);
+}
+
+function findAnyFunction(obj) {
+    for (key in obj) {
+        if (typeof(obj[key]) === 'function') {
+            return obj[key];
+        }
+    }
+}
+
+function getDifference(before, after) {
+    before = before || {};
+    after = after || {};
+
+    var differenceString = '',
+        keysBefore = Object.keys(before),
         keysAfter = Object.keys(after);
 
     var keysAdded = keysAfter.filter(e => keysBefore.indexOf(e) < 0);
-    keysAdded.forEach(e => log('[+] %s', e));
+    keysAdded.forEach(e => differenceString += util.format('[+] %s', e + os.EOL));
 
     var keysRemoved = keysBefore.filter(e => keysAfter.indexOf(e) < 0);
-    keysRemoved.forEach(e => log('[-] %s', e));
+    keysRemoved.forEach((e, i) => differenceString += util.format('[-] %s', e + (i + 1 < keysRemoved.length ? os.EOL : '')));
+    return differenceString.length ? differenceString : 'N\\A';
+}
+
+function createLogDir() {
+    fs.mkdir(logDir, (err) => {
+        if (err && err.code !== 'EEXIST') {
+            console.error('Can\'t create dir for logs. Error: %s. Logs dir: %s', err.toString(), logDir);
+        }
+    });
+}
+
+function parseCmdArgs() {
+    var args = process.argv.slice(2);
+    var isFlag = e => e.startsWith('-');
+    flags = args.filter(isFlag);
+    apps = args.filter(e => !isFlag(e));
+    apps.forEach((filePath, num) => {
+        if (!filePath.endsWith('.js')) {
+            apps[num] += '.js';
+        }
+    });
+}
+
+function processFlags() {
+    var userLogDir = '';
+    flags.forEach(flag => {
+        if (flag.startsWith('-ld') || flag.startsWith('--log-dir')) {
+            userLogDir = flag.split('=')[1];
+        }
+    });
+    if (userLogDir) {
+        logDir = userLogDir + (userLogDir.endsWith(path.sep) ? '': path.sep);
+    }
+
+    runAppSyncModeOn = flags.indexOf('-s') !== -1 || flags.indexOf('--sync') !== -1;
+}
+
+parseCmdArgs();
+processFlags();
+createLogDir();
+
+// run apps
+if (runAppSyncModeOn) {
+    runAppsSync();
+} else {
+    runApps();
 }

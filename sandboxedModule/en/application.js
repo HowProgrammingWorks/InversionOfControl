@@ -4,20 +4,22 @@
 
 util.log('Application started');
 
+require('path');
+
 // Print from the global context of application module
 console.log('From application global context');
 
 var exports = {};
 module.exports = exports;
 
+exports.someFunc = function someFunc(a, b) {
+    return a + b;
+};
 exports.firstDummyFunc = function() {};
 exports.secondDummyFunc = function() {};
 exports.thirdDummyFunc = function() {};
 exports.integerVar = 1;
 exports.stringVar = "String";
-exports.someFunc = function (a, b) {
-    return a + b;
-};
 
 var author = 'Acarus';
 var year = 2016;
