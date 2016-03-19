@@ -10,9 +10,15 @@ changing its behavior using IoC from system layer.
 * `framework.js` - small piece of the framework, just to demonstrate IoC
 * `application.js` - small piece of the application, also for IoC demonstration
 
-## How to execute
+## Usage
+To run applications synchronously use flag `--sync` or `-s`. E.g: 
+`node framework application application2 --sync`
 
-From the command line, type: `node ./framework.js` or `node framework`
+To specify directory for logs use flag `--log-dir` or `-ld`. E.g:
+`node framework application --log-dir=logs`
+
+Next example shows how to run `application.js` and `application2.js` synchronously and write logs into `logs`:<br/>
+`node framework application application2 --sync --log-dir=logs`
 
 ## Tasks
 
