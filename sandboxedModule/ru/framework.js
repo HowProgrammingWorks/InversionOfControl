@@ -8,9 +8,14 @@ var fs = require('fs'),
     vm = require('vm');
     util = require ('util');
 
-// Задание 4
+// Задания 4-5
 var newConsole = {};
 newConsole.log = function(message) {
+	fs.appendFile('file.txt', fileName + " " + new Date() + " " + message + '\n', 
+		(err) => {
+			if (err)
+				throw err;
+	});
 	console.log(fileName + " " + new Date() + " " + message);
 }
 
