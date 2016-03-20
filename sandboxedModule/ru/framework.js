@@ -8,13 +8,20 @@ var fs = require('fs'),
     vm = require('vm');
     util = require ('util');
 
+// Задание 4
+var newConsole = {};
+newConsole.log = function(message) {
+	console.log(fileName + " " + new Date() + " " + message);
+}
+
 // Создаем контекст-песочницу, которая станет глобальным контекстом приложения
-var context = { module: {}, console: console, setTimeout: setTimeout, 
+var context = { module: {}, console: newConsole, setTimeout: setTimeout, 
 				setInterval: setInterval, util: util };
 context.global = context;
 var sandbox = vm.createContext(context);
 
 // Читаем исходный код приложения из файла
+// Задание 3
 var fileName = process.argv[2] == null?'./application.js':process.argv[2];
 fs.readFile(fileName, function(err, src) {
   // Тут нужно обработать ошибки
