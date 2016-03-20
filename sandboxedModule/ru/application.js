@@ -7,5 +7,11 @@ console.log('From application global context');
 
 module.exports = function() {
   // Вывод из контекста экспортируемой функции
-  console.log('From application exported function');
+  //console.log('From application exported function');
+  setTimeout(() => {
+  	console.log("setTimeout function");
+  }, 3000);
+  setInterval(() => {
+  	console.log("setInterval function");
+  }, 1000);
 };
