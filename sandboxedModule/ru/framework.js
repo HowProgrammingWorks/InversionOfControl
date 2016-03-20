@@ -53,6 +53,8 @@ var context = { module: {},
 
                
 
+// Создаем контекст-песочницу, которая станет глобальным контекстом приложения
+var context = { module: {}, console: console };
 context.global = context;
 
 var sandbox = vm.createContext(context);
