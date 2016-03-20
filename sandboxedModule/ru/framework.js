@@ -19,9 +19,19 @@ newConsole.log = function(message) {
 	console.log(fileName + " " + new Date() + " " + message);
 }
 
+//Задание 6
+var newRequire = function(module) {
+	fs.appendFile('file.txt', new Date() + " " + module + '\n', 
+		(err) => {
+			if (err)
+				throw err;
+	});
+	return require(module);
+}
+
 // Создаем контекст-песочницу, которая станет глобальным контекстом приложения
 var context = { module: {}, console: newConsole, setTimeout: setTimeout, 
-				setInterval: setInterval, util: util };
+				setInterval: setInterval, util: util, require: newRequire };
 context.global = context;
 var sandbox = vm.createContext(context);
 
