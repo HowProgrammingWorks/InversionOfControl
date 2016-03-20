@@ -9,7 +9,8 @@ var fs = require('fs'),
     util = require ('util');
 
 // Создаем контекст-песочницу, которая станет глобальным контекстом приложения
-var context = { module: {}, console: console, util: util };
+var context = { module: {}, console: console, setTimeout: setTimeout, 
+				setInterval: setInterval, util: util };
 context.global = context;
 var sandbox = vm.createContext(context);
 
