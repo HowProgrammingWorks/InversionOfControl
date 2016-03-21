@@ -66,15 +66,52 @@ function printFunctionParams(func) {
     console.log(`Amount: ${arr.length}`);
 }
 
-function printHashParams(hash) {
-      Object.keys(hash).forEach((item) => {
-          if (typeof hash[item] === 'object' && item !== 'global') {
-                  printHashParams(hash[item]);
-                } else {
-              console.log(`${typeof hash[item]} ${item}`);
-                }
-          });
+function deepClone(targetObject, resultObject) {
+    Object.keys(targetObject).forEach((item) => {
+        if (typeof targetObject[item] === 'object') {
+            if (item === 'global') {
+                resultObject[item] = resultObject;
+            } else {
+                resultObject[item] = {};
+                deepClone(targetObject[item], resultObject[item]);
+            }
+        } else {
+            resultObject[item] = targetObject[item];
+        }
+    });
+}
+
+let oldSandbox = {};
+deepClone(sandbox, oldSandbox);
+
+function diff(object1, object2) {
+    let arr1 = new Array();
+    let arr2 = new Array();
+
+    function objectToArray(obj, arr) {
+        Object.keys(obj).forEach((item) => {
+            if (typeof obj[item] === 'object' && item !== 'global') {
+                objectToArray(obj[item], arr);
+            } else {
+                arr.push(item);
+            }
+        });
     }
+
+    objectToArray(object1, arr1);
+    objectToArray(object2, arr2);
+
+    arr1.forEach((item) => {
+        if (arr2.indexOf(item) === -1) {
+            console.log(`Added: ${item}`);
+        }
+    });
+    arr2.forEach((item) => {
+        if (arr1.indexOf(item) === -1) {
+            console.log(`Removed: ${item}`);
+        }
+    });
+}
 
 for (var i in process.argv)
 {
@@ -86,7 +123,7 @@ for (var i in process.argv)
             var script = vm.createScript(src, fileN);
             script.runInNewContext(sandbox);
 
-            printHashParams(sandbox);
+            diff(sandbox, oldSandbox);
         });
     }
 }
