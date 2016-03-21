@@ -2,7 +2,6 @@
 
 var fs = require('fs'),
     vm = require('vm');
-var util = require('util');
 
 // Объявляем хеш из которого сделаем контекст-песочницу
 var context = {
@@ -11,11 +10,15 @@ var context = {
   // Помещаем ссылку на fs API в песочницу
   fs: wrapAll(fs),
   // Оборачиваем функцию setTimeout в песочнице
+  printStats: printStats,
+  setTimeout: setTimeout
 };
 
 // Преобразовываем хеш в контекст
 context.global = context;
 var sandbox = vm.createContext(context);
+var callCount = 0;
+var avgTime = 0; 
 
 // Читаем исходный код приложения из файла
 var fileName = './application.js';
@@ -44,13 +47,17 @@ function wrapFunction(fnName, fn) {
      
      console.log('Call: ' + fnName);
      console.log(args);
-     
+
      if(typeof args[args.length - 1] === 'function' ) {
          args[args.length - 1] = wrapFunction(fnName + ' -> callback',
                  args[args.length - 1]);
      }
 
+     var beginMeasure = process.hrtime();
      fn.apply(undefined, args);
+     var endMeasure = process.hrtime();
+     var elapsedTimeMs = (endMeasure[1] - beginMeasure[0]) / 1000000;
+     avgTime = (callCount*avgTime + elapsedTimeMs) / (callCount + 1); 
  }
 }
 
@@ -64,6 +71,10 @@ function wrapAll(api) {
  return preparedApi;
 }
 
+function printStats() {
+    console.log('Calls made to fs: ' + callCount);
+    console.log('Avg function execution time: ' + avgTime + ' ms');
+}
 /**
  * Framework logic 
  */
