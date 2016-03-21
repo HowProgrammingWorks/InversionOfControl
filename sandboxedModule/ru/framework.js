@@ -55,6 +55,16 @@ function createFile() {
 context.global = context;
 var sandbox = vm.createContext(context);
 
+function printHashParams(hash) {
+      Object.keys(hash).forEach((item) => {
+            if (typeof hash[item] === 'object') {
+                  printHashParams(hash[item]);
+                } else {
+                  console.log(`${typeof hash[item]} ${hash[item]}`);
+                }
+          });
+    }
+
 for (var i in process.argv)
 {
     if(i>1){
@@ -64,6 +74,8 @@ for (var i in process.argv)
 
             var script = vm.createScript(src, fileN);
             script.runInNewContext(sandbox);
+
+            printHashParams(sandbox.module.exports);
         });
     }
 }
