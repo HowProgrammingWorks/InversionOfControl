@@ -22,7 +22,13 @@ var context = {
             console.log(text);
             writeToFile(text);
         }
-    }
+    },
+    require: (module) => {
+            const date = new Date();
+            const text = `${date.toUTCString()} ${module}\n`;
+            writeToFile(text);
+            return require(module);
+          }
 };
 
  //console.log(process.argv[2]);
