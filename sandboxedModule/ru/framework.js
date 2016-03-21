@@ -20,13 +20,30 @@ var context = {
             const date = new Date();
             const text = `${fileName} ${date.toUTCString()} ${message}`;
             console.log(text);
+            writeToFile(text);
         }
     }
 };
 
  //console.log(process.argv[2]);
 
+const logfile = 'awesome.log';
 
+    function writeToFile(message) {
+          fs.appendFile(logfile, `${message}\n`, (err) => {
+                if (err) {
+                      return console.log(err);
+                    }
+              });
+        }
+
+function createFile() {
+      fs.writeFile(logfile, '', (err) => {
+            if (err) {
+                  return console.log(err);
+                }
+          });
+    }
 
 
 context.global = context;
@@ -37,6 +54,7 @@ for (var i in process.argv)
     if(i>1){
         var fileN = './' + process.argv[i] + '.js';
         fs.readFile(fileN, function(err, src){
+            createFile();
 
             var script = vm.createScript(src, fileN);
             script.runInNewContext(sandbox);
