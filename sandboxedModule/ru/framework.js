@@ -10,25 +10,47 @@ var fs   = require('fs'),
 
 // Чоздаем контекст-песочницу, которая станет глобальным контекстом приложения
 var context = {
-  module      : {},
-  console     : console,
-  setTimeout  : setTimeout,
-  setInterval : setInterval,
-  util        : util
-  };
+    module      : {},
+    console     : console,
+    setTimeout  : setTimeout,
+    setInterval : setInterval,
+    util        : util,
+    console: {
+        log: (message) => {
+            const date = new Date();
+            const text = `${fileName} ${date.toUTCString()} ${message}`;
+            console.log(text);
+        }
+    }
+};
+
+ //console.log(process.argv[2]);
+
+
+
 
 context.global = context;
 var sandbox = vm.createContext(context);
 
+for (var i in process.argv)
+{
+    if(i>1){
+        var fileN = './' + process.argv[i] + '.js';
+        fs.readFile(fileN, function(err, src){
+
+            var script = vm.createScript(src, fileN);
+            script.runInNewContext(sandbox);
+        });
+    }
+}
 // Читаем исходный код приложения из файла
-var fileName = './application.js';
-fs.readFile(fileName, function(err, src) {
+//var fileName = './application2.js';
+//fs.readFile(fileName, function(err, src) {
   // Тут нужно обработать ошибки
   
   // Запускаем код приложения в песочнице
-  var script = vm.createScript(src, fileName);
-  script.runInNewContext(sandbox);
+  
   
   // Забираем ссылку из sandbox.module.exports, можем ее исполнить,
   // сохранить в кеш, вывести на экран исходный код приложения и т.д.
-});
+//});

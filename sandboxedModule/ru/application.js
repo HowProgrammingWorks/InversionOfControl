@@ -17,4 +17,4 @@ module.exports = function() {
   console.log('From application exported function');
 };
 
-util.log("Util module");
+//util.log("Util module");

@@ -1,0 +1,1 @@
+console.log('From second application global context'); 
