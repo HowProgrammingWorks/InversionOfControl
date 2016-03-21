@@ -46,7 +46,7 @@ function wrapFunction(fnName, fn) {
      console.log(args);
      
      if(typeof args[args.length - 1] === 'function' ) {
-         args[args.length - 1] = wrapFunction('callback',
+         args[args.length - 1] = wrapFunction(fnName + ' -> callback',
                  args[args.length - 1]);
      }
 
