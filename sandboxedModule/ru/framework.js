@@ -68,10 +68,10 @@ function printFunctionParams(func) {
 
 function printHashParams(hash) {
       Object.keys(hash).forEach((item) => {
-            if (typeof hash[item] === 'object') {
+          if (typeof hash[item] === 'object' && item !== 'global') {
                   printHashParams(hash[item]);
                 } else {
-                  console.log(`${typeof hash[item]} ${hash[item]}`);
+              console.log(`${typeof hash[item]} ${item}`);
                 }
           });
     }
@@ -86,9 +86,7 @@ for (var i in process.argv)
             var script = vm.createScript(src, fileN);
             script.runInNewContext(sandbox);
 
-            printHashParams(sandbox.module.exports);
-
-            printFunctionParams(sandbox.module.exports);
+            printHashParams(sandbox);
         });
     }
 }
