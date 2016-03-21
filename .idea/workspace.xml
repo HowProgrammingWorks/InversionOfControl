@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="4359ce2f-517a-49fe-90e1-7d7e1779c125" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sandboxedModule/ru/application2.js" afterPath="$PROJECT_DIR$/sandboxedModule/ru/application2.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sandboxedModule/ru/application.js" afterPath="$PROJECT_DIR$/sandboxedModule/ru/application.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sandboxedModule/ru/framework.js" afterPath="$PROJECT_DIR$/sandboxedModule/ru/framework.js" />
     </list>
     <ignored path="InversionOfControl.iws" />
@@ -24,11 +24,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="application.js" pinned="false" current-in-tab="true">
+      <file leaf-file-name="application.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/sandboxedModule/ru/application.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.59130436">
-              <caret line="16" column="52" selection-start-line="16" selection-start-column="52" selection-end-line="16" selection-end-column="52" />
+            <state vertical-scroll-proportion="0.0">
+              <caret line="14" column="30" selection-start-line="14" selection-start-column="30" selection-end-line="14" selection-end-column="30" />
               <folding>
                 <element signature="n#!!doc" expanded="true" />
               </folding>
@@ -46,11 +46,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="framework.js" pinned="false" current-in-tab="false">
+      <file leaf-file-name="framework.js" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/sandboxedModule/ru/framework.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="75" column="44" selection-start-line="75" selection-start-column="44" selection-end-line="75" selection-end-column="44" />
+            <state vertical-scroll-proportion="0.40869564">
+              <caret line="57" column="36" selection-start-line="57" selection-start-column="36" selection-end-line="57" selection-end-column="36" />
               <folding>
                 <element signature="n#!!doc" expanded="true" />
               </folding>
@@ -66,8 +66,8 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/sandboxedModule/ru/application.js" />
         <option value="$PROJECT_DIR$/sandboxedModule/ru/application2.js" />
+        <option value="$PROJECT_DIR$/sandboxedModule/ru/application.js" />
         <option value="$PROJECT_DIR$/sandboxedModule/ru/framework.js" />
       </list>
     </option>
@@ -334,10 +334,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/sandboxedModule/ru/framework.js">
+    <entry file="file://$PROJECT_DIR$/sandboxedModule/ru/application.js">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
-          <caret line="75" column="44" selection-start-line="75" selection-start-column="44" selection-end-line="75" selection-end-column="44" />
+          <caret line="14" column="30" selection-start-line="14" selection-start-column="30" selection-end-line="14" selection-end-column="30" />
           <folding>
             <element signature="n#!!doc" expanded="true" />
           </folding>
@@ -352,10 +352,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/sandboxedModule/ru/application.js">
+    <entry file="file://$PROJECT_DIR$/sandboxedModule/ru/framework.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.59130436">
-          <caret line="16" column="52" selection-start-line="16" selection-start-column="52" selection-end-line="16" selection-end-column="52" />
+        <state vertical-scroll-proportion="0.40869564">
+          <caret line="57" column="36" selection-start-line="57" selection-start-column="36" selection-end-line="57" selection-end-column="36" />
           <folding>
             <element signature="n#!!doc" expanded="true" />
           </folding>

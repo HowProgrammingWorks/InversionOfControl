@@ -12,7 +12,7 @@ setInterval (function() {
   console.log('setInterval triggered');
 }, 1000);
 
-module.exports = function() {
+module.exports = function(param1, param2, param3) {
   // Вывод из контекста экспортируемой функции
   console.log('From application exported function');
 };
