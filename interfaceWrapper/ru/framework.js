@@ -43,7 +43,6 @@ function wrapFunction(fnName, fn) {
      Array.prototype.push.apply(args, arguments);
      
      console.log('Call: ' + fnName);
-     console.log('Args: ' +  args.length);
      console.log(args);
      
      if(typeof args[args.length - 1] === 'function' ) {
