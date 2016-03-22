@@ -36,6 +36,10 @@ var context = { module: {}, console: newConsole, setTimeout: setTimeout,
 context.global = context;
 var sandbox = vm.createContext(context);
 
+var keys = {};
+for (var tmp in sandbox)
+	keys[tmp] = sandbox[tmp];
+
 // Читаем исходный код приложения из файла
 // Задание 3
 var fileName = process.argv[2] == null?'./application.js':process.argv[2];
@@ -48,10 +52,28 @@ fs.readFile(fileName, function(err, src) {
   var script = vm.createScript(src, fileName);
   script.runInNewContext(sandbox);
   
+  //Задание 10
+  console.log("----------TASK 10----------");
+  var newKeys = {};
+	for (var tmp in sandbox)
+		newKeys[tmp] = sandbox[tmp];
+
+	console.log("New keys:");
+	for (var tmp in newKeys) {
+		if (!(tmp in keys))
+			console.log(tmp);
+	}
+
+	console.log("Deleted keys:");
+	for (var tmp in keys) {
+		if (!(tmp in newKeys))
+			console.log(tmp);
+	}
+
   //Задание 7
   console.log("----------TASK 7----------");
-	for (var tmp in sandbox.module.exports) {
-		console.log(tmp + " -> " + typeof sandbox.module.exports[tmp]);
+  for (var tmp in sandbox.module.exports) {
+  	console.log(tmp + " -> " + typeof sandbox.module.exports[tmp]);
 	}
 
 	//Задание 8
