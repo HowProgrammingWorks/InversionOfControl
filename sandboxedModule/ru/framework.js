@@ -48,10 +48,17 @@ fs.readFile(fileName, function(err, src) {
   script.runInNewContext(sandbox);
   
   //Задание 7
-  console.log("--------TASK 7--------");
+  console.log("----------TASK 7----------");
 	for (var tmp in sandbox.module.exports) {
 		console.log(tmp + " -> " + typeof sandbox.module.exports[tmp]);
 	}
+
+	//Задание 8
+	console.log("----------TASK 8----------");
+	console.log(sandbox.module.exports.func.toString());
+	console.log('Amount of arguments: '+
+        sandbox.module.exports.func.toString().
+        replace(/.+\(/, '').replace(/\)[^]+/, '').split(/, */).length);
 
   sandbox.module.exports();
   // Забираем ссылку из sandbox.module.exports, можем ее исполнить,

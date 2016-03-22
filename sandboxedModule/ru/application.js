@@ -18,11 +18,10 @@ module.exports = function() {
   
 };
 
-//Задание 7
-module.exports.func = function() {
-    // Вывод из контекста экспортируемой функции
-    console.log('From application exported function');
-  };
+//Задания 7-8
+module.exports.func = function(argument, anotherArgum) {
+    console.log(argument);
+};
 
 module.exports.variable = 100;
 
