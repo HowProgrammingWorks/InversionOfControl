@@ -15,7 +15,9 @@ var Country = function (name, capital) {
 module.exports = function() {
   // Вывод из контекста экспортируемой функции
   console.log('From application exported function');
-  
+
+  //Задание 9
+  console.log(inspect(global, {colors: true}));
 };
 
 //Задания 7-8

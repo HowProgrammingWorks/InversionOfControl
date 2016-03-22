@@ -31,7 +31,8 @@ var newRequire = function(module) {
 
 // Создаем контекст-песочницу, которая станет глобальным контекстом приложения
 var context = { module: {}, console: newConsole, setTimeout: setTimeout, 
-				setInterval: setInterval, util: util, require: newRequire };
+				setInterval: setInterval, util: util, require: newRequire,
+				inspect: util.inspect };
 context.global = context;
 var sandbox = vm.createContext(context);
 
@@ -58,9 +59,11 @@ fs.readFile(fileName, function(err, src) {
 	console.log(sandbox.module.exports.func.toString());
 	console.log('Amount of arguments: '+
         sandbox.module.exports.func.toString().
-        replace(/.+\(/, '').replace(/\)[^]+/, '').split(/, */).length);
+        replace(/.+\(/, '').replace(/\)[^]+/, '').
+        split(/, */).length);
 
   sandbox.module.exports();
   // Забираем ссылку из sandbox.module.exports, можем ее исполнить,
   // сохранить в кеш, вывести на экран исходный код приложения и т.д.
+
 });
