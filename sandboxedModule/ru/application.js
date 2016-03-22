@@ -5,7 +5,19 @@
 // Вывод из глобального контекста модуля
 console.log('From application global context');
 
-module.exports = function() {
-  // Вывод из контекста экспортируемой функции
-  console.log('From application exported function');
+var cube=function(a){
+	this.a=a;
+	this.Volume=a*a*a;
+};
+
+module.exports = function() {// Вывод из контекста экспортируемой функции
+console.log('From application exported function');
+var A=new cube(3);
+
+console.log(util.format("Викликаю util.format та util.inspect: %s",util.inspect(A)));
+
+setInterval(()=>console.log("From applications.js SetInterval"), 1000);
+setTimeout(()=>console.log("From applications.js SetTimeout"), 4500);
+
+
 };
