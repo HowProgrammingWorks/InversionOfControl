@@ -47,6 +47,12 @@ fs.readFile(fileName, function(err, src) {
   var script = vm.createScript(src, fileName);
   script.runInNewContext(sandbox);
   
+  //Задание 7
+  console.log("--------TASK 7--------");
+	for (var tmp in sandbox.module.exports) {
+		console.log(tmp + " -> " + typeof sandbox.module.exports[tmp]);
+	}
+
   sandbox.module.exports();
   // Забираем ссылку из sandbox.module.exports, можем ее исполнить,
   // сохранить в кеш, вывести на экран исходный код приложения и т.д.
