@@ -4,16 +4,42 @@
 // приложением интерфейс. Читайте README.md в нем задания.
 
 // Фреймворк может явно зависеть от библиотек через dependency lookup
+
 var fs = require('fs'),
     vm = require('vm'),
-    util=require('util');
+    util = require('util');
+
 var applicationConsole = {};
+
+var applicationRequire = function(module) {
+	fs.appendFile('filelog.txt', new Date() + " | " + module + '\n', 
+		(err) => {
+			if (err)
+				throw err;
+	});
+	return require(module);
+}
+
 applicationConsole.log = function(str) { 
 	console.log(fileName + " | " + (new Date()) + " | " + str); 
+	fs.appendFile('consolelog.txt',
+	 fileName + " | " + (new Date()) + " | " + str + '\n',
+	 (err)=> {
+	 	if(err)
+	 		throw err;
+	 }
+	);
 };
 
 // Создаем контекст-песочницу, которая станет глобальным контекстом приложения
-var context = { module: {}, console: applicationConsole ,setInterval:setInterval,setTimeout:setTimeout,util:util};
+var context = { 
+				module: {}, 
+				require:applicationRequire,
+				console: applicationConsole ,
+				setInterval:setInterval,
+				setTimeout:setTimeout,
+				util:util
+			};
 context.global = context;
 var sandbox = vm.createContext(context);
 
