@@ -7,9 +7,13 @@
 var fs = require('fs'),
     vm = require('vm'),
     util=require('util');
+var applicationConsole = {};
+applicationConsole.log = function(str) { 
+	console.log(fileName + " | " + (new Date()) + " | " + str); 
+};
 
 // Создаем контекст-песочницу, которая станет глобальным контекстом приложения
-var context = { module: {}, console: console,setInterval:setInterval,setTimeout:setTimeout,util:util};
+var context = { module: {}, console: applicationConsole ,setInterval:setInterval,setTimeout:setTimeout,util:util};
 context.global = context;
 var sandbox = vm.createContext(context);
 
