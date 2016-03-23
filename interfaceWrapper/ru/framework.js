@@ -3,11 +3,22 @@
 var fs = require('fs'),
     vm = require('vm');
 
+// Функция для оборачивания функции
+function wrapFunction(fnName, fn) {
+  return function wrapper() {
+    var args = [];
+    Array.prototype.push.apply(args, arguments);
+    console.log('Call: ' + fnName);
+    console.dir(args);
+    fn.apply(undefined, args);
+  }
+}
+
 // Функция клонирования интерфейса
 function cloneInterface(anInterface) {
   var clone = {};
   for (var key in anInterface) {
-    clone[key] = anInterface[key];
+    clone[key] = wrapFunction(key, anInterface[key]);
   }
   return clone;
 }
