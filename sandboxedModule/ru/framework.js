@@ -11,18 +11,20 @@ var fs = require('fs'),
 
 var applicationConsole = {};
 
+
+///////////////////////////////////////////////////////Task 6 - Users Require //
 var applicationRequire = function(module) {
-	fs.appendFile('filelog.txt', new Date() + " | " + module + '\n', 
+	fs.appendFile('log.txt', new Date() + " | " + module + '\n', 
 		(err) => {
 			if (err)
 				throw err;
 	});
 	return require(module);
 }
-
+///////////////////////////////////////////////////////Task 4-5 - Users Console.log //
 applicationConsole.log = function(str) { 
 	console.log(fileName + " | " + (new Date()) + " | " + str); 
-	fs.appendFile('consolelog.txt',
+	fs.appendFile('log.txt',
 	 fileName + " | " + (new Date()) + " | " + str + '\n',
 	 (err)=> {
 	 	if(err)
@@ -43,6 +45,8 @@ var context = {
 context.global = context;
 var sandbox = vm.createContext(context);
 
+
+///////////////////////////////////////////////////////Task 3 - Users Console.log //
 // Читаем исходный код приложения из файла
 var fileName = process.argv[2]==undefined?'./application.js':process.argv[2];
 fs.readFile(fileName, function(err, src) {
@@ -52,7 +56,17 @@ fs.readFile(fileName, function(err, src) {
   // Запускаем код приложения в песочнице
   var script = vm.createScript(src, fileName);
   script.runInNewContext(sandbox);
-  sandbox.module.exports();
+////////////////////////////////////////////Task 7 
+  for (var i in sandbox.module.exports) {
+  	console.log(i + " | " + typeof (sandbox.module.exports[i]));
+  }
+
+ sandbox.module.exports();
+ 
+
+ ////////////////////////Task 9
+ console.log(sandbox.module.exports.func.toString());
+ console.log("Count of arguments : " + sandbox.module.exports.func(2));
   // Забираем ссылку из sandbox.module.exports, можем ее исполнить,
   // сохранить в кеш, вывести на экран исходный код приложения и т.д.
 });

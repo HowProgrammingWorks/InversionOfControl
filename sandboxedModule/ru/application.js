@@ -3,7 +3,7 @@
 // кусочком фреймворка. Читайте README.md в нем задания.
 
 // Вывод из глобального контекста модуля
-console.log('From application global context');
+//console.log('From application global context');
 
 var cube=function(a){
 	this.a=a;
@@ -16,9 +16,17 @@ var A=new cube(3);
 
 console.log(util.inspect(global, false, 2, true));
 
-console.log(util.format("Викликаю util.format та util.inspect: %s",util.inspect(A)));
+console.log(util.format("Use util.format and util.inspect: %s",util.inspect(A)));
 
-setInterval(()=>console.log("From applications.js SetInterval"), 1000);
-setTimeout(()=>console.log("From applications.js SetTimeout"), 4500);
+//Task 1 
+//please uncomment next: 
+
+
+//setInterval(()=>console.log("From applications.js SetInterval"), 1000);
+//setTimeout(()=>console.log("From applications.js SetTimeout"), 4500);
 
 };
+module.exports.func=function(number){
+	console.log("Task 7-8 function: parameter = "+"number");
+	return arguments.length;
+}
