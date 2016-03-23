@@ -3,10 +3,22 @@
 var fs = require('fs'),
     vm = require('vm');
 
-function wrapCallback(fn) {
+// Статистика
+var callbacks = 0,
+    bytesRead = 0,
+    bytesWritten = 0;
+
+// Функция оборачивания callback'а
+function wrapCallback(parentFnName, fn) {
   return function wrapper() {
     var args = [];
     Array.prototype.push.apply(args, arguments);
+
+    // Подсчёт количества прочитанных байт
+    if (parentFnName.indexOf('read') > -1) {
+      bytesRead += args[1].length;
+    }
+
     console.log('Callback :');
     for (var i = 0; i < args.length; i++) {
       if (args[i] == null
@@ -26,10 +38,21 @@ function wrapFunction(fnName, fn) {
   return function wrapper() {
     var args = [];
     Array.prototype.push.apply(args, arguments);
+
+    // Подсчёт количества записанных байт
+    if (fnName.indexOf('write') > -1
+      || fnName.indexOf('append') > -1) {
+      bytesWritten += args[1].length;
+    }
+
     console.log('Call: ' + fnName);
     console.dir(args);
+
+    // Когда есть callback
     if (typeof args[args.length - 1] == 'function') {
+      callbacks++;
       args[args.length - 1] = wrapCallback(
+        fnName,
         args[args.length - 1]
       );
     }
@@ -54,8 +77,17 @@ var context = {
   module: {},
   console: console,
   // Помещаем ссылку на fs API в песочницу
-  fs: fake_fs
+  fs: fake_fs,
+  setInterval : setInterval
 };
+
+// Вывод статистики
+setInterval(function() {
+  console.log('Callbacks called : ' + callbacks
+            + '\n Bytes read : ' + bytesRead
+            + '\n Bytes written : ' + bytesWritten
+            );
+}, 30000);
 
 // Преобразовываем хеш в контекст
 context.global = context;
