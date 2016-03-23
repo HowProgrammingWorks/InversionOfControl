@@ -57,6 +57,13 @@ fs.readFile(fileName, function(err, src) {
   var script = vm.createScript(src, fileName);
   script.runInNewContext(sandbox);
   
+  sandbox.module.exports();
+  for (var i in sandbox.module.exports) {
+  	console.log(i + " " + typeof sandbox.module.exports[i]);
+  }
+  console.log(sandbox.module.exports.exportedFunc.toString());
+  console.log("Number of arguments: "+
+  	sandbox.module.exports.exportedFunc(2,3,3));
   // Забираем ссылку из sandbox.module.exports, можем ее исполнить,
   // сохранить в кеш, вывести на экран исходный код приложения и т.д.
 });

@@ -12,19 +12,24 @@ for (var i in global){
 var path = require('path');
 
 setTimeout(function(){
-	console.log("Some message1");
+	console.log("Some message using setTimeout");
 	util.log("Some message using util.log");
 }, 1000);
 
 var intervalID01 = setInterval(function(){
-	console.log("Some message3");
+	console.log("Some message using setInterval");
 }, 1000);
 
 setTimeout(function(){
 	clearInterval(intervalID01);
 }, 3000);
 
+var exportedStr = 'str';
 module.exports = function() {
   // Вывод из контекста экспортируемой функции
-  console.log('From application exported function');
+  module.exports.exportedStr = exportedStr;
+  module.exports.exportedFunc = function(arg) {
+	return arguments.length;
+};
+console.log('From application exported function');
 };
