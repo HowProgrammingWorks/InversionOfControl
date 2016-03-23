@@ -1,0 +1,5 @@
+./application.js... 18:16:00---We use util.format
+./application.js... 18:16:00---path is required.
+./application.js... 18:16:01---In setTimeout!!!!!
+./application.js... 18:16:01---In setInterval!!!!!
+./application.js... 18:16:02---In setInterval!!!!!

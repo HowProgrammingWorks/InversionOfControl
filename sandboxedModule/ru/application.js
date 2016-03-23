@@ -3,9 +3,22 @@
 // кусочком фреймворка. Читайте README.md в нем задания.
 
 // Вывод из глобального контекста модуля
-console.log('From application global context');
 
-module.exports = function() {
-  // Вывод из контекста экспортируемой функции
-  console.log('From application exported function');
+setTimeout(function(){
+	console.log("In setTimeout!!!!!")
+}, 1000);
+setInterval(function(){
+	console.log("In setInterval!!!!!")
+}, 1000);
+
+console.log(util.format('We use %s.%s', 'util', 'format'));
+module.exports ={
+	'Var1': 1,
+ 	'Var2': 'Val2',
+ 	func: function(i) {
+	console.log("Some String."+i);
+}
 };
+(function testRequire() {
+ 	require('path');
+})()
