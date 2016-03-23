@@ -19,7 +19,7 @@ how wrapper works for `setTimeout`.
 ## Tasks
 
 1. Learn how `setTimeout` is wrapped in example: `framework.js`. Now we will
-try to wrap module fs. We can iterat all of its functions by following code:
+try to wrap module fs. We can iterate all of its functions by following code:
 `for (var key in fs) {...}` and replace its function with wrapped ones. We need
 a closure function and it should be universal to wrap any function in fs
 interface. The purpose of this example wrapper is to log all calls to the file
@@ -39,11 +39,11 @@ following code:
   ```
 This example contains a call to `fs.readFile`. In next steps we will change the
 behavior of the code changing `framework.js` and wrapping all `fs` functions.
-Let`s run `node framework` and make sure that it reads th file displays its
+Let's run `node framework` and make sure that it reads the file and displays its
 length.
 3. Next step is preparing function `cloneInterface(interfaceName)` for cloning
 all keys from given library into new interface. So we can pass its result
-(cloned `fs`) to sandbox instead of `fs`. Clonning function example:
+(cloned `fs`) to sandbox instead of `fs`. Cloning function example:
 
   ```JavaScript
   function cloneInterface(anInterface) {
@@ -55,7 +55,7 @@ all keys from given library into new interface. So we can pass its result
   }
   ```
 4. After that we can add wrapper `wrapFunction(fnName, fn)` with 2 arguments:
-name of the function and link to a function itself. It returns `wrapper` -
+name of the function and link to a function itself. It returns `wrapper` —
 closure function. Closure `wrapper` is a newly created function with the help
 of functional inheritance, so it will see `fnName`, `fn` in its context. Thus
 we can pass all arguments from wrapper into original function as you see in
@@ -68,7 +68,7 @@ example:
       Array.prototype.push.apply(args, arguments);
       console.log('Call: ' + fnName);
       console.dir(args);
-      fn.apply(undefined, args);
+      return fn.apply(undefined, args);
     }
   }
   ```
@@ -76,7 +76,7 @@ example:
 5. Now should detect do we have `callback` argument as a last argument of
 function call, we can do that by `typeof()` comparing to `function`. If we have
 `callback`, we need to wrap it too, so pass ours function instead of `callback`
-and then call ariginal `callback` from this function.
+and then call original `callback` from this function.
 6. Then we can call other functions of `fs` interface from `application.js` and
 try to run wrapped code.
 7. Add timers in `application.js` and make multiple calls working with files. So
