@@ -3,6 +3,24 @@
 var fs = require('fs'),
     vm = require('vm');
 
+function wrapCallback(fn) {
+  return function wrapper() {
+    var args = [];
+    Array.prototype.push.apply(args, arguments);
+    console.log('Callback :');
+    for (var i = 0; i < args.length; i++) {
+      if (args[i] == null
+        || args[i].length === 'undefined'
+        || args[i].length < 100)
+        console.dir(args[i]);
+      else {
+        console.dir(typeof args[i]);
+      }
+    }
+    fn.apply(undefined, args);
+  }
+}
+
 // Функция для оборачивания функции
 function wrapFunction(fnName, fn) {
   return function wrapper() {
@@ -10,6 +28,11 @@ function wrapFunction(fnName, fn) {
     Array.prototype.push.apply(args, arguments);
     console.log('Call: ' + fnName);
     console.dir(args);
+    if (typeof args[args.length - 1] == 'function') {
+      args[args.length - 1] = wrapCallback(
+        args[args.length - 1]
+      );
+    }
     fn.apply(undefined, args);
   }
 }
