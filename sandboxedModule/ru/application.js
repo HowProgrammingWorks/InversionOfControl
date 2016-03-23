@@ -29,7 +29,7 @@ module.exports = function() {
   // Вывод из контекста экспортируемой функции
   module.exports.exportedStr = exportedStr;
   module.exports.exportedFunc = function(arg) {
-	return arguments.length;
-};
-console.log('From application exported function');
+  	return arguments.length;
+  };
+  console.log('From application exported function');
 };

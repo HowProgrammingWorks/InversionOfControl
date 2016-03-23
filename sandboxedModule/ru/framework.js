@@ -48,6 +48,8 @@ context.require = function (module) {
 context.global = context;
 var sandbox = vm.createContext(context);
 
+var keysBefore = clone(sandbox.global);
+
 // Читаем исходный код приложения из файла
 var fileName = process.argv[2] || './application.js';
 fs.readFile(fileName, function(err, src) {
@@ -56,7 +58,9 @@ fs.readFile(fileName, function(err, src) {
   // Запускаем код приложения в песочнице
   var script = vm.createScript(src, fileName);
   script.runInNewContext(sandbox);
-  
+
+  compareKeys();
+
   sandbox.module.exports();
   for (var i in sandbox.module.exports) {
   	console.log(i + " " + typeof sandbox.module.exports[i]);
@@ -67,3 +71,21 @@ fs.readFile(fileName, function(err, src) {
   // Забираем ссылку из sandbox.module.exports, можем ее исполнить,
   // сохранить в кеш, вывести на экран исходный код приложения и т.д.
 });
+
+function clone(obj) {
+	if (null == obj || "object" != typeof obj) return obj;
+	var copy = obj.constructor();
+	for (var attr in obj) {
+		if (obj.hasOwnProperty(attr)) copy[attr] = obj[attr];
+	}
+	return copy;
+}
+
+function compareKeys(){
+	for(var i in keysBefore){
+		if(!(i in sandbox.global)) console.log("Deleted: "+i);
+	}
+	for(var i in sandbox.global){
+		if(!(i in keysBefore)) console.log("Added: "+i);
+	}
+}
