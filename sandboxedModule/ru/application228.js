@@ -1,3 +1,6 @@
+/**
+ * Created by senior on 23.03.16.
+ */
 // Файл содержит маленький кусочек основного модуля демонстрационного
 // прикладного приложения, загружаемого в песочницу демонстрационным
 // кусочком фреймворка. Читайте README.md в нем задания.
@@ -5,15 +8,8 @@
 //Req call to test task 6
 var someModule = require('./reqModule');
 
-
-/*
- Task 9: print a list of everything from the application
- global context with the data types specified
- */
-console.log('-----Task 9: list fo everything from app global context-----');
-for (var key in global) {
-    console.log(key + ' : ' + typeof global[key]);
-}
+// Вывод из глобального контекста модуля
+console.log('From application global context');
 
 module.exports = {
     firstFunction: function () {

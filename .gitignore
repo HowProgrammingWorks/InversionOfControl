@@ -1,3 +1,4 @@
 node_modules
 crlf.js
-*.log
+*.txt
+.idea
