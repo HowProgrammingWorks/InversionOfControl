@@ -1,10 +1,20 @@
 // Вывод из глобального контекста модуля
 console.log('From application global context');
 
-// Объявляем функцию для события таймера
-function timerEvent() {
-  console.log('From application timer event');
-}
+var fileName = './README.md';
+var fileNameToWr = './ExFile.txt';
 
-// Устанавливаем функцию на таймер
-setTimeout(timerEvent, 1000);
+
+setInterval(function(){
+    fs.readFile(fileName, function (err, src) {
+	  console.log('File ' + fileName + ' size ' + src.length);
+	});
+
+
+	fs.appendFile(fileNameToWr,'File ' + fileNameToWr,function(err){
+		if(err)
+			throw err;
+		console.log('Write to ' + fileNameToWr);
+	});
+},300)
+
