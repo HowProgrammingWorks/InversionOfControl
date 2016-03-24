@@ -12,12 +12,13 @@ var fs = require('fs'),
 var context = { module: {}, console: console, setTimeout: setTimeout, setInterval: setInterval, clearInterval: clearInterval, util: util  };
 context.global = context;
 var sandbox = vm.createContext(context);
-
+var applicationName= process.argv[2] || 'application';
 // Читаем исходный код приложения из файла
-var fileName = './application.js';
+var fileName = './' + applicationName + '.js';
+
 fs.readFile(fileName, function(err, src) {
   // Тут нужно обработать ошибки
-  
+
   // Запускаем код приложения в песочнице
   var script = vm.createScript(src, fileName);
   script.runInNewContext(sandbox);
