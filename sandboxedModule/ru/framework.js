@@ -62,4 +62,8 @@ fs.readFile(fileName, function(err, src) {
   
   // Забираем ссылку из sandbox.module.exports, можем ее исполнить,
   // сохранить в кеш, вывести на экран исходный код приложения и т.д.
+  var fromSandbox = sandbox.module.exports;
+      for(var key in fromSandbox){
+            console.log(key + ' ' + typeof (fromSandbox[key]));
+      }
 });

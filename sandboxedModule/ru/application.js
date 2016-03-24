@@ -12,6 +12,11 @@ module.exports = function() {
   // Вывод из контекста экспортируемой функции
   console.log('From application exported function');
 };
+module.exports.print = function(text) {
+        console.log(text);
+    }
+module.exports.variable = 42;
+module.exports.word = 'inversion';
 //Работа с setTimeout и setInterval
 var timeout = function(){
           console.log('Timeout: 3 seconds');
