@@ -44,6 +44,7 @@ function cloneInterface(anInterface) {
 function wrapFunction(fnName, fn) {
  return function wrapper() {
      var args = [];
+     callCount++;
      Array.prototype.push.apply(args, arguments);
      
      console.log('Call: ' + fnName);
