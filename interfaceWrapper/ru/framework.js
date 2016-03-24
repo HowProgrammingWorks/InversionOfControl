@@ -11,7 +11,8 @@ var context = {
   fs: wrapAll(fs),
   // Оборачиваем функцию setTimeout в песочнице
   printStats: printStats,
-  setTimeout: setTimeout
+  setTimeout: setTimeout,
+  setInterval: setInterval
 };
 
 // Преобразовываем хеш в контекст
@@ -72,8 +73,10 @@ function wrapAll(api) {
 }
 
 function printStats() {
+    console.log('*******************************');
     console.log('Calls made to fs: ' + callCount);
     console.log('Avg function execution time: ' + avgTime + ' ms');
+    console.log('*******************************');
 }
 /**
  * Framework logic 
