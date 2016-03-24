@@ -10,21 +10,43 @@ var fs = require('fs'),
 
 // Запуск фреймворка с разными приложениями через командную строку
 var applicationName = process.argv[2] || 'application';
+
+//запись в файл для логирования
+function putIntoLogFile(text) {
+  fs.appendFile(('./' + applicationName + '.log'), (text + '\n'), function (err) {
+    if (err) throw err;
+  });
+}
 // Обертка для вызова console.log()
 var sandboxConsole = {};
 sandboxConsole.log = function() {
   var now = new Date();
   var this_log = applicationName + ' ' + now.toDateString() + ' ' + now.toLocaleTimeString() + ' ' + arguments[0];
 
-  fs.appendFile(('./' + applicationName + '.log'), (this_log + '\n'), function(err) {
-    if (err) throw err;
-  });
+  putIntoLogFile(this_log);
 
   console.log(this_log);
   }
 
+// Обертка для вызова require
+function wrappedRequire(lib){
+  var now =new Date();
+  var this_log = now.toDateString() + ' ' + now.toLocaleTimeString() + ' ' + lib;
+
+  putIntoLogFile(this_log);
+
+  return require(lib);
+}
+
 // Создаем контекст-песочницу, которая станет глобальным контекстом приложения
-var context = { module: {}, console: sandboxConsole, setTimeout: setTimeout, setInterval: setInterval, clearInterval: clearInterval, util: util  };
+var context = { module: {},
+  console: sandboxConsole,
+  setTimeout: setTimeout,
+  setInterval: setInterval,
+  clearInterval: clearInterval,
+  util: util,
+  require: wrappedRequire
+};
 context.global = context;
 var sandbox = vm.createContext(context);
 

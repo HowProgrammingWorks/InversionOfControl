@@ -5,6 +5,9 @@
 // Вывод из глобального контекста модуля
 console.log('From application global context');
 
+// Подключение зависимостей
+var application2 = require('./application2.js');
+
 module.exports = function() {
   // Вывод из контекста экспортируемой функции
   console.log('From application exported function');
@@ -31,3 +34,4 @@ setTimeout(clear_interval,3000);
 var timestamp_id = util.log('Use util.log()');
 var format_id= util.log(util.format('%s,%s %d','Hello ', 'node v',5.6));
 
+application2.SomeFunction();
