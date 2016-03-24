@@ -7,6 +7,9 @@ var fs = require('fs'),
 var context = {
   module: {},
   console: console,
+  setTimeout: setTimeout,
+  setInterval: setInterval,
+  clearInterval: clearInterval,
   // Помещаем ссылку на fs API в песочницу
   fs: cloneInterface(fs)
 };
