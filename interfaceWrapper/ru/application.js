@@ -1,7 +1,7 @@
 var fileName = './README.md';
 
 console.log('Application going to read ' + fileName);
-var countdown = 10;
+var countdown = 40;
 setTimeout(function f() {
     countdown--;
 
@@ -22,7 +22,7 @@ setTimeout(function f() {
     if(countdown > 0) {
         setTimeout(f, 2500);
     }
-}, 1500);
+}, 1000);
 
 setInterval(function() {
     printStats();
