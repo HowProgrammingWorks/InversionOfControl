@@ -78,21 +78,13 @@ fs.readFile(fileName, function(err, src) {
     console.log('Keys from framework befor start application:' +
                 before + '\nKeys from framework befor start application:' + after);
     
-    var added = 0, finded = 0;
-    for (var i in after){
-        checked = false;
-        for(var j in before){
-            if(i == j) {
-                checked = true;
-                break;
-            }
-        }
-        if(checked){ 
-            finded++;
-        }
-        else{
-            added++;
-        }
-    }
-    console.log('Added: ' + added + ', deleted: ' +                           (before.length - finded));
+    // Проверка добавленых и удаленных ключей.
+    var added = after.filter(function(element){
+        return (before.indexOf(element) == -1);
+    }).length,
+        deleted = before.filter(function(element){
+        return (after.indexOf(element) == -1);    
+    }).length;
+    
+    console.log('Added: ' + added + ', deleted: ' +                           deleted);
 });
