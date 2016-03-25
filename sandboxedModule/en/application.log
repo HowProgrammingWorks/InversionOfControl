@@ -6,3 +6,9 @@ application Fri Mar 25 2016 3:26:06 PM Interval: 2 second
 application Fri Mar 25 2016 3:26:08 PM Interval: 2 second
 application Fri Mar 25 2016 3:26:10 PM Interval: 2 second
 application Fri Mar 25 2016 3:26:12 PM Interval: 2 second
+Fri Mar 25 2016 3:28:23 PM ./application2.js
+application Fri Mar 25 2016 3:28:23 PM From application global context
+application Fri Mar 25 2016 3:28:23 PM Hello, console!
+application Fri Mar 25 2016 3:28:24 PM Timeout: 1 second
+application Fri Mar 25 2016 3:28:25 PM Interval: 2 second
+application Fri Mar 25 2016 3:28:27 PM Interval: 2 second
