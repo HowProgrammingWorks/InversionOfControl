@@ -1,21 +1,13 @@
 // Файл содержит маленький кусочек основного модуля демонстрационного
 // прикладного приложения, загружаемого в песочницу демонстрационным
 // кусочком фреймворка. Читайте README.md в нем задания.
-
 // Вывод из глобального контекста модуля
 console.log('From application global context');
+//setTimeout(function(){ console.log('!!!'); },1000); 1-я лаба
+//setInterval(function(){ console.log('!!!'); },1000);
+//util.log("Util module"); 2-я лаба
 
 module.exports = function() {
   // Вывод из контекста экспортируемой функции
   console.log('From application exported function');
 };
-
-
-
-var f=util.format(1,2,3);
-
-util.log('Timestamped message.');
-
-setTimeout(function(){
-  console.log('Two seconds later');
-  }, 2000);
