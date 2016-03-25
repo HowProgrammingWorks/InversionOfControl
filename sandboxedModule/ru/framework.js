@@ -5,22 +5,27 @@
 
 // Фреймворк может явно зависеть от библиотек через dependency lookup
 var fs = require('fs'),
-    vm = require('vm');
-	util = require('util');
+    vm = require('vm'),
+	util = require('util'),
+	path = require('path');
 
 // Чоздаем контекст-песочницу, которая станет глобальным контекстом приложения
 var context = { 
-module: {},
-console: console,
-setTimeout: setTimeout,
-setInterval: setInterval,
-util: util
+	module: {}, 
+	console: {
+		log: function() {
+			[].unshift.call(arguments, path.basename(__filename), new Date());
+			console.log.apply(this, arguments);
+		}
+	} 
 };
+
 context.global = context;
 var sandbox = vm.createContext(context);
 
 // Запуск фреймворка с разными приложениями через командную строку
 var applicationName = process.argv[2] || 'application';
+
 
 // Читаем исходный код приложения из файла
 var fileName = './' + applicationName + '.js';
