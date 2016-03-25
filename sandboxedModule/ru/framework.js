@@ -17,6 +17,11 @@ var sandboxConsole = {};
 sandboxConsole.log = function() {
       var now = new Date();
       var this_log = applicationName + ' ' + now.toDateString() + ' ' + now.toLocaleTimeString() + ' ' + arguments[0];
+	  
+	  fs.appendFile(('./' + applicationName + '.log'), (this_log + '\n'), function(err){
+        if (err) throw err; 
+      });
+	  
       console.log(this_log);
 }
 
