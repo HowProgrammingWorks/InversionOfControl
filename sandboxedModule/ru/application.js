@@ -47,3 +47,7 @@ var timestamp_id = util.log('Use util.log()');
 var format_id= util.log(util.format('%s,%s %d','Hello ', 'node v',5.6));
 
 application2.SomeFunction();
+
+for(var key in global) {
+    console.log(key + ' ' + typeof (global[key]));
+}
