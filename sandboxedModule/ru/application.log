@@ -2,3 +2,15 @@ application Fri Mar 25 2016 13:42:36 From application global context
 application Fri Mar 25 2016 13:59:29 From application global context
 application Fri Mar 25 2016 14:07:03 From application global context
 application Fri Mar 25 2016 14:07:07 From application global context
+Fri Mar 25 2016 14:41:47 ./application2.js
+application Fri Mar 25 2016 14:41:47 From application global context
+Fri Mar 25 2016 15:31:28 ./application2.js
+application Fri Mar 25 2016 15:31:28 From application global context
+application Fri Mar 25 2016 15:31:29 Hello, console!
+application Fri Mar 25 2016 15:31:30 Timeout: 1 second
+application Fri Mar 25 2016 15:31:31 Interval: 2 second
+application Fri Mar 25 2016 15:31:33 Interval: 2 second
+application Fri Mar 25 2016 15:31:35 Interval: 2 second
+application Fri Mar 25 2016 15:31:37 Interval: 2 second
+application Fri Mar 25 2016 15:31:39 Interval: 2 second
+application Fri Mar 25 2016 15:31:39 Timer cleared
