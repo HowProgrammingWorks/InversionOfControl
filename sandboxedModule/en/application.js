@@ -5,7 +5,7 @@
 console.log('From application global context');
 //setTimeout(function(){ console.log('!!!'); },1000); 1-я лаба
 //setInterval(function(){ console.log('!!!'); },1000);
-//util.log("Util module"); 2-я лаба
+//util.log("Util module"); //2-я лаба
 
 module.exports = function() {
   // Вывод из контекста экспортируемой функции
