@@ -20,7 +20,7 @@ module.exports.print = function(text) {
         console.log(text);
     }
 
-    }
+}
 
 module.exports.variable = 42;
 module.exports.word = 'inversion';
