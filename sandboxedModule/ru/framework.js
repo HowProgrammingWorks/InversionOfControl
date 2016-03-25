@@ -2,7 +2,6 @@
 // исполнения приложения, загружает приложение, передает ему песочницу в
 // качестве глобального контекста и получает ссылу на экспортируемый
 // приложением интерфейс. Читайте README.md в нем задания.
-
 // Фреймворк может явно зависеть от библиотек через dependency lookup
 var fs = require('fs'),
     vm = require('vm'),
@@ -25,12 +24,24 @@ sandboxConsole.log = function() {
       console.log(this_log);
 }
 
+function wrappedRequire(lib){
+    var now = new Date();
+    var this_log = now.toDateString() + ' ' + now.toLocaleTimeString() + ' ' + lib;
+ 
+    fs.appendFile(('./' + applicationName + '.log'), (this_log + '\n'), function(err){
+        if (err) throw err; 
+      });
+ 
+    return require(lib);
+}
+
  var context = { module: {},
                 console: sandboxConsole,
                 setTimeout: setTimeout,
                 setInterval: setInterval,
                 //clearInterval: clearInterval,
                 util: util,
+				require: wrappedRequire,
                }; 
   
 context.global = context;
