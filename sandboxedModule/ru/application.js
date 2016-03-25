@@ -11,10 +11,17 @@ var application2 = require('./application2.js');
 module.exports = function() {
   // Вывод из контекста экспортируемой функции
   console.log('From application exported function');
+
 };
+
 module.exports.print = function(text) {
+
+    for(i=0; i<=3;i++){
         console.log(text);
     }
+
+    }
+
 module.exports.variable = 42;
 module.exports.word = 'inversion';
 //Работа с setTimeout и setInterval

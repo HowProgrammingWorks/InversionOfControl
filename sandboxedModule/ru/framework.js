@@ -66,4 +66,6 @@ fs.readFile(fileName, function(err, src) {
       for(var key in fromSandbox){
             console.log(key + ' ' + typeof (fromSandbox[key]));
       }
+  console.log('Exported function:\n'+
+                      'text ' + fromSandbox.print.toString());
 });
