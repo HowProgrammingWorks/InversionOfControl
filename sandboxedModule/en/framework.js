@@ -55,12 +55,16 @@ var sandbox = vm.createContext(context);
 var fileName = './' + applicationName + '.js';
 
 fs.readFile(fileName, function(err, src) {
-  // Тут нужно обработать ошибки
+    // Тут нужно обработать ошибки
   
-  // Запускаем код приложения в песочнице
-  var script = vm.createScript(src, fileName);
-  script.runInNewContext(sandbox);
+    // Запускаем код приложения в песочнице
+    var script = vm.createScript(src, fileName);
+    script.runInNewContext(sandbox);
   
-  // Забираем ссылку из sandbox.module.exports, можем ее исполнить,
-  // сохранить в кеш, вывести на экран исходный код приложения и т.д.
+    // Забираем ссылку из sandbox.module.exports, можем ее исполнить,
+    // сохранить в кеш, вывести на экран исходный код приложения и т.д.
+    var fromSandbox = sandbox.module.exports;
+    for(var key in fromSandbox){
+        console.log(key + ' ' + typeof (fromSandbox[key]));
+  }
 });
