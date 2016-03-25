@@ -1,20 +1,17 @@
-// File contains a small piece of the source to demonstrate main module
-// of a sample application to be executed in the sandboxed context by
-// another pice of code from `framework.js`. Read README.md for tasks.
+// Файл содержит маленький кусочек основного модуля демонстрационного
+// прикладного приложения, загружаемого в песочницу демонстрационным
+// кусочком фреймворка. Читайте README.md в нем задания.
 
-// Print from the global context of application module
+// Вывод из глобального контекста модуля
 console.log('From application global context');
 
 module.exports = function() {
-	// Print from the exported function context
+  // Вывод из контекста экспортируемой функции
   console.log('From application exported function');
 };
 
-setTimeout(function () {
-	console.log('setTimeout triggered');
-}, 1000);
+var f=util.format(1,2,3);
 
+console.log(f);
 
-setInterval(function () {
-	console.log('setInterval triggered');
-}, 1000);
+util.log('Timestamped message.');

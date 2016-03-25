@@ -1,32 +1,27 @@
-// Example showing us how the framework creates an environment (sandbox) for
-// appication runtime, load an application code and passes a sandbox into app
-// as a global context and receives exported application interface
+// Файл, демонстрирующий то, как фреймворк создает среду (песочницу) для
+// исполнения приложения, загружает приложение, передает ему песочницу в
+// качестве глобального контекста и получает ссылу на экспортируемый
+// приложением интерфейс. Читайте README.md в нем задания.
 
-// The framework can require core libraries
+// Фреймворк может явно зависеть от библиотек через dependency lookup
 var fs = require('fs'),
-    vm = require('vm');
+    vm = require('vm'),
+    util=require('util');
 
-// Create a hash and turn it into the sandboxed context which will be
-// the global context of an application
-var context = {
-	module: {},
-	console: console,
-	setTimeout: setTimeout,
-	setInterval: setInterval
-};
-
+// Создаем контекст-песочницу, которая станет глобальным контекстом приложения
+var context = { module: {}, console: console, setTimeout:setTimeout, setInterval:setInterval, clearInterval:clearInterval, util:util};
 context.global = context;
 var sandbox = vm.createContext(context);
 
-// Read an application source code from the file
+// Читаем исходный код приложения из файла
 var fileName = './application.js';
 fs.readFile(fileName, function(err, src) {
-  // We need to handle errors here
+  // Тут нужно обработать ошибки
   
-  // Run an application in sandboxed context
+  // Запускаем код приложения в песочнице
   var script = vm.createScript(src, fileName);
   script.runInNewContext(sandbox);
   
-  // We can access a link to exported interface from sandbox.module.exports
-  // to execute, save to the cache, print to console, etc.
+  // Забираем ссылку из sandbox.module.exports, можем ее исполнить,
+  // сохранить в кеш, вывести на экран исходный код приложения и т.д.
 });
