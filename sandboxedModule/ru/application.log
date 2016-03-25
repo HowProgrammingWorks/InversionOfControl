@@ -14,3 +14,17 @@ application Fri Mar 25 2016 15:31:35 Interval: 2 second
 application Fri Mar 25 2016 15:31:37 Interval: 2 second
 application Fri Mar 25 2016 15:31:39 Interval: 2 second
 application Fri Mar 25 2016 15:31:39 Timer cleared
+Fri Mar 25 2016 15:36:55 ./application2.js
+application Fri Mar 25 2016 15:36:55 From application global context
+application Fri Mar 25 2016 15:36:55 Hello, console!
+application Fri Mar 25 2016 15:36:56 Timeout: 1 second
+application Fri Mar 25 2016 15:36:57 Interval: 2 second
+application Fri Mar 25 2016 15:36:59 Interval: 2 second
+application Fri Mar 25 2016 15:37:01 Interval: 2 second
+application Fri Mar 25 2016 15:37:03 Interval: 2 second
+application Fri Mar 25 2016 15:37:05 Interval: 2 second
+application Fri Mar 25 2016 15:37:05 Timer cleared
+Fri Mar 25 2016 15:53:00 ./application2.js
+application Fri Mar 25 2016 15:53:00 From application global context
+Fri Mar 25 2016 15:59:39 ./application2.js
+application Fri Mar 25 2016 15:59:39 From application global context
