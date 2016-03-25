@@ -10,8 +10,12 @@ module.exports = function() {
   console.log('From application exported function');
 };
 
+
+
 var f=util.format(1,2,3);
 
-console.log(f);
-
 util.log('Timestamped message.');
+
+setTimeout(function(){
+  console.log('Two seconds later');
+  }, 2000);
