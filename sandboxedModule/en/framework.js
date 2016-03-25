@@ -14,9 +14,11 @@ context.global = context;
 var sandbox = vm.createContext(context);
 
 // Читаем исходный код приложения из файла
-var fileName = './application.js';
+var fileName = process.argv[2];
 fs.readFile(fileName, function(err, src) {
   // Тут нужно обработать ошибки
+  if(err)
+    throw err;
   
   // Запускаем код приложения в песочнице
   var script = vm.createScript(src, fileName);
