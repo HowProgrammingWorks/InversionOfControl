@@ -2,7 +2,10 @@
 
 var fs = require('fs'),
     vm = require('vm');
-    functionCallsCount = 0;
+    functionCallsCounter = 0;
+    callbackCallsCounter = 0;
+    dataReadVol = 0; // bytes
+    dataReadTime = 0; // milliseconds
 
 // Create a hash for application sandbox
 var context = {
@@ -10,7 +13,6 @@ var context = {
   console: console,
   // Forward link to fs API into sandbox
   fs: cloneInterface(fs),
-  getFunctionCallsCount: getFunctionCallsCount,
   setInterval: setInterval,
   setTimeout: setTimeout
 };
@@ -41,18 +43,38 @@ function cloneInterface(anInterface) {
 
 function wrapFunction(fnName, fn) {
   return function wrapper() {
+  	if (fnName === 'readFile') var startTimestamp = process.hrtime();
     var args = [];
+    functionCallsCounter++;
     Array.prototype.push.apply(args, arguments);
-    functionCallsCount++;
     console.log('Call: ' + fnName);
-    console.dir(args);
     if (typeof (args[args.length - 1]) === 'function') {
-      args[args.length - 1] = wrapFunction(args[args.length - 1].name, args[args.length - 1]);
+    	callbackCallsCounter++;
+    	var cb = args[args.length - 1];
+    	console.log('Callback: ' + cb.name);
+      args[args.length - 1] = function() {
+
+      	var args = [];
+      	Array.prototype.push.apply(args, arguments);
+        if (fnName === 'readFile') {
+          dataReadVol += args[1].length;
+        }
+        return cb.apply(undefined, args);
+      };
     }
-    return fn.apply(undefined, args);
+    var result =  fn.apply(undefined, args);
+    if (fnName === 'readFile') {
+      var endTimestamp = process.hrtime();
+      dataReadTime += ((endTimestamp[0] - startTimestamp[0]) * 1e3 +
+        (endTimestamp[1] - startTimestamp[1]) / 1e6);
+    }
+    return result;
   }
 }
 
-function getFunctionCallsCount() {
-	return functionCallsCount;
-}
+setInterval(function() {
+  console.log('Function calls count: ' + functionCallsCounter);
+  console.log('Callback calls count: ' + callbackCallsCounter);
+  console.log('Data reading speed: ' + 
+    Math.round(dataReadVol / dataReadTime) + ' bytes / ms');
+  }, 10000);
