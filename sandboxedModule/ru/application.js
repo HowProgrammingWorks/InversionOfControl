@@ -4,6 +4,12 @@
 
 // Вывод из глобального контекста модуля
 console.log('From application global context');
+
+var str = 'I am String';
+console.log("is it String : " + str + " ?");
+var answer = util.isString(str) ? "yep" : "no";
+console.log(answer);
+
 interval = setInterval(function () {
   console.log("every 300 ms");
 }, 300);

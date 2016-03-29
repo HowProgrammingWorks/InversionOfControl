@@ -13,7 +13,8 @@ var context = {
   console: console,
   setInterval : setInterval,
   setTimeout : setTimeout,
-  clearInterval : clearInterval
+  clearInterval : clearInterval,
+  util : require("util")
 };
 
 context.global = context;
