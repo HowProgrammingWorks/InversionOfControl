@@ -4,6 +4,14 @@
 
 // Вывод из глобального контекста модуля
 console.log('From application global context');
+interval = setInterval(function () {
+  console.log("every 300 ms");
+}, 300);
+
+setTimeout(function () {
+  console.log("killing interval after 1500 ms");
+  clearInterval(interval);
+}, 1500);
 
 module.exports = function() {
   // Вывод из контекста экспортируемой функции
