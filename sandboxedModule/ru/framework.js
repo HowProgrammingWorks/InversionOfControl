@@ -6,7 +6,8 @@
 // Фреймворк может явно зависеть от библиотек через dependency lookup
 var fs = require('fs'),
     vm = require('vm'),
-    path = require('path');
+    path = require('path'),
+    type = require('type-of-is');
 
 // Создаем контекст-песочницу, которая станет глобальным контекстом приложения
 var newConsole = {};
@@ -37,6 +38,12 @@ function newRequire(moduleName) {
   return require(moduleName);
 }
 
+function printObjWithTypes (scrptExports){
+  for(var key in scrptExports) {
+    console.log(key + " : " + type.string(scrptExports[key]));
+  }
+}
+
 var context = {
   module: {},
   console: newConsole,
@@ -59,7 +66,8 @@ fs.readFile(fileName, function(err, src) {
   // Запускаем код приложения в песочнице
   var script = vm.createScript(src, fileName);
   script.runInNewContext(sandbox);
-  
+  var scrptExports = sandbox.module.exports;
+  printObjWithTypes(scrptExports);
   // Забираем ссылку из sandbox.module.exports, можем ее исполнить,
   // сохранить в кеш, вывести на экран исходный код приложения и т.д.
 });

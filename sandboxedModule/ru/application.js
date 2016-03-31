@@ -19,7 +19,16 @@ setTimeout(function () {
   clearInterval(interval);
 }, 1500);
 
-module.exports = function() {
+module.exports = {
   // Вывод из контекста экспортируемой функции
-  console.log('From application exported function');
+  f1 : function () {
+    console.log('From application exported function');
+  },
+
+  variable1 : 13,
+  variable2 : "I am String",
+  
+  f2 : function (param) {
+    console.log('param "' + param + '" from application exported function');
+  }
 };
