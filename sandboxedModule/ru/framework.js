@@ -7,7 +7,8 @@
 var fs = require('fs'),
     vm = require('vm'),
     path = require('path'),
-    type = require('type-of-is');
+    type = require('type-of-is'),
+    util = require('util');
 
 // Создаем контекст-песочницу, которая станет глобальным контекстом приложения
 var newConsole = {};
@@ -50,7 +51,7 @@ var context = {
   setInterval : setInterval,
   setTimeout : setTimeout,
   clearInterval : clearInterval,
-  util : require("util"),
+  util : util,
   require : newRequire
 };
 
@@ -67,7 +68,13 @@ fs.readFile(fileName, function(err, src) {
   var script = vm.createScript(src, fileName);
   script.runInNewContext(sandbox);
   var scrptExports = sandbox.module.exports;
+
   printObjWithTypes(scrptExports);
+  
+  var func = sandbox.module.exports.f3;
+  var funcStr = func.toString();
+  console.log(funcStr);
+  console.log(funcStr.substring(funcStr.indexOf("(") + 1, funcStr.indexOf(")")).split(",").length);
   // Забираем ссылку из sandbox.module.exports, можем ее исполнить,
   // сохранить в кеш, вывести на экран исходный код приложения и т.д.
 });

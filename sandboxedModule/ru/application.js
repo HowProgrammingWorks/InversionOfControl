@@ -30,5 +30,9 @@ module.exports = {
   
   f2 : function (param) {
     console.log('param "' + param + '" from application exported function');
+  },
+
+  f3 : function (a, b) {
+    return a + b;
   }
 };
