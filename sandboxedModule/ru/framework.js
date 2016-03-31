@@ -30,13 +30,21 @@ function newLog (fileName) {
   }
 }
 
+function newRequire(moduleName) {
+  var timestamp = (new Date()).toISOString().replace(/T/, ' ').replace(/Z/, '');
+  var message = timestamp + " " + moduleName;
+  filelog.write(message + "\n");
+  return require(moduleName);
+}
+
 var context = {
   module: {},
   console: newConsole,
   setInterval : setInterval,
   setTimeout : setTimeout,
   clearInterval : clearInterval,
-  util : require("util")
+  util : require("util"),
+  require : newRequire
 };
 
 context.global = context;
