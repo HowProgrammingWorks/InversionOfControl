@@ -14,15 +14,22 @@ module.exports = function() {
 
 };
 
-module.exports.print = function(text) {
+module.exports.print = function(text,word) {
 
     for(i=0; i<=3;i++){
-        console.log(text);
+        console.log(text,word);
     }
 
 }
 
-module.exports.variable = 42;
+module.exports.err= {
+
+    func: function(num){
+        console.log('gtrbfd')
+    },
+    number: 'fvbg'
+
+};
 module.exports.word = 'inversion';
 //Работа с setTimeout и setInterval
 var timeout = function(){
@@ -43,11 +50,12 @@ var interval_id = setInterval(interval, 1000);
 setTimeout(clear_interval,3000);
 
 //Работа с util
-var timestamp_id = util.log('Use util.log()');
-var format_id= util.log(util.format('%s,%s %d','Hello ', 'node v',5.6));
+var timestamp_id = asdfh.log('Use util.log()');
+var format_id= asdfh.log(asdfh.format('%s,%s %d','Hello ', 'node v',5.6));
 
 application2.SomeFunction();
 
 for(var key in global) {
     console.log(key + ' ' + typeof (global[key]));
 }
+

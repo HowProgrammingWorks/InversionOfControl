@@ -29,7 +29,7 @@ sandboxConsole.log = function() {
   }
 
 // Обертка для вызова require
-function wrappedRequire(lib){
+function newRequire(lib){
   var now =new Date();
   var this_log = now.toDateString() + ' ' + now.toLocaleTimeString() + ' ' + lib;
 
@@ -44,8 +44,8 @@ var context = { module: {},
   setTimeout: setTimeout,
   setInterval: setInterval,
   clearInterval: clearInterval,
-  util: util,
-  require: wrappedRequire
+  asdfh: util,
+  require: newRequire
 };
 context.global = context;
 var sandbox = vm.createContext(context);
