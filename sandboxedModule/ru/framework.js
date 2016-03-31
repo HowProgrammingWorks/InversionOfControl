@@ -11,11 +11,22 @@ var fs = require('fs'),
 // Создаем контекст-песочницу, которая станет глобальным контекстом приложения
 var newConsole = {};
 
-function newLog (filename) {
+var filelog = fs.createWriteStream(__dirname + '/debug.log', {flags: 'a'});
+
+process.on('cleanup', function() { filelog.close();});
+process.on('exit', function() { process.emit('cleanup'); });
+process.on('uncaughtException', function(e) {
+  console.log('Uncaught Exception...');
+  console.log(e.stack);
+  process.exit(2);
+});
+
+function newLog (fileName) {
   return function (message) {
     var timestamp = (new Date()).toISOString().replace(/T/, ' ').replace(/Z/, '');
-    message = timestamp + " " + path.normalize(filename) + " : " + message;
+    message = timestamp + " " + path.normalize(fileName) + " : " + message;
     console.log.call(console, message);
+    filelog.write(message + "\n");
   }
 }
 
