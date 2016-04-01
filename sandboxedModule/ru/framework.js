@@ -45,6 +45,33 @@ function printObjWithTypes (scrptExports){
   }
 }
 
+function clone(obj) {
+  var clone = {};
+  for (key in obj){
+    clone[key] = obj[key];
+  }
+  return clone;
+}
+
+function cntxtKeyDiff(before, after) {
+  var added = [];
+  var deleted = [];
+
+  for(key in before){
+    if (!(key in after)){
+      deleted.push(key);
+    }
+  }
+
+  for(key in after){
+    if (!(key in before)){
+      added.push(key);
+    }
+  }
+
+  return "added : " + added + " | deleted : " + deleted;
+}
+
 var context = {
   module: {},
   console: newConsole,
@@ -65,16 +92,19 @@ fs.readFile(fileName, function(err, src) {
   // Тут нужно обработать ошибки
   
   // Запускаем код приложения в песочнице
+  var sandboxBefore = clone(sandbox);
   var script = vm.createScript(src, fileName);
   script.runInNewContext(sandbox);
   var scrptExports = sandbox.module.exports;
 
   printObjWithTypes(scrptExports);
-  
+
+  // Забираем ссылку из sandbox.module.exports, можем ее исполнить,
+  // сохранить в кеш, вывести на экран исходный код приложения и т.д.
   var func = sandbox.module.exports.f3;
   var funcStr = func.toString();
   console.log(funcStr);
   console.log(funcStr.substring(funcStr.indexOf("(") + 1, funcStr.indexOf(")")).split(",").length);
-  // Забираем ссылку из sandbox.module.exports, можем ее исполнить,
-  // сохранить в кеш, вывести на экран исходный код приложения и т.д.
+
+  console.log(cntxtKeyDiff(sandboxBefore, sandbox));
 });
