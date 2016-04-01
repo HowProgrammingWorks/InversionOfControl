@@ -3,7 +3,14 @@
 // кусочком фреймворка. Читайте README.md в нем задания.
 
 // Вывод из глобального контекста модуля
-console.log('From application global context');
+var type = require('type-of-is');
+
+console.log('From application global context\n');
+console.log('globals:\n');
+for (key in global) {
+  console.log((key + ': [' + type.string(global[key]) + ']'));
+}
+console.log('');
 
 var str = 'I am String';
 console.log("is it String : " + str + " ?");
