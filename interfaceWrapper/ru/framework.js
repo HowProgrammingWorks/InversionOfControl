@@ -3,6 +3,12 @@
 var fs = require('fs'),
     vm = require('vm');
 
+//переменнные дя сбора статистики
+var functionCall= 0,
+    callback= 0,
+    readByte= 0,
+    writeByte=0;
+
 
 // Запуск фреймворка с разными приложениями через командную строку
 var applicationName = process.argv[2] || 'application';
@@ -18,6 +24,10 @@ function wrapperCallback(parentFnName, fname) {
   return function wrapper() {
     var array = [];
     Array.prototype.push.apply(array, arguments);
+    //подсчет прочитанных байт
+    if(parentFnName.indexOf('read')>-1){
+      readByte+=array[1].length;
+    }
 
     var tmp='Callback list :';
       putIntoLogFile(tmp);
@@ -41,9 +51,16 @@ function wrapperCallback(parentFnName, fname) {
 
 // Обертка функций
 function wrapperFunction(newName, fname) {
+  //счетчик вызовов функций
+  functionCall++;
   return function wrapper() {
     var array = [];
     Array.prototype.push.apply(array, arguments);
+    //подсчет записаных байт
+    if(newName.indexOf('write')>-1 ||
+        newName.indexOf('append')>-1){
+      writeByte+=array[1].length;
+    }
       var now=new Date();
       var tmp= now.toDateString() + ' ' + now.toLocaleTimeString() + ' \n' + 'Call list: ' + newName;
       putIntoLogFile(tmp);
@@ -53,7 +70,8 @@ function wrapperFunction(newName, fname) {
 
     // Когда есть callback
     if (typeof array[array.length - 1] == 'function') {
-
+      //счетчит callbacks
+      callback++;
       array[array.length - 1] = wrapperCallback(
           newName,
           array[array.length - 1]
@@ -82,7 +100,8 @@ var context = {
   // Помещаем ссылку на обертку к fs в песочницу
   fs: mod_fs,
   // Оборачиваем функцию setTimeout в песочнице
-  setTimeout: setTimeout
+  setTimeout: setTimeout,
+  setInterval:setInterval
     /*function(callback, timeout) {
     // Добавляем поведение при вызове setTimeout
     console.log(
@@ -99,6 +118,21 @@ var context = {
     }, timeout);
   }*/
 };
+
+// Вывод  статистики с интервалом 30 секунд
+    setInterval(function() {
+
+        var statistic = 'Function called :' + functionCall
+                      +'\n Callbacks called : ' + callback
+                      + '\n Bytes read : ' + readByte
+                      + '\n Bytes written : ' + writeByte
+                      ;
+      fs.appendFile(('./' +  'statistic.log'), (statistic + '\n'), function (err) {
+        if (err) throw err;
+      });
+        console.log(statistic);
+      }, 30000);
+
 
 // Преобразовываем хеш в контекст
 context.global = context;
