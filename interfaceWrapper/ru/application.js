@@ -1,10 +1,29 @@
-// Вывод из глобального контекста модуля
-console.log('From application global context');
+var fileName = './README.md';
 
-// Объявляем функцию для события таймера
-function timerEvent() {
-  console.log('From application timer event');
-}
+console.log('Application going to read ' + fileName);
+var countdown = 40;
+setTimeout(function f() {
+    countdown--;
 
-// Устанавливаем функцию на таймер
-setTimeout(timerEvent, 1000);
+    var randTask = Math.floor(Math.random()*2);
+    if(randTask == 0) {
+        fs.readFile(fileName, function(err, src) {
+            console.log('File ' + fileName + ' size ' + src.length);
+        });
+    } else {
+        var randomText = '';
+        var randLen = Math.floor(Math.random()*100);
+        for(var i = 0; i < randLen; i++) {
+            randomText+= Math.floor(Math.random()*2);
+        }
+        fs.writeFile('output.txt', randomText );
+    }
+
+    if(countdown > 0) {
+        setTimeout(f, 2500);
+    }
+}, 1000);
+
+setInterval(function() {
+    printStats();
+}, 5000);

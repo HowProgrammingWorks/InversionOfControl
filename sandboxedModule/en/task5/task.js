@@ -1,0 +1,1 @@
+console.log("Decorated log 2");
