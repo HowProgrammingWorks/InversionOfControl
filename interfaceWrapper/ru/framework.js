@@ -20,6 +20,15 @@ context.global = context;
 var sandbox = vm.createContext(context);
 var callCount = 0;
 var avgTime = 0; 
+var virtualFs = {
+    rootDir: "", 
+    fs: {}
+}
+
+function VirtualFile() {
+    this.cached = false;
+    this.content = '';
+}
 
 // Читаем исходный код приложения из файла
 var fileName = './application.js';
@@ -79,7 +88,4 @@ function printStats() {
     console.log('Avg function execution time: ' + avgTime + ' ms');
     console.log('*******************************');
 }
-/**
- * Framework logic 
- */
 
