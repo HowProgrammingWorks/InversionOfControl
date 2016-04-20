@@ -4,9 +4,10 @@ var fs = require('fs'),
     vm = require('vm');
 
 // Статистика
-var callbacks = 0,
-    bytesRead = 0,
-    bytesWritten = 0;
+var bytesRead = 0,
+    bytesWritten = 0,
+    callbacksCalled = 0,
+    totalCallbackExecutionTime = 0;
 
 // Функция оборачивания callback'а
 function wrapCallback(parentFnName, fn) {
@@ -29,7 +30,10 @@ function wrapCallback(parentFnName, fn) {
         console.dir(typeof args[i]);
       }
     }
+    callbacksCalled++;
+    var start = Date.now();
     fn.apply(undefined, args);
+    totalCallbackExecutionTime += Date.now() - start;
   }
 }
 
@@ -50,7 +54,6 @@ function wrapFunction(fnName, fn) {
 
     // Когда есть callback
     if (typeof args[args.length - 1] == 'function') {
-      callbacks++;
       args[args.length - 1] = wrapCallback(
         fnName,
         args[args.length - 1]
@@ -83,7 +86,8 @@ var context = {
 
 // Вывод статистики
 setInterval(function() {
-  console.log('Callbacks called : ' + callbacks
+  console.log('Callbacks called : ' + callbacksCalled
+            + (callbacksCalled ? '\nAverage callback execution time : ' + (1.0 * totalCallbackExecutionTime / callbacksCalled) + 'ms' : '')
             + '\n Bytes read : ' + bytesRead
             + '\n Bytes written : ' + bytesWritten
             );
