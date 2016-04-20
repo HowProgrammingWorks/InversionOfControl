@@ -7,7 +7,7 @@
 
 var fs = require('fs'),
     vm = require('vm'),
-    util = require('util');
+    wet = require('util');
 
 var applicationConsole = {};
 
@@ -40,7 +40,7 @@ var context = {
 				console: applicationConsole ,
 				setInterval:setInterval,
 				setTimeout:setTimeout,
-				util:util
+				util:wet
 			};
 context.global = context;
 var sandbox = vm.createContext(context);
@@ -60,13 +60,13 @@ fs.readFile(fileName, function(err, src) {
   for (var i in sandbox.module.exports) {
   	console.log(i + " | " + typeof (sandbox.module.exports[i]));
   }
-
+  console.log("====================================================================");
  sandbox.module.exports();
  
 
  ////////////////////////Task 9
- console.log(sandbox.module.exports.func.toString());
- console.log("Count of arguments : " + sandbox.module.exports.func(2));
+ // console.log(sandbox.module.exports.func.toString());
+ // console.log("Count of arguments : " + sandbox.module.exports.func(2));
   // Забираем ссылку из sandbox.module.exports, можем ее исполнить,
   // сохранить в кеш, вывести на экран исходный код приложения и т.д.
 });
