@@ -9,7 +9,7 @@ setInterval(function () {
 	fs.readFile(fileName, function(err, src) {
 	  console.log('File ' + fileName + ' size ' + src.length);
 	});
-}, 5000);
+}, 3000);
 
 setInterval(function () {
 	console.log('Application going to write to ' + file);

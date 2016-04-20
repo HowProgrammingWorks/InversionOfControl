@@ -4,7 +4,8 @@ var fs = require('fs'),
     vm = require('vm');
 
 var writtenBytes = 0,
-    callbacks = 0;
+    callbacks = 0,
+    callbacksTime = 0;
 
 function cloneInterface(anInterface) {
   var clone = {};
@@ -14,7 +15,27 @@ function cloneInterface(anInterface) {
   return clone;
 }
 
-function wrapFunction(fnName, fn, flag) {
+function wrapCallback(fnName, fn) {
+  return function wrapper() {
+    var args = [];
+    Array.prototype.push.apply(args, arguments);
+
+    for (var i = 0; i < args.length; i++) {
+      if (args[i] == null || args[i].length === 'undefined' || args[i].length < 50) {
+        console.dir(args[i]);
+      } else {
+        console.dir(typeof args[i]);
+      }
+    }
+
+    callbacks++;
+    var since = Date.now();
+    fn.apply(undefined, args);
+    callbacksTime += Date.now() - since;
+  }
+}
+
+function wrapFunction(fnName, fn) {
   return function wrapper() {
     var args = [];
     Array.prototype.push.apply(args, arguments);
@@ -22,22 +43,21 @@ function wrapFunction(fnName, fn, flag) {
     if (fnName != undefined && (
       fnName.indexOf('append') > -1
        || fnName.indexOf('write') > -1)
-      ) {
+      ) { 
       writtenBytes += args[1].length;
     } 
 
     for (var i = 0; i < args.length; i++) {
-      if (args[i] == null || args[i].length === 'undefined' || args[i].length < 100) {
-        console.log('Call: ' + fnName);
+      if (args[i] == null || args[i].length === 'undefined' || args[i].length < 50) {
+        console.dir('Call: ' + fnName);
         console.dir(args[i]);
       } else {
-        console.log(typeof args);
+        console.log(typeof args[i]);
       }
     }
 
-    if (typeof args[args.length - 1] == "function") {
-        callbacks++;
-        args[args.length - 1] = wrapFunction(undefined, args[args.length - 1]);
+    if (typeof args[args.length - 1] === "function") {
+        args[args.length - 1] = wrapCallback(undefined, args[args.length - 1]);
     }
 
     fn.apply(undefined, args);
@@ -58,7 +78,8 @@ var context = {
 setInterval(function () {
   console.log("Bytes are written: " + writtenBytes);
   console.log("Callbacks: " + callbacks);
-  }, 20000);
+  console.log("Callbacks' execution time: " + (1.0*callbacksTime/callbacks));
+  }, 16000);
 
 // Преобразовываем хеш в контекст
 context.global = context;
