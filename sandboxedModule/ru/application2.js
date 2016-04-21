@@ -1,16 +1,7 @@
-'use strict';
-const util = require('util');
-
-console.log('From second application global context');
+function superFunction() {
+    console.log('GGG');
+}
 
 module.exports = {
-      one: 'qwerty',
-      two: 2,
-      three: {
-        one: 'qwerty',
-            two: 2,
-            func: () => {
-              console.log('kek');
-            }
-      }
+    superFunction : superFunction
 };
