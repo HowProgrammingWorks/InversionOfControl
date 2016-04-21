@@ -18,6 +18,14 @@ var context = {
 context.global = context;
 var sandbox = vm.createContext(context);
 
+// Счётчики операций для обертки
+var calls = new Stats();
+var callbacks = new Stats();
+
+// Вывод статистики с таймера
+var st_timer = setInterval(statsOutput, 3000);
+setTimeout(stopTimer, 61000);
+
 // Читаем исходный код приложения из файла
 var fileName = './application.js';
 fs.readFile(fileName, function(err, src) {
@@ -46,6 +54,7 @@ function wrapFunction(fnName, fn) {
             } else if(typeof (args[i]) === 'function') {
                 this_log = this_log + i + ': Function ';
                 args[i] = wrapFunction('callback', args[i]);
+                callbacks.inc();
             } else {
                 this_log = this_log + i + ': ' + args[i] + ' ';
             }
@@ -53,6 +62,23 @@ function wrapFunction(fnName, fn) {
         this_log = this_log + ']';
         console.log(this_log);
         fs.appendFile('./application.log', (this_log + '\n'), function(err){});
+        calls.inc();
         return fn.apply(undefined, args);
     }
+}
+
+function Stats() {
+    this.current = 0;
+    this.inc = function() {
+        this.current++;
+    };
+}
+
+function statsOutput() {
+    console.log('Function calls: ' + calls.current +
+                '\nCallback calls: ' + callbacks.current);
+}
+
+function stopTimer() {
+    clearInterval(st_timer);
 }
