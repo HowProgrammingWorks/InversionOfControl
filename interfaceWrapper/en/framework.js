@@ -3,28 +3,71 @@
 var fs = require('fs'),
     vm = require('vm');
 
+var stat = {
+  functions: {
+    calls: 0,
+    callbacks: {}
+  },
+  fs: {
+    read: 0
+  }
+};
+
+function printStat() {
+  console.log("Function calls: %d", stat.functions.calls);
+  console.log("Functions with callbacks: %d", Object.keys(stat.functions.callbacks).length);
+  console.log("Read data: %d", stat.fs.read);
+  setTimeout(printStat, 3000);
+}
+
+function wrapReadFunction(fnName, fn) {
+  return function() {
+    var args = [];
+    Array.prototype.push.apply(args, arguments);
+    stat.fs.read += args[1].length;
+    console.log('Call: ' + fnName);
+    console.dir(args);
+    return fn.apply(undefined, args);
+  }
+}
+
+function wrapFunction(fnName, fn) {
+  return function() {
+    stat.functions.calls++;
+    var args = [];
+    Array.prototype.push.apply(args, arguments);
+    if (args.length != 0 && typeof args[args.length - 1] === 'function') {
+      if (fnName === 'readFile') {
+        args[args.length - 1] = wrapReadFunction('callback', args[args.length - 1]);
+      } else {
+        args[args.length - 1] = wrapFunction('callback', args[args.length - 1]);
+      }
+      stat.functions.callbacks[fnName] = args[args.length - 1];
+    }
+    console.log('Call: ' + fnName);
+    console.dir(args);
+    return fn.apply(undefined, args);
+  }
+}
+
+
+function wrapInterface(anInterface) {
+  var clone = {};
+  for (var key in anInterface) {
+    clone[key] = wrapFunction(key, anInterface[key]);
+  }
+  return clone;
+}
+
 // Create a hash for application sandbox
 var context = {
   module: {},
   console: console,
   // Forward link to fs API into sandbox
-  fs: fs,
+  fs: wrapInterface(fs),
   // Wrapper for setTimeout in sandbox
-  setTimeout: function(callback, timeout) {
-    // Logging all setTimeout calls
-    console.log(
-      'Call: setTimeout, ' +
-      'callback function: ' + callback.name + ', ' +
-      'timeout: ' + timeout
-    );
-    setTimeout(function() {
-      // Logging timer events before application event
-      console.log('Event: setTimeout, before callback');
-      // Calling user-defined timer event
-      callback();
-      console.log('Event: setTimeout, after callback');
-    }, timeout);
-  }
+  setTimeout: setTimeout,
+  setInterval: setInterval
 };
 
 // Turn hash into context
@@ -38,3 +81,5 @@ fs.readFile(fileName, function(err, src) {
   var script = vm.createScript(src, fileName);
   script.runInNewContext(sandbox);
 });
+
+setTimeout(printStat, 0);
