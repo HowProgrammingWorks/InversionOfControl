@@ -2,7 +2,9 @@
 
 console.log('From application global context');
 
-const util = require('util');
+//console.log('parent: ', module);
+
+const util = global.util || require('util');
 
 module.exports = {
 	setTimeout: (callback, delay, ...args) => {
