@@ -1,11 +1,24 @@
-// Файл содержит маленький кусочек основного модуля демонстрационного
-// прикладного приложения, загружаемого в песочницу демонстрационным
-// кусочком фреймворка. Читайте README.md в нем задания.
+'use strict';
 
-// Вывод из глобального контекста модуля
 console.log('From application global context');
 
-module.exports = function() {
-  // Вывод из контекста экспортируемой функции
-  console.log('From application exported function');
+module.exports = {
+	setTimeout: (callback, delay, ...args) => {
+		console.log('Set Timeout');
+
+		setTimeout(callback, delay, ...args);
+	},
+
+	clearTimeout: (timer) => {
+		console.log('Clear Timeout Timer: ', timer);
+	},
+
+	setInterval: (callback, delay, ...args) => {
+		console.log('Set Interval');
+	},
+
+	clearInterval: (timer) => {
+		console.log('Clear Interval Timer: ', timer);
+	}
 };
+
