@@ -18,7 +18,13 @@ context.global = context;
 
 let sandbox = vm.createContext(context);
 
-let fileName = './application.js';
+let fileName = process.argv[2];
+
+if (!fileName) {
+	throw new Error('third argument is mussing.\n');
+
+	return;
+}
 
 fs.readFile(fileName, (err, src) => {
 	if (err) {

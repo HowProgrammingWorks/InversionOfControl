@@ -2,6 +2,8 @@
 
 console.log('From application global context');
 
+const util = require('util');
+
 module.exports = {
 	setTimeout: (callback, delay, ...args) => {
 		console.log('Set Timeout');
