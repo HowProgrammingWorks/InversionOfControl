@@ -37,12 +37,16 @@ fs.readFile(fileName, (err, src) => {
   	// сохранить в кеш, вывести на экран исходный код приложения и т.д.
 	let app = sandbox.module.exports;
 
-	app.setTimeout((...args) => {
-		console.log('start args: ', args);
-	
-		let sum = args.reduce((a, b) => a + b);
-
-		console.log('finish sum = %s.', sum);
-	}, 1000, 1, 2, 3, 4, 5);
+	timers(app);
 });
+
+function timers(app) {
+	app.setTimeout((...args) => {
+        console.log('start args: ', args);
+
+        let sum = args.reduce((a, b) => a + b);
+
+        console.log('finish sum = %s.', sum);
+    }, 1000, 1, 2, 3, 4, 5);
+}
 
