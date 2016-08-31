@@ -19,6 +19,8 @@ module.exports = {
 
 	clearInterval: (timer) => {
 		console.log('Clear Interval Timer: ', timer);
-	}
+	},
+
+	util: util
 };
 
