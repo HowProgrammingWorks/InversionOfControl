@@ -18,20 +18,22 @@ context.global = context;
 
 let sandbox = vm.createContext(context);
 
-let fileName = process.argv[2];
+let filename = process.argv[2];
 
-if (!fileName) {
+if (!filename) {
 	throw new Error('third argument is mussing.\n');
 
 	return;
+} else {
+	context.filename = filename;
 }
 
-fs.readFile(fileName, (err, src) => {
+fs.readFile(filename, (err, src) => {
 	if (err) {
 		throw err;
 	}
- 
-  	let script = vm.createScript(src, fileName);
+
+	let script = vm.createScript(src, filename);
   	script.runInNewContext(sandbox);
   
   	let app = sandbox.module.exports;
@@ -44,7 +46,7 @@ function useUtil(app) {
 
 	console.log( util.format('Hello %s', 'util') );
 
-	console.log( util.inspect({a: '42', rt: 89}) );
+	app.console.log( util.inspect({a: '42', rt: 89}) );
 }
 
 function timers(app) {

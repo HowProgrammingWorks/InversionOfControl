@@ -25,6 +25,17 @@ module.exports = {
 		console.log('Clear Interval Timer: ', timer);
 	},
 
-	util: util
+	util: util,
+
+	console: {
+		log: (message) => {
+			//let hours = (new Date).getTimezoneOffset() / 60 + (new Date).getUTCHour();
+
+			//let time = new Date(Date.now() + our);
+			console.log('App Name:', global.filename);
+			console.log('Time: ', new Date);
+			console.log('Message: ', message);
+		}
+	}
 };
 
