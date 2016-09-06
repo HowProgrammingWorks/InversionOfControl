@@ -2,8 +2,6 @@
 
 console.log('From application global context');
 
-//console.log('parent: ', module);
-
 const util = global.util || require('util');
 
 module.exports = {
@@ -33,6 +31,14 @@ module.exports = {
 			console.log('Time: ', new Date);
 			console.log('Message: ', message);
 		}
+	},
+
+	writeFile: (file, data, options, callback) => {
+		console.log('App name: ', global.filename);
+		console.log('Time: ', new Date);
+		console.log(data);
+
+		fs.writeFile(file, data, options, callback);
 	}
 };
 
