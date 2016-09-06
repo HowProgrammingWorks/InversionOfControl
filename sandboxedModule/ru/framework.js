@@ -40,8 +40,15 @@ fs.readFile(filename, (err, src) => {
   
   	let app = sandbox.module.exports;
 
-	useUtil(app);
+	exportFunc(app, 'setTimeout');
 });
+
+function exportFunc(app, name) {
+	let func = app[name];
+
+	console.log('Function Code:', func);
+	console.log('Number of Arguments: ', func.length);
+}
 
 function useUtil(app) {
 	const util = app.require('util');
