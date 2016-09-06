@@ -2,7 +2,7 @@
 
 console.log('From application global context');
 
-const util = global.util || require('util');
+//const util = global.util || require('util');
 
 module.exports = {
 	setTimeout: (callback, delay, ...args) => {
@@ -23,7 +23,7 @@ module.exports = {
 		console.log('Clear Interval Timer: ', timer);
 	},
 
-	util: util,
+	//util: util
 
 	console: {
 		log: (message) => {
@@ -39,6 +39,13 @@ module.exports = {
 		console.log(data);
 
 		fs.writeFile(file, data, options, callback);
+	},
+
+	require: (moduleName) => {
+		console.log('Time: ', new Date);
+		console.log('Module Name: ', moduleName);
+
+		return require(moduleName);
 	}
 };
 

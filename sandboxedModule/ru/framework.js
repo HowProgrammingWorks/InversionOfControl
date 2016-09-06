@@ -11,8 +11,9 @@ let context = {
 	clearTimeout: clearTimeout,
 	setInterval: setInterval,
 	clearInterval: clearInterval,
-	util: util,
-	fs: fs
+	//util: util,
+	//fs: fs,
+	require: require
 };
 
 context.global = context;
@@ -43,13 +44,15 @@ fs.readFile(filename, (err, src) => {
 });
 
 function useUtil(app) {
-	const util = app.util;
+	const util = app.require('util');
 
-	//console.log( util.format('Hello %s', 'util') );
+	console.log( util.format('Hello %s', 'util') );
 
 	//app.console.log( util.inspect({a: '42', rt: 89}) );
 
-	app.writeFile('out.txt', 'Hello Node.js', (err) => {
+	const fs = app.require('fs');
+
+	fs.writeFile('out.txt', 'Hello Node.js', (err) => {
 		if (err) {
 			throw err;
 		}
