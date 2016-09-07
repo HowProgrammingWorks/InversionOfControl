@@ -2,17 +2,17 @@
 
 console.log('From application global context');
 
-function showGlobal() {
-	let names = Object.getOwnPropertyNames(global)
+function showGlobal(context) {
+	let names = Object.getOwnPropertyNames(context)
 
 	names.sort().forEach((name) => {
-		console.log(' %s: %s', name, typeof global[name]);
+		console.log(' %s: %s', name, typeof context[name]);
 	});
 
 	console.log('Global Object\'s Name Length: ', names.length);
 }
 
-showGlobal();
+//showGlobal();
 
 //const util = global.util || require('util');
 
