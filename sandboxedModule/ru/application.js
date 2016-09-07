@@ -2,6 +2,18 @@
 
 console.log('From application global context');
 
+function showGlobal() {
+	let names = Object.getOwnPropertyNames(global)
+
+	names.sort().forEach((name) => {
+		console.log(' %s: %s', name, typeof global[name]);
+	});
+
+	console.log('Global Object\'s Name Length: ', names.length);
+}
+
+showGlobal();
+
 //const util = global.util || require('util');
 
 module.exports = {
@@ -26,10 +38,13 @@ module.exports = {
 	//util: util
 
 	console: {
-		log: (message) => {
+		log: (message = '') => {
 			console.log('App Name:', global.filename);
 			console.log('Time: ', new Date);
-			console.log('Message: ', message);
+
+			if (message) {
+				console.log('Message: ', message);
+			}
 		}
 	},
 
@@ -46,6 +61,8 @@ module.exports = {
 		console.log('Module Name: ', moduleName);
 
 		return require(moduleName);
-	}
+	},
+
+	showGlobal: showGlobal
 };
 

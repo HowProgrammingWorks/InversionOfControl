@@ -4,49 +4,90 @@ let fs = require('fs'),
 	util = require('util'),
     vm = require('vm');
 
-let context = {
-	module: {},
-	console: console,
-	setTimeout: setTimeout,
-	clearTimeout: clearTimeout,
-	setInterval: setInterval,
-	clearInterval: clearInterval,
-	//util: util,
-	//fs: fs,
-	require: require
-};
-
-context.global = context;
-
-let sandbox = vm.createContext(context);
-
 let filename = process.argv[2];
 
-if (!filename) {
-	throw new Error('third argument is mussing.\n');
+if (filename) {
+	let context = {
+		module: {},
+		console: console,
+		//setTimeout: setTimeout,
+		//clearTimeout: clearTimeout,
+		//setInterval: setInterval,
+		//clearInterval: clearInterval,
+		//util: util,
+		//fs: fs,
+		//require: require
+	};
 
-	return;
-} else {
+	context.global = context;
+
+	let sandbox = vm.createContext(context);
+
 	context.filename = filename;
+
+	fs.readFile(filename, (err, src) => {
+		if (err) {
+			throw err;
+		}
+
+		let script = vm.createScript(src, filename);
+  		script.runInNewContext(sandbox);
+  
+  		let app = sandbox.module.exports;
+
+		app.console.log( 'Show Global Object',  app.showGlobal() );
+
+		//getSandbox(sandbox);
+
+		//useUtil(app);
+	});
 }
 
-fs.readFile(filename, (err, src) => {
-	if (err) {
-		throw err;
-	}
+/*
+function getSandbox(sandbox) {
+	//console.log('Sandbox: ', sandbox);
 
-	let script = vm.createScript(src, filename);
-  	script.runInNewContext(sandbox);
-  
-  	let app = sandbox.module.exports;
+	let opts = {};
 
-	exportFunc(app, 'setTimeout');
-});
+	for (let prop in sandbox) {
+		let value = sandbox[prop];
+
+		let opts = setOpts(prop, value, typeof value);
+
+		showOpts(opts);
+
+		if (value !== null && typeof(value) == 'object') {
+			console.log('value: ', value);
+
+			for (let prop in value[prop]) {
+				let subvalue = value[prop];
+
+				let subOpts = setOpts(prop, subvalue[prop], typeof subvalue[prop]);
+
+				showOpts(subOpts);
+			}
+		}
+	} 
+}
+
+function setOpts(prop, value, type) {
+	let obj = {};
+
+	obj[prop] = prop;
+	obj[value] = value;
+	obj[type] = type;
+
+	return obj;
+}
+
+function showOpts({prop, value, type}) {
+	console.log('Property: %s; Value: %s; Type: %s;', prop, value, value);
+
 
 function exportFunc(app, name) {
 	let func = app[name];
 
-	console.log('Function Code:', func);
+	console.log('Function Code: ', func);
 	console.log('Number of Arguments: ', func.length);
 }
 
@@ -77,4 +118,4 @@ function timers(app) {
         console.log('finish sum = %s.', sum);
     }, 1000, 1, 2, 3, 4, 5);
 }
-
+*/
