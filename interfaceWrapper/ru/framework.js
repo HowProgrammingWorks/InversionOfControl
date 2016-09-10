@@ -39,20 +39,6 @@ function decorFS() {
 
 	let propNames = Object.getOwnPropertyNames(fs);
 
-	function before(callback) {
-		callback( console.log('Before') );
-	}
-
-	function after(callback) {
-		callback( console.log('After') );
-	}
-
-	function fsFunc(code, name, ...args) {
-		return (callback) => {
-			callback( code.apply(this, args)  );
-		};
-	}
-
 	function statlogger(code, name, ...args) {
 		return (...args) => {	
 			timeLogger();
@@ -61,19 +47,27 @@ function decorFS() {
 
 			console.log('Args: ', args);
 
-			let cb = args[2];
+			let isFunction = (obj) => {
+				return typeof obj === 'function';
+			};
+
+			let cb = args.find(isFunction);
+
+			let cbIndex = args.findIndex(isFunction);
 
 			function getNewcb(err, data) {
-				return (...args) => {
+				return (err, data) => {
 					console.log('before');
 					
-					cb(args);
+					cb(err, data);
 					
 					console.log('after');
 				}
 			};
 
-			code.call(this, args[0], args[1], getNewcb() );
+			args[cbIndex] = getNewcb();
+
+			code.apply(this, args);
 		};
 	}
 
