@@ -1,18 +1,14 @@
 'use strict';
-// Пример оборачивания функции в песочнице
 
 const fs = require('fs'),
+	it = require('./sequental'),
 	vm = require('vm');
 
-// Объявляем хеш из которого сделаем контекст-песочницу
 let context = {
 	module: {},
 	console: console,
-	// Помещаем ссылку на fs API в песочницу
-	fs: fs,
-	// Оборачиваем функцию setTimeout в песочнице
+	//fs: fs,
 	setTimeout: (callback, timeout) => {
-		// Добавляем поведение при вызове setTimeout
 		console.log(
 			'Call: setTimeout, ' +
 			'callback function: ' + callback.name + ', ' +
@@ -20,14 +16,79 @@ let context = {
 		);
 
 		setTimeout(() => {
-			// Добавляем поведение при срабатывании таймера
 			console.log('Event: setTimeout, before callback');
-			// Вызываем функцию пользователя на событии таймера
 			callback();
 			console.log('Event: setTimeout, after callback');
 		}, timeout);
 	}
 };
+
+function timeLogger() {
+	let now = new Date();
+
+	console.log('Time: %s:%s:%s:%s',
+		now.getHours(),
+		now.getMinutes(),
+		now.getSeconds(),
+		now.getMilliseconds()
+	);
+}
+
+function decorFS() {
+	let newFS = {};
+
+	let propNames = Object.getOwnPropertyNames(fs);
+
+	function before(callback) {
+		callback( console.log('Before') );
+	}
+
+	function after(callback) {
+		callback( console.log('After') );
+	}
+
+	function fsFunc(code, name, ...args) {
+		return (callback) => {
+			callback( code.apply(this, args)  );
+		};
+	}
+
+	function statlogger(code, name, ...args) {
+		return (...args) => {	
+			timeLogger();
+
+			console.log('Function Name: "%s"', name);
+
+			console.log('Args: ', args);
+
+			let cb = args[2];
+
+			function getNewcb(err, data) {
+				return (...args) => {
+					console.log('before');
+					
+					cb(args);
+					
+					console.log('after');
+				}
+			};
+
+			code.call(this, args[0], args[1], getNewcb() );
+		};
+	}
+
+	propNames.forEach((name, index) => {
+		let type = typeof fs[name];
+
+		newFS[name] = statlogger(fs[name], name); 
+	});
+
+	return newFS;
+}
+
+//console.log('decorFS:', decorFS() );
+
+context.fs = decorFS();
 
 // Преобразовываем хеш в контекст
 context.global = context;

@@ -1,5 +1,8 @@
 'use strict';
 
+//const fs = global.fs || require('fs');
+
+
 // Вывод из глобального контекста модуля
 console.log('From application global context');
 
@@ -9,5 +12,18 @@ function timerEvent() {
 }
 
 // Устанавливаем функцию на таймер
-setTimeout(timerEvent, 1000);
+//setTimeout(timerEvent, 1500);
+
+
+let filename = './in.txt';
+
+fs.readFile(filename, 'utf8', (err, data) => {
+	if (err) {
+		console.error(err);
+
+		return;
+	}
+
+	console.log(data);
+});
 
