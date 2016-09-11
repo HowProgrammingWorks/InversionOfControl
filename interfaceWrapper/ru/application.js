@@ -1,6 +1,6 @@
 'use strict';
 
-//const fs = global.fs || require('fs');
+const fs = global.fs || require('fs');
 
 
 // Вывод из глобального контекста модуля
@@ -15,15 +15,17 @@ function timerEvent() {
 //setTimeout(timerEvent, 1500);
 
 
-let filename = './in.txt';
+let filename = './README.md';
 
-fs.readFile(filename, 'utf8', (err, data) => {
+console.log('App is going to read "%s"', filename);
+
+fs.readFile(filename, 'utf8', (err, src) => {
 	if (err) {
 		console.error(err);
 
 		return;
 	}
 
-	console.log(data);
+	console.log('File "%s" Size "%d"', filename, src.length);
 });
 

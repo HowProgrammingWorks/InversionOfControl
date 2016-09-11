@@ -80,8 +80,6 @@ function decorFS() {
 	return newFS;
 }
 
-//console.log('decorFS:', decorFS() );
-
 context.fs = decorFS();
 
 // Преобразовываем хеш в контекст
