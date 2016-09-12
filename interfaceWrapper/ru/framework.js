@@ -2,25 +2,29 @@
 
 const fs = require('fs');
 const vm = require('vm');
+const stat = require('./stat');
 
 let context = {
 	module: {},
 	console: console,
-	//fs: fs,
 	setTimeout: (callback, timeout) => {
 		console.log(
-			'Call: setTimeout, ' +
-			'callback function: ' + callback.name + ', ' +
-			'timeout: ' + timeout
+			' Call: setTimeout, ' +
+			' callback function: ' + callback.name + ', ' +
+			' timeout: ' + timeout
 		);
 
 		setTimeout(() => {
-			console.log('Event: setTimeout, before callback');
+			console.log(' Event: setTimeout, before callback');
 			callback();
-			console.log('Event: setTimeout, after callback');
+			console.log(' Event: setTimeout, after callback\n');
 		}, timeout);
 	}
 };
+
+setInterval( () => {
+	stat.show();
+}, 3000);
 
 function cloneAPI(api) {
 	let clone = {};
@@ -28,63 +32,69 @@ function cloneAPI(api) {
 	for (let key in api) {
 		let type = typeof api[key];
 
-		clone[key] = wrap[type](key, api[key]); 
+		clone[key] = wrapType[type](key, api[key]); 
 	}
 
 	return clone;
 }
 
-let wrap = {
+let wrapType = {
 	'object' : function wrapObject(objName, obj) {
 		return function wrapper() {
-			console.log('Call: ', objName);
-			console.log('Object: ', obj);
-		:}
+			timeLogger();
+			console.log(' Call: ', objName);
+			console.log(' Object: %j\n', obj);
+		}
 	},
 
 	'number' : function wrapNumber(numName, number) {
 		return function wrapper() {
-			console.log('Call: ', numName);
-			console.log('Number: ', number);
+			timeLogger();
+			console.log(' Call: ', numName);
+			console.log(' Number: %d\n', number);
 		}
 	},
 
 	'function' : function wrapFunction(fnName, fn) {
 		return function wrapper(...args) {
-			console.log('Call: ', fnName);
-			console.log('Args: ', args);
+				console.log(' Call: ', fnName);
+			console.log(' Args: %j\n', args);
+			timeLogger();
 
-			hasCallback(args);
+			hasCallback(args, Date.now() );
 
 			return fn.apply(undefined, args);
 		};
 	}
 };
 
-function hasCallback(args) {
+function hasCallback(args, start) {
 	let last = args.length - 1;
 
 	let obj = args[last];
 
 	if (typeof obj === 'function') {
-		args[last] = wrapCallback(obj);
+		args[last] = wrapCallback(obj, start);
 	}
 }
 
-function wrapCallback(fn) {
+function wrapCallback(fn, start) {
 	return (err, data) => {
-		console.log('Before Call');
+		console.log(' Before Call');
 
 		fn(err, data);
 
-		console.log('After Call');
+		console.log(
+			' After Call.\n Duration: %d\n',
+			Date.now() - start
+		);
 	};
 }
 
 function timeLogger() {
 	let now = new Date();
 
-	console.log('Time: %s:%s:%s:%s',
+	console.log(' Time: %s:%s:%s:%s',
 		now.getHours(),
 		now.getMinutes(),
 		now.getSeconds(),
@@ -92,53 +102,7 @@ function timeLogger() {
 	);
 }
 
-function decorFS() {
-	let newFS = {};
-
-	let propNames = Object.getOwnPropertyNames(fs);
-
-	for (let key in fs) {
-		console.log(' ' + key + ' : ' +  typeof fs[key]);
-	}
-
-	function statlogger(fn, name) {
-		return (...args) => {	
-			timeLogger();
-
-			console.log('Call: "%s"', name);
-
-			console.log('Args: ', args);
-
-			let cbIndex = args.length - 1;
-			let cb = args[cbIndex];
-
-			if (typeof cb === 'function') {
-				args[cbIndex] = getNewcb();
-			}
-
-			function getNewcb(err, data) {
-				return (err, data) => {
-					console.log('Before Call');
-					
-					cb(err, data);
-					
-					console.log('After Call');
-				}
-			};
-
-			fn.apply(this, args);
-		};
-	}
-
-	propNames.forEach((fnName) => {
-		newFS[fnName] = statlogger(fs[fnName], fnName); 
-	});
-
-	//return newFS;
-}
-
 context.fs = cloneAPI(fs);
-//context.fs = decorFS();
 
 // Преобразовываем хеш в контекст
 context.global = context;
