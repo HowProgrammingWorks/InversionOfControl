@@ -1,8 +1,7 @@
 'use strict';
 
-const fs = require('fs'),
-	it = require('./sequental'),
-	vm = require('vm');
+const fs = require('fs');
+const vm = require('vm');
 
 let context = {
 	module: {},
@@ -23,6 +22,51 @@ let context = {
 	}
 };
 
+function cloneAPI(api) {
+	let clone = {};
+
+	for (let key in api) {
+		clone[key] = wrapFunction(key, api[key]);
+	}
+
+	return clone;
+}
+
+function wrapObject() {}
+
+function wrapNumber() {}
+
+function wrapFunction(fnName, fn) {
+	return function wrapper(...args) {
+		console.log('Call: ', fnName);
+		console.log('Args: ', args);
+
+		hasCallback(args);
+
+		return fn.apply(undefined, args);
+	};
+}
+
+function hasCallback(args) {
+	let last = args.length - 1;
+
+	let obj = args[last];
+
+	if (typeof obj === 'function') {
+		args[last] = wrapCallback(obj);
+	}
+}
+
+function wrapCallback(fn) {
+	return (err, data) => {
+		console.log('Before Call');
+
+		fn(err, data);
+
+		console.log('After Call');
+	};
+}
+
 function timeLogger() {
 	let now = new Date();
 
@@ -39,47 +83,47 @@ function decorFS() {
 
 	let propNames = Object.getOwnPropertyNames(fs);
 
-	function statlogger(code, name, ...args) {
+	for (let key in fs) {
+		console.log(' ' + key + ' : ' +  typeof fs[key]);
+	}
+
+	function statlogger(fn, name) {
 		return (...args) => {	
 			timeLogger();
 
-			console.log('Function Name: "%s"', name);
+			console.log('Call: "%s"', name);
 
 			console.log('Args: ', args);
 
-			let isFunction = (obj) => {
-				return typeof obj === 'function';
-			};
+			let cbIndex = args.length - 1;
+			let cb = args[cbIndex];
 
-			let cb = args.find(isFunction);
-
-			let cbIndex = args.findIndex(isFunction);
+			if (typeof cb === 'function') {
+				args[cbIndex] = getNewcb();
+			}
 
 			function getNewcb(err, data) {
 				return (err, data) => {
-					console.log('before');
+					console.log('Before Call');
 					
 					cb(err, data);
 					
-					console.log('after');
+					console.log('After Call');
 				}
 			};
 
-			args[cbIndex] = getNewcb();
-
-			code.apply(this, args);
+			fn.apply(this, args);
 		};
 	}
 
-	propNames.forEach((name, index) => {
-		let type = typeof fs[name];
-
-		newFS[name] = statlogger(fs[name], name); 
+	propNames.forEach((fnName) => {
+		newFS[fnName] = statlogger(fs[fnName], fnName); 
 	});
 
-	return newFS;
+	//return newFS;
 }
 
+//context.fs = cloneAPI(fs);
 context.fs = decorFS();
 
 // Преобразовываем хеш в контекст
