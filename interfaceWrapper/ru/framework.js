@@ -26,26 +26,40 @@ function cloneAPI(api) {
 	let clone = {};
 
 	for (let key in api) {
-		clone[key] = wrapFunction(key, api[key]);
+		let type = typeof api[key];
+
+		clone[key] = wrap[type](key, api[key]); 
 	}
 
 	return clone;
 }
 
-function wrapObject() {}
+let wrap = {
+	'object' : function wrapObject(objName, obj) {
+		return function wrapper() {
+			console.log('Call: ', objName);
+			console.log('Object: ', obj);
+		:}
+	},
 
-function wrapNumber() {}
+	'number' : function wrapNumber(numName, number) {
+		return function wrapper() {
+			console.log('Call: ', numName);
+			console.log('Number: ', number);
+		}
+	},
 
-function wrapFunction(fnName, fn) {
-	return function wrapper(...args) {
-		console.log('Call: ', fnName);
-		console.log('Args: ', args);
+	'function' : function wrapFunction(fnName, fn) {
+		return function wrapper(...args) {
+			console.log('Call: ', fnName);
+			console.log('Args: ', args);
 
-		hasCallback(args);
+			hasCallback(args);
 
-		return fn.apply(undefined, args);
-	};
-}
+			return fn.apply(undefined, args);
+		};
+	}
+};
 
 function hasCallback(args) {
 	let last = args.length - 1;
@@ -123,8 +137,8 @@ function decorFS() {
 	//return newFS;
 }
 
-//context.fs = cloneAPI(fs);
-context.fs = decorFS();
+context.fs = cloneAPI(fs);
+//context.fs = decorFS();
 
 // Преобразовываем хеш в контекст
 context.global = context;

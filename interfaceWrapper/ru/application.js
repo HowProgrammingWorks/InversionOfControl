@@ -18,7 +18,7 @@ let filename = './README.md';
 
 console.log('App is going to read "%s"', filename);
 
-/*
+
 fs.readFile(filename, 'utf8', (err, src) => {
 	if (err) {
 		console.error(err);
@@ -28,6 +28,5 @@ fs.readFile(filename, 'utf8', (err, src) => {
 
 	console.log('File "%s" Size "%d"', filename, src.length);
 });
-*/
 
-console.log(fs.constants);
+//console.log(fs.constants);
