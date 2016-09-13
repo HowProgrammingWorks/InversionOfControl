@@ -57,37 +57,42 @@ let wrapType = {
 
 	'function' : function wrapFunction(fnName, fn) {
 		return function wrapper(...args) {
-				console.log(' Call: ', fnName);
+			console.log(' Call: ', fnName);
 			console.log(' Args: %j\n', args);
 			timeLogger();
 
-			hasCallback(args, Date.now() );
+			stat.setName(fnName);
+			stat.setCall(fnName);
+			stat.setStartTime(fnName, Date.now() );
+
+			hasCallback(args, fnName);
 
 			return fn.apply(undefined, args);
 		};
 	}
 };
 
-function hasCallback(args, start) {
+function hasCallback(args, fnName) {
 	let last = args.length - 1;
 
 	let obj = args[last];
 
 	if (typeof obj === 'function') {
-		args[last] = wrapCallback(obj, start);
+		args[last] = wrapCallback(obj, fnName);
 	}
+
+	stat.setCallTime(fnName, Date.now() );
 }
 
-function wrapCallback(fn, start) {
+function wrapCallback(fn, fnName) {
 	return (err, data) => {
 		console.log(' Before Call');
 
 		fn(err, data);
 
-		console.log(
-			' After Call.\n Duration: %d\n',
-			Date.now() - start
-		);
+		console.log('After Call');
+
+		stat.setCbTime(fnName, Date.now() );
 	};
 }
 

@@ -30,3 +30,13 @@ fs.readFile(filename, 'utf8', (err, src) => {
 });
 
 //console.log(fs.constants);
+
+fs.readFile('./sequental.js', 'utf8', (err, src) => {
+    if (err) {
+        console.error(err);
+
+        return;
+    }
+
+    console.log(' File "%s" Size "%d"', filename, src.length);
+});
