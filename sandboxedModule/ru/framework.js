@@ -6,7 +6,9 @@ let fs = require('fs'),
 
 let filename = process.argv[2];
 
-if (filename) {
+if (!filename) {
+	throw new Error('There is no app\'s layer');
+} else {
 	let context = {
 		module: {},
 		console: console,
@@ -30,7 +32,12 @@ if (filename) {
 			throw err;
 		}
 
-		let script = vm.createScript(src, filename);
+		let scriptOptions = {
+			filename,
+			displayErrors: true
+		};
+
+		let script = vm.createScript(src, scriptOptions);
   		script.runInNewContext(sandbox);
   
   		let app = sandbox.module.exports;

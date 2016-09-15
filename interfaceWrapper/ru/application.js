@@ -11,32 +11,35 @@ function timerEvent() {
 }
 
 // Устанавливаем функцию на таймер
-setTimeout(timerEvent, 1500);
+//setTimeout(timerEvent, 1500);
 
 
-let filename = './README.md';
+let readme = './README.md';
+let sequental = './sequental.js';
 
-console.log(' App is going to read "%s"', filename);
+console.log(' App is going to read "%s"', readme);
 
-
-fs.readFile(filename, 'utf8', (err, src) => {
+fs.readFile(readme, 'utf8', (err, src) => {
 	if (err) {
 		console.error(err);
 
 		return;
 	}
 
-	console.log(' File "%s" Size "%d"', filename, src.length);
+	console.log(' File "%s" Size "%d"', readme, src.length);
 });
+
 
 //console.log(fs.constants);
 
-fs.readFile('./sequental.js', 'utf8', (err, src) => {
+
+fs.readFile(sequental, 'utf8', (err, src) => {
     if (err) {
         console.error(err);
 
         return;
     }
 
-    console.log(' File "%s" Size "%d"', filename, src.length);
+    console.log(' File "%s" Size "%d"', sequental, src.length);
 });
+
