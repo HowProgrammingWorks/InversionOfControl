@@ -1,5 +1,7 @@
 'use strict';
 
+const stat = require('./stat');
+
 let api = {};
 
 function timeLogger() {
@@ -13,9 +15,17 @@ function timeLogger() {
     );
 }
 
-api.cloneAPI =  function cloneAPI(api) {
-	//console.log('api: ', api);
+function cloneFn(fnName, fn) {
+	let wrapFn;
 
+	let type = typeof fn;
+
+	wrapFn = wrapType[type](fnName, fn);
+
+	return wrapFn;
+}
+
+function cloneAPI(api) {
 	let clone = {};
 
 	for (let key in api) {
@@ -50,9 +60,9 @@ let wrapType = {
 			timeLogger();
 			console.log(' Args: ', args);
 
-			//stat.setName(fnName);
-			//stat.setCall(fnName);
-			//stat.setStartTime(fnName, Date.now() );
+			stat.setName(fnName);
+			stat.setCall(fnName);
+			stat.setStartTime(fnName, Date.now() );
 
 			hasCallback(args, fnName);
 
@@ -62,15 +72,18 @@ let wrapType = {
 };
 
 function hasCallback(args, fnName) {
-	let last = args.length - 1;
+	let isFn = function isFn(obj) {
+		return typeof obj === 'function'
+	};
 
-	let obj = args[last];
+	let obj = args.find(isFn);
+	let objIndex = args.findIndex(isFn);
 
-	if (typeof obj === 'function') {
-		args[last] = wrapCallback(obj, fnName);
+	if (obj) {
+		args[objIndex] = wrapCallback(obj, fnName);
 	}
 
-	//stat.setCallTime(fnName, Date.now() );
+	stat.setCallTime(fnName, Date.now() );
 }
 
 function wrapCallback(fn, fnName) {
@@ -82,9 +95,12 @@ function wrapCallback(fn, fnName) {
 
 		console.log(' After Callback');
 
-		//stat.setCbTime(fnName, Date.now() );
+		stat.setCbTime(fnName, Date.now() );
 	};
 }
 
 
-module.exports = api.cloneAPI;
+module.exports = {
+	cloneAPI,
+	cloneFn
+};

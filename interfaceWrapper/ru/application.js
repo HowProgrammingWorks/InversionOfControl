@@ -11,13 +11,11 @@ function timerEvent() {
 }
 
 // Устанавливаем функцию на таймер
-//setTimeout(timerEvent, 1500);
+setTimeout(timerEvent, 1500);
 
 
 let readme = './README.md';
 let sequental = './sequental.js';
-
-console.log(' App is going to read "%s"', readme);
 
 fs.readFile(readme, 'utf8', (err, src) => {
 	if (err) {
@@ -31,7 +29,6 @@ fs.readFile(readme, 'utf8', (err, src) => {
 
 
 //console.log(fs.constants);
-
 
 fs.readFile(sequental, 'utf8', (err, src) => {
     if (err) {

@@ -8,6 +8,22 @@ let stat = {
 			this.callTime = [];
 			this.callbackTime = [];
 		}
+
+		getCall() {
+			return this.call;
+		}
+
+		getStartTime() {
+			return this.callTime;
+		}
+
+		getCallTime() {
+			return this.callTime;
+		}
+
+		getCallbackTime() {
+			return this.callbackTime;
+		}
 	},
 
 	fns: {},
@@ -18,13 +34,39 @@ let stat = {
 
 		for (var i = 0, len = fnNames.length; i < len; i += 1) {
 			let name = fnNames[i];
-			let startTime = fns[name]['startTime'][i];
+			let data = this.averageTime(fns[name]);
 
-			console.log(' Calls: ', fns[name].call);
-			console.log(' Call Duration:', fns[name]['callTime'][i] - startTime);
-			console.log(' Callback Duration: ', fns[name]['callbackTime'][i] - startTime);
+			this.showStatFunc(name, data);
 		}
     },
+
+	averageTime(fn) {
+		let callDuration = [];
+		let callbackDuration = [];
+
+		let call = fn.getCall();
+		let startTime = fn.getStartTime();
+		let callTime = fn.getCallTime();
+		let callbackTime = fn.getCallbackTime();
+
+		for (let i = 0, len = startTime.length; i < len; i += 1) {
+			callDuration[i] = (callTime[i] - startTime[i]) / call;
+			callbackDuration[i] = (callbackTime[i] - startTime[i]) / call;
+		}
+
+		return {
+			call,
+			callDuration: callDuration.reduce( (prev, cur) => prev + cur, 0),
+			callbackDuration: callbackDuration.reduce( (prev, cur) => prev + cur, 0)
+		}
+	},
+
+	showStatFunc(name, {call, callDuration, callbackDuration}) {
+		console.log('\n "%s":', name);
+		console.log(' Calls: %d', call);
+		console.log(' Calls Duration: %d', callDuration);
+		console.log(' Callbacks Duration: %d', callbackDuration);
+	},
 
 	setName(name) {
 		let isExistFn = this.fns[name];

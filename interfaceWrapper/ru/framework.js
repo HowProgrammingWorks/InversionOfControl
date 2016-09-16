@@ -3,7 +3,7 @@
 const fs = require('fs');
 const vm = require('vm');
 const stat = require('./stat');
-const cloneAPI = require('./wrap');
+const wrap = require('./wrap');
 
 let context = {
 	module: {},
@@ -25,13 +25,13 @@ let context = {
 	*/
 };
 
-context.fs = cloneAPI(fs);
+setInterval( () => {
+	stat.show();
+}, 3000);
 
-/*
-context.setTimeout = cloneTimers(
-	setTimeout, 'setTimeout'
-);
-*/
+context.fs = wrap.cloneAPI(fs);
+
+context.setTimeout = wrap.cloneFn('setTimeout', setTimeout);
 
 // Преобразовываем хеш в контекст
 context.global = context;
