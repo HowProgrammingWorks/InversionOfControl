@@ -1,19 +1,9 @@
 'use strict';
 
 const stat = require('./stat');
+const time = require('./timeLogger');
 
 let api = {};
-
-function timeLogger() {
-    let now = new Date();
-
-    console.log(' Time: %s:%s:%s:%s',
-        now.getHours(),
-        now.getMinutes(),
-        now.getSeconds(),
-        now.getMilliseconds()
-    );
-}
 
 function cloneFn(fnName, fn) {
 	let wrapFn;
@@ -40,7 +30,7 @@ function cloneAPI(api) {
 let wrapType = {
 	'object' : function wrapObject(objName, obj) {
 		return function wrapper() {
-			timeLogger();
+			time.showTime();
 			console.log(' Call: ', objName);
 			console.log(' Object: %j\n', obj);
 		}
@@ -48,7 +38,7 @@ let wrapType = {
 
 	'number' : function wrapNumber(numName, number) {
 		return function wrapper() {
-			timeLogger();
+			time.showTime();
 			console.log(' Call: ', numName);
 			console.log(' Number: %d\n', number);
 		}	
@@ -56,8 +46,8 @@ let wrapType = {
 
 	'function' : function wrapFunction(fnName, fn) {
 		return function wrapper(...args) {
-			console.log('\n Call: ', fnName);
-			timeLogger();
+			console.log('\n Call: "%s"', fnName);
+			time.showTime();
 			console.log(' Args: ', args);
 
 			stat.setName(fnName);
@@ -89,7 +79,7 @@ function hasCallback(args, fnName) {
 function wrapCallback(fn, fnName) {
 	return (err, data) => {
 		console.log('\n Before Callback');
-		timeLogger();		
+		time.showTime();
 
 		fn(err, data);
 
@@ -104,3 +94,4 @@ module.exports = {
 	cloneAPI,
 	cloneFn
 };
+
