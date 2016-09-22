@@ -8,8 +8,10 @@ const time = require('./timeLogger');
 
 let fileName = process.argv[2];
 
+let context = {};
+
 if (fileName) {
-	let context = {
+	context = {
 		module: {},
 		console: {}
 	};
@@ -49,18 +51,35 @@ if (fileName) {
 
 		let app = sandbox.module.exports;
 
-		showAppExp(app);
+		//showAppExp(app);
+
+		//printFn(app.getParams);
+
+		//printSandbox();
+
+		printDiffGlobal(global, context);
 	});
 }
 
-function showAppExp(obj) {
+function printSandbox() {
+	printAppExp(context);
+}
+
+function printFn(fn) {
+	console.log(
+		' Name: "%s"\n Args Len: %d\n code: %s\n',
+		fn.name, fn.length, fn.toString()
+	);
+}
+
+function printAppExp(obj) {
 	console.log('Application Export');
 
 	for (let key in obj) {
 		let hasProperty = obj.hasOwnProperty(key);
 
 		if (hasProperty) {
-			console.log(' %s; type: %s', key, typeof obj[key]);
+			console.log(' %s: type: %s', key, typeof obj[key]);
 		}
 	}
 }
@@ -77,7 +96,7 @@ function logMessageFile(...args) {
 			throw err;
 		}
 
-		console.log(' Data was Append to "%s"',  filename);
+		console.log('\n Data was Append to "%s"',  filename);
 	});
 }
 
@@ -108,13 +127,13 @@ function logFn(app, name) {
     console.log('Args Number: ', fn.length);
 }
 
-function diffGlobal(global, sandbox) {
-    let result = {};
+function printDiffGlobal(global, context) {
+	let result = {};
     let added = [];
     let deleted = [];
 
     let gName = Object.getOwnPropertyNames(global).sort();
-    let sName = Object.getOwnPropertyNames(sandbox).sort();
+    let sName = Object.getOwnPropertyNames(context).sort();
 
     let glen = gName.length;
     let slen = sName.length;
@@ -151,7 +170,7 @@ function diffGlobal(global, sandbox) {
 
     result.deleted = deleted;
 
-    return result;
+    console.log(result);
 }
 
 function useUtil(app) {
