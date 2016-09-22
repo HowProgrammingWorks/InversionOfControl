@@ -49,14 +49,20 @@ if (fileName) {
 
 		let app = sandbox.module.exports;
 
-		//showAppExp(app);
+		showAppExp(app);
 	});
 }
 
 function showAppExp(obj) {
-	console.log('showAppExp');
+	console.log('Application Export');
 
-	console.log(obj);
+	for (let key in obj) {
+		let hasProperty = obj.hasOwnProperty(key);
+
+		if (hasProperty) {
+			console.log(' %s; type: %s', key, typeof obj[key]);
+		}
+	}
 }
 
 function logMessageFile(...args) {
