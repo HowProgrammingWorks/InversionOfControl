@@ -10,9 +10,7 @@ function showTime() {
     let sec = now.getSeconds();
     let msec = now.getMilliseconds();
 
-	console.log(' ' +
-		hour + ':' + min + ':' + sec + ':' + msec
-	);
+	return ' ' + hour + ':' + min + ':' + sec + ':' + msec;
 };
 
 module.exports = {

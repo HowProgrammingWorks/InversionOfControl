@@ -2,8 +2,15 @@
 
 const stat = require('./stat');
 const time = require('./timeLogger');
+const fs = require('fs');
 
 let api = {};
+
+function writeToFile(data) {
+	let call = './call';
+
+	fs.appendFile(call, data);
+}
 
 function cloneFn(fnName, fn) {
 	let wrapFn;
@@ -30,25 +37,34 @@ function cloneAPI(api) {
 let wrapType = {
 	'object' : function wrapObject(objName, obj) {
 		return function wrapper() {
-			time.showTime();
-			console.log(' Call: ', objName);
-			console.log(' Object: %j\n', obj);
+			let log = '\n Call: ' + objName + ' ' +
+                time.showTime() +
+                ' Object: ' + obj + '\n';
+
+			//console.log(log);
+			writeToFile(log);
 		}
 	},
 
 	'number' : function wrapNumber(numName, number) {
 		return function wrapper() {
-			time.showTime();
-			console.log(' Call: ', numName);
-			console.log(' Number: %d\n', number);
+			let log = '\n Call: ' + numName + ' ' +
+                time.showTime() +
+                ' Number: ' + number + '\n';
+
+			//console.log(log);
+			writeToFile(log);
 		}	
 	},
 
 	'function' : function wrapFunction(fnName, fn) {
 		return function wrapper(...args) {
-			console.log('\n Call: "%s"', fnName);
-			time.showTime();
-			console.log(' Args: ', args);
+			let log = '\n Call: ' + fnName + ' ' +
+				time.showTime() +
+				' Args: ' + args + '\n';
+
+			//console.log(log);
+			writeToFile(log);
 
 			stat.setName(fnName);
 			stat.setCall(fnName);
@@ -78,12 +94,18 @@ function hasCallback(args, fnName) {
 
 function wrapCallback(fn, fnName) {
 	return (err, data) => {
-		console.log('\n Before Callback');
-		time.showTime();
+		let logBefore = ' Before Callback\n' +
+			time.showTime();
+
+		let logAfter = ' After Callback\n';
+
+		//console.log(logBefore);
+		writeToFile(logBefore);
 
 		fn(err, data);
 
-		console.log(' After Callback');
+		//console.log(logAfter);
+		writeToFile(logAfter);
 
 		stat.setCbTime(fnName, Date.now() );
 	};

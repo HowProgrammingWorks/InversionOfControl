@@ -4,6 +4,7 @@ const fs = require('fs');
 const vm = require('vm');
 const stat = require('./stat');
 const wrap = require('./wrap');
+const time = require('./timeLogger');
 
 let fileName = process.argv[2];
 
@@ -24,7 +25,9 @@ if (fileName) {
 	context.setTimeout = wrap.cloneFn('setTimeout', setTimeout);
 	context.clearTimeout = wrap.cloneFn('clearTimeout', clearTimeout);
 
-	context.console.log = wrap.cloneFn('console.log', logMessage);
+	context.console.log = wrap.cloneFn('console.log', logMessageFile);
+
+	context.require = wrap.cloneFn('require', require);
 
 	// Преобразовываем хеш в контекст
 	context.global = context;
@@ -45,42 +48,52 @@ if (fileName) {
 		script.runInNewContext(sandbox);
 
 		let app = sandbox.module.exports;
+
+		//showAppExp(app);
 	});
 }
 
-function logMessageFile(data, ...args) {
+function showAppExp(obj) {
+	console.log('showAppExp');
+
+	console.log(obj);
+}
+
+function logMessageFile(...args) {
 	let filename = './log';
 
-	fs.appendFile(filename, data, (err) => {
+	let log = (args) => {
+		return logMessage(args);
+	};
+
+	fs.appendFile(filename, log(), (err) => {
 		if (err) {
 			throw err;
 		}
 
 		console.log(' Data was Append to "%s"',  filename);
 	});
-
-	logMessage(args);
 }
 
 function logMessage(...args) {
-	let log = ' ';
+	let log = time.showTime() + ' ';
 
 	let message = 'hello from framework';
-	let filename = '';
 
 	if (message) {
 		log += 'Msg: ' + message;
 	}
 
-
-	if (filename) {
-		log += ' App Name: ' + filename;
+	if (fileName) {
+		log += '; App Name: ' + fileName;
 	}
 
-	console.log(log);
-}
+	log += '\n' + args;
 
-logMessage();
+	console.log(log);
+
+	return log;
+}
 
 function logFn(app, name) {
     let fn = app[name];
