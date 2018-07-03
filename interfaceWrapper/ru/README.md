@@ -20,7 +20,7 @@
 
 1. Нужно изучить, как обернут таймер.
 По аналогии с оберткой таймера нужно сделать обертку вокруг модуля fs.
-Все его функции нужно пройти в цикле `for (var key in fs) { ... }` и заменить
+Все его функции нужно пройти в цикле `for (const key in fs) { ... }` и заменить
 на свою функцию. При помощи замыкания эта функция должна стать универсальной
 прослойкой для всех функций библиотеки fs. Смысл обертки - логировать все
 вызовы к файловой системе в файл, с указанием времени, имени функции, ее
@@ -29,13 +29,14 @@
 несколько шагов.
 2. Удаляем из `application.js` вызов таймера и оставляем там только код:
 
-  ```JavaScript
-  var fileName = './README.md';
-  console.log('Application going to read ' + fileName);
-  fs.readFile(fileName, function(err, src) {
-    console.log('File ' + fileName + ' size ' + src.length);
-  });
-  ```
+```JavaScript
+const fileName = './README.md';
+console.log('Application going to read ' + fileName);
+fs.readFile(fileName, (err, src) => {
+  console.log('File ' + fileName + ' size ' + src.length);
+});
+```
+
 Это пример работы с файлом. И мы будем изменять поведение этого кода.
 Убираем из `framework.js` обертку таймера и пробрасываем `fs` в приложение.
 Теперь запускаем `node framework` и убеждаемся, что файл считывается и
@@ -44,15 +45,16 @@
 ключей из библиотеки `fs` в новый интерфейс и передаем в песочницу не исходный
 `fs`, а склонированный. Пример функции клонирования:
 
-  ```JavaScript
-  function cloneInterface(anInterface) {
-    var clone = {};
-    for (var key in anInterface) {
-      clone[key] = anInterface[key];
-    }
-    return clone;
+```JavaScript
+const cloneInterface = (anInterface) => {
+  const clone = {};
+  for (const key in anInterface) {
+    clone[key] = anInterface[key];
   }
-  ```
+  return clone;
+};
+```
+
 4. Пишем функцию `wrapFunction(fnName, fn)` которая оборачивает функцию `fn` и
 возвращает функцию-замыкание от `wrapper`. Замыкание, это ссылка на копию
 функции `wrapper`, которая замкнута на контекст `wrapFunction`. Таким образом
@@ -60,17 +62,14 @@
 который видит параметры `fnName` и 'fn' от `wrapFunction`. Мы полностью
 передаем все аргументы в функцию fn:
 
-  ```JavaScript
-  function wrapFunction(fnName, fn) {
-    return function wrapper() {
-      var args = [];
-      Array.prototype.push.apply(args, arguments);
-      console.log('Call: ' + fnName);
-      console.dir(args);
-      return fn.apply(undefined, args);
-    }
-  }
-  ```
+```JavaScript
+const wrapFunction = (fnName, fn) => (...args) => {
+  console.log('Call: ' + fnName);
+  console.dir(args);
+  return fn(...args);
+}
+```
+
 5. Определяем, есть ли среди аргументов `callback`, он всегда последний в
 массиве аргументов и его тип `function`. Если `callback` есть, то вместо него
 передаем свою функцию, которая логирует все аргументы и вызывает настоящий
@@ -99,19 +98,20 @@
 и прочитать из нее при помощи `fs.readFile`, потом записать файл, создать и
 удалить. Пример структуры:
 
-  ```JavaScript
-  var virtualFs = {
-    folder: {
-      subfolder: {
-        file1: 'File content',
-        file2: 'Another file content'
-      },
+```JavaScript
+const virtualFs = {
+  folder: {
+    subfolder: {
+      file1: 'File content',
+      file2: 'Another file content'
     },
-    notes: {
-      myToDos: 'Refactor projects, Prepare tests',
-      meetings: 'Meet thoughts at 10:00 walking along garden'
-    }
-  };
-  ```
+  },
+  notes: {
+    myToDos: 'Refactor projects, Prepare tests',
+    meetings: 'Meet thoughts at 10:00 walking along garden'
+  }
+};
+```
+
 9. Реализуйте кеширование файловых операций в памяти.
 10. Напишите аналогичный пример на другом языке программирования.
