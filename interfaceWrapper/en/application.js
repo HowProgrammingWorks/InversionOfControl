@@ -1,3 +1,5 @@
+'use strict';
+
 // Print something
 console.log('From application global context');
 

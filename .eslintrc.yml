@@ -4,6 +4,7 @@ env:
 extends: 'eslint:recommended'
 globals:
   api: false
+  fs: false
 rules:
   indent:
     - error

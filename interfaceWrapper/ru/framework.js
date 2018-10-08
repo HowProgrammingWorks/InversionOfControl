@@ -1,40 +1,42 @@
-// Пример оборачивания функции в песочнице
+'use strict';
 
-var fs = require('fs'),
-    vm = require('vm');
+global.api = {};
+api.fs = require('fs');
+api.vm = require('vm');
 
-// Объявляем хеш из которого сделаем контекст-песочницу
-var context = {
-  module: {},
-  console: console,
-  // Помещаем ссылку на fs API в песочницу
-  fs: fs,
-  // Оборачиваем функцию setTimeout в песочнице
-  setTimeout: function(callback, timeout) {
-    // Добавляем поведение при вызове setTimeout
-    console.log(
-      'Call: setTimeout, ' +
-      'callback function: ' + callback.name + ', ' +
-      'timeout: ' + timeout
-    );
-    setTimeout(function() {
-      // Добавляем поведение при срабатывании таймера
-      console.log('Event: setTimeout, before callback');
-      // Вызываем функцию пользователя на событии таймера
-      callback();
-      console.log('Event: setTimeout, after callback');
-    }, timeout);
+const wrapFunction = (fnName, fn) => (...args) => {
+  if (args.length > 0) {
+    let callback = args[args.length - 1];
+    if (typeof callback === 'function') {
+      args[args.length - 1] = (...pars) => {
+        console.log(`Callback: ${fnName}`);
+        callback(...pars);
+      };
+    } else {
+      callback = null;
+    }
   }
+  console.log(`Call: ${fnName}`);
+  console.dir(args);
+  fn(...args);
 };
 
-// Преобразовываем хеш в контекст
-context.global = context;
-var sandbox = vm.createContext(context);
+const cloneInterface = anInterface => {
+  const clone = {};
+  for (const key in anInterface) {
+    const fn = anInterface[key];
+    clone[key] = wrapFunction(key, fn);
+  }
+  return clone;
+};
 
-// Читаем исходный код приложения из файла
-var fileName = './application.js';
-fs.readFile(fileName, function(err, src) {
-  // Запускаем код приложения в песочнице
-  var script = vm.createScript(src, fileName);
+const context = { module: {}, console, fs: cloneInterface(api.fs) };
+
+context.global = context;
+const sandbox = api.vm.createContext(context);
+
+const fileName = './application.js';
+api.fs.readFile(fileName, 'utf8', (err, src) => {
+  const script = api.vm.createScript(src, fileName);
   script.runInNewContext(sandbox);
 });

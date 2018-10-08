@@ -1,6 +1,8 @@
-var application = {};
+'use strict';
+
+const application = {};
 module.exports = application;
 
-application.main = function() {
+application.main = () => {
   console.log('Application entry point');
 };

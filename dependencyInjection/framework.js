@@ -1,5 +1,7 @@
+'use strict';
+
 // Типы библиотек
-var libraries = {
+const libraries = {
   console:     'global',
   setTimeout:  'global',
   setInterval: 'global',
@@ -13,19 +15,16 @@ var libraries = {
 };
 
 // Ссылки на метаданные загруженных библиотек
-var loaded = {};
+const loaded = {};
 
 // Ссылки на загруженные библиотеки
-var api = {};
-
-// Загружаем два системных модуля и после них основное приложение
-['fs', 'vm', 'application'].forEach(loadLibrary);
+const api = {};
 
 // Функция загрузчик
-function loadLibrary(name, parent) {
-  if (typeof(parent) !== 'object') parent = { name: 'framework' };
-  console.log('Loading dependency: ' + name + ' into ' + parent.name);
-  var mod = {};
+const loadLibrary = (name, parent) => {
+  if (typeof parent !== 'object') parent = { name: 'framework' };
+  console.log(`Loading dependency: ${name} into ${parent.name}`);
+  const mod = {};
   loaded[name] = mod;
   mod.name = name;
   mod.type = libraries[name];
@@ -40,18 +39,21 @@ function loadLibrary(name, parent) {
     mod.context = { module: {} };
     mod.context.global = mod.context;
     mod.sandbox = api.vm.createContext(mod.context);
-    mod.config = require('./' + name + '.json');
-    mod.fileName = './' + name + '.js';
-    api.fs.readFile(mod.fileName, function(err, src) {
+    mod.config = require(`./${name}.json`);
+    mod.fileName = `./${name}.js`;
+    api.fs.readFile(mod.fileName, 'utf8', (err, src) => {
       mod.script = api.vm.createScript(src, mod.fileName);
       mod.script.runInNewContext(mod.sandbox);
       mod.interface = mod.sandbox.exports;
       api[name] = mod.interface;
       if (mod.config.api) {
-        mod.config.api.forEach(function(item) {
+        mod.config.api.forEach(item => {
           loadLibrary(item, mod);
         });
       }
     });
   }
-}
+};
+
+// Загружаем два системных модуля и после них основное приложение
+['fs', 'vm', 'application'].forEach(loadLibrary);
