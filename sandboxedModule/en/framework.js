@@ -16,7 +16,7 @@ context.global = context;
 const sandbox = api.vm.createContext(context);
 
 // Read an application source code from the file
-const fileName = './application.js';
+const fileName = process.argv.pop();
 api.fs.readFile(fileName, 'utf8', (err, src) => {
   // We need to handle errors here
 
