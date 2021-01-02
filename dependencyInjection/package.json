@@ -6,7 +6,7 @@
   "description": "Dependency Injection Example for Node.js",
   "main": "./framework.js",
   "dependencies": {
-    "colors": "1.1.x",
+    "colors": "1.4.0",
     "mkdirp": "0.5.x",
     "ncp": "2.0.x"
   },
