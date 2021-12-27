@@ -5,7 +5,7 @@ module.exports = moduleName;
 
 const privateProperty = 'Privat variable value in Module2';
 
-const privateFunction = s => {
+const privateFunction = (s) => {
   console.log('Output from private function of Module2');
   console.log(s);
 };

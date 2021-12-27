@@ -47,7 +47,7 @@ const loadLibrary = (name, parent) => {
       mod.interface = mod.sandbox.module.exports;
       api[name] = mod.interface;
       if (mod.config.api) {
-        mod.config.api.forEach(item => {
+        mod.config.api.forEach((item) => {
           loadLibrary(item, mod);
         });
       }
