@@ -44,7 +44,7 @@ const loadLibrary = (name, parent) => {
     api.fs.readFile(mod.fileName, 'utf8', (err, src) => {
       mod.script = api.vm.createScript(src, mod.fileName);
       mod.script.runInNewContext(mod.sandbox);
-      mod.interface = mod.sandbox.exports;
+      mod.interface = mod.sandbox.module.exports;
       api[name] = mod.interface;
       if (mod.config.api) {
         mod.config.api.forEach(item => {
