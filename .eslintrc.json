@@ -9,9 +9,9 @@
     "ecmaVersion": 2020
   },
   "globals": {
-    "BigInt": true,
     "api": true,
-    "fs": true
+    "fs": true,
+    "BigInt": true
   },
   "rules": {
     "indent": [
