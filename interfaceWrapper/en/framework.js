@@ -3,8 +3,8 @@
 // Wrapping function and interface example
 
 global.api = {};
-api.fs = require('fs');
-api.vm = require('vm');
+api.fs = require('node:fs');
+api.vm = require('node:vm');
 
 // Create a hash for application sandbox
 const context = {

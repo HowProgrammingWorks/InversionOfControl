@@ -1,8 +1,8 @@
 'use strict';
 
 global.api = {};
-api.fs = require('fs');
-api.vm = require('vm');
+api.fs = require('node:fs');
+api.vm = require('node:vm');
 
 const wrapFunction = (fnName, fn) => (...args) => {
   if (args.length > 0) {

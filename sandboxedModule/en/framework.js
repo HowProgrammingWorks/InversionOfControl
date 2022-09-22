@@ -6,8 +6,8 @@
 
 // The framework can require core libraries
 global.api = {};
-api.fs = require('fs');
-api.vm = require('vm');
+api.fs = require('node:fs');
+api.vm = require('node:vm');
 
 // Create a hash and turn it into the sandboxed context which will be
 // the global context of an application

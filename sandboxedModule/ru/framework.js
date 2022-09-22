@@ -7,8 +7,8 @@
 
 // Фреймворк может явно зависеть от библиотек через dependency lookup
 global.api = {};
-api.fs = require('fs');
-api.vm = require('vm');
+api.fs = require('node:fs');
+api.vm = require('node:vm');
 
 // Создаем контекст-песочницу, которая станет глобальным контекстом приложения
 const context = {}; // module: {}, /*console: console*/ };
