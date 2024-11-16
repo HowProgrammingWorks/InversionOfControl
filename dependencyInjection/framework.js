@@ -2,16 +2,16 @@
 
 // Типы библиотек
 const libraries = {
-  console:     'global',
-  setTimeout:  'global',
+  console: 'global',
+  setTimeout: 'global',
   setInterval: 'global',
-  fs:          'native',
-  vm:          'native',
-  path:        'native',
-  util:        'native',
-  ncp:         'module',
-  colors:      'module',
-  mkdirp:      'module',
+  fs: 'native',
+  vm: 'native',
+  path: 'native',
+  util: 'native',
+  ncp: 'module',
+  colors: 'module',
+  mkdirp: 'module',
 };
 
 // Ссылки на метаданные загруженных библиотек

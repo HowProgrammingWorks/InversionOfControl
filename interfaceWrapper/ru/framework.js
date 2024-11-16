@@ -4,22 +4,24 @@ global.api = {};
 api.fs = require('node:fs');
 api.vm = require('node:vm');
 
-const wrapFunction = (fnName, fn) => (...args) => {
-  if (args.length > 0) {
-    let callback = args[args.length - 1];
-    if (typeof callback === 'function') {
-      args[args.length - 1] = (...pars) => {
-        console.log(`Callback: ${fnName}`);
-        callback(...pars);
-      };
-    } else {
-      callback = null;
+const wrapFunction =
+  (fnName, fn) =>
+  (...args) => {
+    if (args.length > 0) {
+      let callback = args[args.length - 1];
+      if (typeof callback === 'function') {
+        args[args.length - 1] = (...pars) => {
+          console.log(`Callback: ${fnName}`);
+          callback(...pars);
+        };
+      } else {
+        callback = null;
+      }
     }
-  }
-  console.log(`Call: ${fnName}`);
-  console.dir(args);
-  fn(...args);
-};
+    console.log(`Call: ${fnName}`);
+    console.dir(args);
+    fn(...args);
+  };
 
 const cloneInterface = (anInterface) => {
   const clone = {};

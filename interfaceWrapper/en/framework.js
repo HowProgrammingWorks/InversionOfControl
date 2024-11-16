@@ -17,8 +17,11 @@ const context = {
     // Logging all setTimeout calls
     console.log(
       'Call: setTimeout, ' +
-      'callback function: ' + callback.name + ', ' +
-      'timeout: ' + timeout
+        'callback function: ' +
+        callback.name +
+        ', ' +
+        'timeout: ' +
+        timeout,
     );
     setTimeout(() => {
       // Logging timer events before application event
@@ -27,7 +30,7 @@ const context = {
       callback();
       console.log('Event: setTimeout, after callback');
     }, timeout);
-  }
+  },
 };
 
 // Turn hash into context
