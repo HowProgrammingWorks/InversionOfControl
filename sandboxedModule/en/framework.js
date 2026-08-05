@@ -1,7 +1,7 @@
 'use strict';
 
 // Example showing us how the framework creates an environment (sandbox) for
-// appication runtime, load an application code and passes a sandbox into app
+// application runtime, load an application code and passes a sandbox into app
 // as a global context and receives exported application interface
 
 // The framework can require core libraries

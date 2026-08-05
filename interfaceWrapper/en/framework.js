@@ -16,12 +16,8 @@ const context = {
   setTimeout: (callback, timeout) => {
     // Logging all setTimeout calls
     console.log(
-      'Call: setTimeout, ' +
-        'callback function: ' +
-        callback.name +
-        ', ' +
-        'timeout: ' +
-        timeout,
+      `Call: setTimeout, callback function: ${callback.name}, ` +
+        `timeout: ${timeout}`,
     );
     setTimeout(() => {
       // Logging timer events before application event

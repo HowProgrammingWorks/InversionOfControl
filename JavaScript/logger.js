@@ -2,7 +2,7 @@
 
 class Logger {
   log(message) {
-    process.stdout.write(message + '\n');
+    process.stdout.write(`${message}\n`);
   }
 }
 
